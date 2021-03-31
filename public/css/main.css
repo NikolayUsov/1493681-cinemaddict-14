@@ -554,6 +554,11 @@ button {
   overflow: hidden;
 }
 
+
+.hidden-popup .film-details {
+  display: none;
+}
+
 .film-details {
   position: fixed;
   height: 100vh;
