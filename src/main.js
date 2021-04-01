@@ -5,6 +5,8 @@ import { mainFilterTemplate } from './view/filter.js';
 import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-list-container.js';
 import { footerStatisticTemplate } from './view/footer-statistic.js';
 import { popupContainerTemplate, commentTemplate} from './view/popup.js';
+import './mock/film.js';
+
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
