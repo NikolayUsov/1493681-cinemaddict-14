@@ -4,7 +4,7 @@ export const filmListcontainerTemplate = () => {
   <section class="films-list">
     <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
-    <div class="films-list__container">
+    <div class="films-list__container film-list--main">
     </div>
   </section>
 
@@ -22,10 +22,12 @@ export const filmListcontainerTemplate = () => {
   </section>`;
 };
 
-export const filmCardTemplate = () => {
+
+export const filmCardTemplate = (card) => {
+
   return `<article class="film-card">
   <h3 class="film-card__title">The Dance of Life</h3>
-  <p class="film-card__rating">8.3</p>
+  <p class="film-card__rating">${card.rating}</p>
   <p class="film-card__info">
     <span class="film-card__year">1929</span>
     <span class="film-card__duration">1h 55m</span>

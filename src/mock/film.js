@@ -124,5 +124,5 @@ const generateFilmInfo = () => {
   };
 };
 
-// eslint-disable-next-line no-console
-console.log(generateFilmInfo());
+export { generateFilmInfo };
+
