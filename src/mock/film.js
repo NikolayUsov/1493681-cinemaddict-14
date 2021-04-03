@@ -17,9 +17,9 @@ const POSTERS = [
 const TITELS = [
   'made for each other',
   'popeye meets sinbad',
-  'the-great-flamarion',
-  'the-man-with-the-golden-arm',
-  'the-man-with-the-golden-arm 2',
+  'the great flamarion',
+  'the man with the golden arm',
+  'the man with the golden arm 2',
 ];
 
 const DIRECTORS = [
@@ -96,31 +96,30 @@ const getDuration = () => {
 
 const generateFilmInfo = () => {
   const title = TITELS.randomElement();
-  const pathToPoster = '../public/images/postets/';
+  const pathToPoster = '/images/posters/';
   const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
   const duration = getDuration();
   return {
-    poster: {
-      small: `${pathToPoster}${poster}`,
-      big: `${pathToBigPoster}${poster}`,
-    },
+    poster: `${pathToPoster}${poster}`,
     title: title,
     originalTitle: `Original: ${title}`,
+    description: getDescription(),
     director: DIRECTORS.randomElement(),
-    screenwriter: WRITERS.shuffle().slice(0, getRandomInteger(0, WRITERS.length - 1)),
+    screenWriters: WRITERS.shuffle().slice(0, getRandomInteger(0, WRITERS.length - 1)),
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
     rating: getRandomFloat(0, 10, 1),
     dateCreate : getDateCreate(),
-    filmDuration: {
-      hours: duration.get('hours'),
-      minutes: duration.get('minutes'),
-    },
+    filmDuration: duration,
     genres: GENRES.shuffle().slice(0, getRandomInteger(0, GENRES.length - 1)),
-    description: getDescription(),
     comments: {},
     country: COUNTRY.randomElement(),
     adult: ADULT.randomElement(),
+    userInfo: {
+      isWatchList: Boolean(getRandomInteger(0, 1)),
+      isFavorite: Boolean(getRandomInteger(0, 1)),
+      isWatched: Boolean(getRandomInteger(0, 1)),
+    },
   };
 };
 

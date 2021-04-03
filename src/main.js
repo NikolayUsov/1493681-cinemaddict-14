@@ -2,7 +2,7 @@
 import { headerProfileTemplate } from './view/profile.js';
 import { mainNavigationTemplate } from './view/navigation.js';
 import { mainFilterTemplate } from './view/filter.js';
-import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-list-container.js';
+import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-card.js';
 import { footerStatisticTemplate } from './view/footer-statistic.js';
 import { popupContainerTemplate, commentTemplate} from './view/popup.js';
 import { generateFilmInfo } from './mock/film.js';
@@ -14,7 +14,7 @@ const footer = document.querySelector('.footer');
 
 
 const MAX_MAIN_FILM_CARD = 5;
-const MAX_EXTRA_FILM_CARD = 2;
+//const MAX_EXTRA_FILM_CARD = 2;
 const DEFOULT_COMMENTS_COUNTER = 4;
 const MAX_FILM_CARD = 20;
 
@@ -63,7 +63,7 @@ render (filmCardContainers[0], showMoreButtonTemplate(), 'afterend');
 render (footerStatistic, footerStatisticTemplate(), 'beforeend');
 
 // Рендер попапа
-render (footer, popupContainerTemplate(),'afterend');
+render (footer, popupContainerTemplate(filmCards[0]),'afterend');
 renderSomeElements(document.querySelector('.film-details__comments-list'), commentTemplate(), DEFOULT_COMMENTS_COUNTER);
 
 renderFilmCards();
