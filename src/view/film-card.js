@@ -1,4 +1,6 @@
 /* eslint-disable quotes */
+import {filmCardsMap} from '../mock/data.js';
+
 export const filmListcontainerTemplate = () => {
   return `<section class="films">
   <section class="films-list">
@@ -42,6 +44,7 @@ export const filmCardTemplate = (card) => {
   } = userInfo;
 
   const  minutesDuration = filmDuration.get('minutes');
+  const comments = filmCardsMap.get(card);
   let hourDuration = filmDuration.get('hours');
   let newDescription;
   let isWatchListClass;
@@ -53,6 +56,8 @@ export const filmCardTemplate = (card) => {
   isWatchList ? isWatchListClass = 'film-card__controls-item--active' : isWatchListClass = '';
   isFavorite ? isFavoriteClass = 'film-card__controls-item--active' : isFavoriteClass = '';
   isWatched ? isWatchedClass = 'film-card__controls-item--active' : isWatchedClass = '';
+
+
   return `<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
@@ -63,7 +68,7 @@ export const filmCardTemplate = (card) => {
   </p>
   <img src="${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${newDescription}</p>
-  <a class="film-card__comments">5 comments</a>
+  <a class="film-card__comments">${comments.length} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchListClass}" type="button">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatchedClass}" type="button">Mark as watched</button>

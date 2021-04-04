@@ -4,9 +4,8 @@ import { mainNavigationTemplate } from './view/navigation.js';
 import { mainFilterTemplate } from './view/filter.js';
 import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-card.js';
 import { footerStatisticTemplate } from './view/footer-statistic.js';
-import { popupContainerTemplate, commentTemplate} from './view/popup.js';
-import { generateFilmInfo } from './mock/film.js';
-import {generateCommentsListData} from './mock/comment';
+import { popupContainerTemplate } from './view/popup.js';
+import { filmCardsMap } from './mock/data.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -15,23 +14,12 @@ const footer = document.querySelector('.footer');
 
 
 const MAX_MAIN_FILM_CARD = 5;
-//const MAX_EXTRA_FILM_CARD = 2;
-const DEFOULT_COMMENTS_COUNTER = 4;
-const MAX_FILM_CARD = 20;
+/* const DEFOULT_COMMENTS_COUNTER = 4; */
 
-const filmCards = new Array(MAX_FILM_CARD).fill().map(generateFilmInfo);
-
-// eslint-disable-next-line no-console
-console.log(filmCards);
+const filmCards = Array.from(filmCardsMap.keys());
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
-};
-
-const renderSomeElements = (container, template, items, place = 'beforeend') => {
-  for (let i = 1; i <= items; i++) {
-    render(container, template, place);
-  }
 };
 
 render (header, headerProfileTemplate(), 'beforeend');
@@ -63,6 +51,7 @@ render (footerStatistic, footerStatisticTemplate(), 'beforeend');
 
 // Рендер попапа
 render (footer, popupContainerTemplate(filmCards[0]),'afterend');
-renderSomeElements(document.querySelector('.film-details__comments-list'), commentTemplate(), DEFOULT_COMMENTS_COUNTER);
 
 renderFilmCards();
+
+export {filmCardsMap};

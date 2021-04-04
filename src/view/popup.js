@@ -1,3 +1,5 @@
+import {filmCardsMap} from '../mock/data.js';
+
 const popupContainerTemplate = (card) => {
   const {
     title,
@@ -32,6 +34,25 @@ const popupContainerTemplate = (card) => {
   const isWatchListChecked = isWatchList ? 'checked' : '';
   const isFavoriteChecked = isFavorite ? 'checked' : '';
   const isWatchedChecked = isWatched ? 'checked' : '';
+
+  const comments = filmCardsMap.get(card);
+
+  const createCommentsList = () => {
+    return `${comments.map((elem) => `<li class="film-details__comment">
+    <span class="film-details__comment-emoji">
+      <img src="./images/emoji/${elem.emotion}.png" width="55" height="55" alt="emoji-sleeping">
+    </span>
+    <div>
+      <p class="film-details__comment-text">${elem.text}</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">${elem.author}</span>
+        <span class="film-details__comment-day">${elem.diffmessage}</span>
+        <button class="film-details__comment-delete">Delete</button>
+      </p>
+    </div>
+      </li>`).join('')}`;
+  };
+
   return `
   <section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -110,10 +131,10 @@ const popupContainerTemplate = (card) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
-
+          ${createCommentsList()}
         </ul>
 
         <div class="film-details__new-comment">
