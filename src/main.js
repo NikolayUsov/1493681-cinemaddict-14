@@ -6,6 +6,7 @@ import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } f
 import { footerStatisticTemplate } from './view/footer-statistic.js';
 import { popupContainerTemplate, commentTemplate} from './view/popup.js';
 import { generateFilmInfo } from './mock/film.js';
+import {generateCommentsListData} from './mock/comment';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -34,7 +35,7 @@ const renderSomeElements = (container, template, items, place = 'beforeend') => 
 };
 
 render (header, headerProfileTemplate(), 'beforeend');
-render (main, mainNavigationTemplate(), 'beforeend');
+render (main, mainNavigationTemplate(filmCards), 'beforeend');
 render (main, mainFilterTemplate(), 'beforeend');
 render (main, filmListcontainerTemplate(), 'beforeend');
 
@@ -46,8 +47,6 @@ const filmCardContainers = document.querySelectorAll('.films-list__container');
 const renderFilmCards = () => {
   for (let i = 0; i < filmCards.length; i++) {
     const filmCard = filmCards[i];
-    // eslint-disable-next-line no-console
-    console.log(filmCard);
     render(mainFilmCardContainer, filmCardTemplate(filmCard), 'beforeend');
     if (i === MAX_MAIN_FILM_CARD) {
       break;

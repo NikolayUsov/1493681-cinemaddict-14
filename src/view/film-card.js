@@ -59,7 +59,7 @@ export const filmCardTemplate = (card) => {
   <p class="film-card__info">
     <span class="film-card__year">${dateCreate.format('YYYY')}</span>
     <span class="film-card__duration">${hourDuration} ${minutesDuration}m</span>
-    <span class="film-card__genre">${genres.randomElement()}</span>
+    <span class="film-card__genre">${genres.length > 0 ? genres.randomElement(): ''}</span>
   </p>
   <img src="${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${newDescription}</p>

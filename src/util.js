@@ -20,3 +20,32 @@ Array.prototype.shuffle = function() {
 Array.prototype.randomElement = function() {
   return this[getRandomInteger(0, this.length-1)];
 };
+
+export const countUserInfo = (filmData) => {
+  let favoriteCounter = 0;
+  let watchedCounter = 0;
+  let watchlistCounter = 0;
+  for (let i = 0; i < filmData.length; i++) {
+    const {isWatchList,
+      isFavorite,
+      isWatched,
+    } = filmData[i].userInfo;
+
+    if (isFavorite){
+      favoriteCounter++;
+    }
+
+    if (isWatched) {
+      watchedCounter++;
+    }
+
+    if (isWatchList) {
+      watchlistCounter++;
+    }
+  }
+  return {
+    favorits: favoriteCounter,
+    watchedFilms: watchedCounter,
+    watchlists: watchlistCounter,
+  };
+};

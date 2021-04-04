@@ -69,7 +69,7 @@ const ADULT = [
   '18+',
 ];
 
-const getDescription = () => {
+const getRandomText = () => {
   const phrase = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
   return phrase.split('.').shuffle().slice(0, getRandomInteger(1,5)).join('.');
 };
@@ -93,6 +93,14 @@ const getDuration = () => {
   });
 };
 
+const createId = ()=> {
+  let id = 0;
+  return () => {
+    id++;
+    return id;
+  };
+};
+const filmId = createId();
 
 const generateFilmInfo = () => {
   const title = TITELS.randomElement();
@@ -100,11 +108,13 @@ const generateFilmInfo = () => {
   const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
   const duration = getDuration();
+
   return {
+    id:filmId(),
     poster: `${pathToPoster}${poster}`,
     title: title,
     originalTitle: `Original: ${title}`,
-    description: getDescription(),
+    description: getRandomText(),
     director: DIRECTORS.randomElement(),
     screenWriters: WRITERS.shuffle().slice(0, getRandomInteger(0, WRITERS.length - 1)),
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
@@ -123,5 +133,5 @@ const generateFilmInfo = () => {
   };
 };
 
-export { generateFilmInfo };
+export { generateFilmInfo, createId, getRandomText};
 
