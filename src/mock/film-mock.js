@@ -87,9 +87,9 @@ const getDateCreate = () => {
 
 const getDuration = () => {
   return dayjs.duration({
-    seconds: getRandomInteger(0, 60),
-    minutes: getRandomInteger(0,60),
-    hours: getRandomInteger(0, 5),
+    seconds: getRandomInteger(0, 59),
+    minutes: getRandomInteger(0,59),
+    hours: getRandomInteger(0, 4),
   });
 };
 

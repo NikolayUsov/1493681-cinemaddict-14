@@ -4,7 +4,7 @@ import { getRandomInteger } from '../util.js';
 import dayjs from 'dayjs';
 
 const commentId = createId();
-
+const MAX_COMMENT = 5
 
 const EMODJI =  ['smile', 'sleeping', 'puke', 'angry'];
 const COMMENT_AUTHOR  =['Makim', 'ivan', 'Petr','sveta', 'Vadim'];
@@ -34,7 +34,7 @@ const generateCommetData = () => {
 };
 
 const generateCommentsListData = () => {
-  const items = getRandomInteger(0,10);
+  const items = getRandomInteger(0, MAX_COMMENT);
   const commentsList = [];
   for (let i = 0; i < items; i++) {
     commentsList.push(generateCommetData());

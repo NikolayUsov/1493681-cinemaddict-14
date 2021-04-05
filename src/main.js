@@ -6,17 +6,19 @@ import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } f
 import { footerStatisticTemplate } from './view/footer-statistic.js';
 import { popupContainerTemplate } from './view/popup.js';
 import { filmCardsMap } from './mock/data.js';
+import { sortByRaiting, sortByComments } from './filters.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
 const footer = document.querySelector('.footer');
 
-
-const MAX_MAIN_FILM_CARD = 5;
-/* const DEFOULT_COMMENTS_COUNTER = 4; */
+const CARD_STEP = 5;
+let startCard = CARD_STEP;
 
 const filmCards = Array.from(filmCardsMap.keys());
+const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
+const sortFilmCardByComments = sortByComments(filmCardsMap);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -27,31 +29,56 @@ render (main, mainNavigationTemplate(filmCards), 'beforeend');
 render (main, mainFilterTemplate(), 'beforeend');
 render (main, filmListcontainerTemplate(), 'beforeend');
 
-// Задать вопрос в ПП про данное решение
 const mainFilmCardContainer = document.querySelector('.film-list--main');
-const filmCardContainers = document.querySelectorAll('.films-list__container');
-// Задать вопрос о целесообразности использовать индексы
+const topRaitingContainer = document.querySelector('.films-list--raiting').querySelector('.films-list__container');
+const topCommentedContainer = document.querySelector('.films-list--top-commented').querySelector('.films-list__container');
 
-const renderFilmCards = () => {
-  for (let i = 0; i < filmCards.length; i++) {
-    const filmCard = filmCards[i];
+const renderFilmCards = (data) => {
+  mainFilmCardContainer.innerHTML = '';
+
+  let items;
+  if (filmCards.length < startCard) {
+    items = filmCards.length;
+  } else {
+    items = startCard;
+  }
+
+  for (let i = 0; i < items; i++) {
+    const filmCard = data[i];
     render(mainFilmCardContainer, filmCardTemplate(filmCard), 'beforeend');
-    if (i === MAX_MAIN_FILM_CARD) {
-      break;
-    }
   }
 };
 
-//renderSomeElements(filmCardContainers[0], filmCardTemplate(), MAX_MAIN_FILM_CARD);
-//renderSomeElements(filmCardContainers[1], filmCardTemplate(), MAX_EXTRA_FILM_CARD);
-//renderSomeElements(filmCardContainers[2], filmCardTemplate(), MAX_EXTRA_FILM_CARD);
+const renderExtraFilmCard = (template, data) => {
+  const MAX_EXTRA_CARD =2;
+  for (let i = 0; i < MAX_EXTRA_CARD; i++) {
+    const filmCard = data[i];
+    render(template, filmCardTemplate(filmCard), 'beforeend');
+  }
+};
 
-render (filmCardContainers[0], showMoreButtonTemplate(), 'afterend');
 render (footerStatistic, footerStatisticTemplate(), 'beforeend');
-
 // Рендер попапа
 render (footer, popupContainerTemplate(filmCards[0]),'afterend');
 
-renderFilmCards();
+renderFilmCards(filmCards);
 
+renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
+renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
+renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
+
+render (mainFilmCardContainer, showMoreButtonTemplate(), 'afterend');
+const buttonShowMore = document.querySelector('.films-list__show-more');
+
+const onButtonShowMoreClick = (evt) => {
+  evt.preventDefault();
+  startCard += CARD_STEP;
+  if (startCard >= filmCards.length) {
+    startCard = filmCards.length;
+    evt.target.remove();
+  }
+  renderFilmCards(filmCards);
+};
+
+buttonShowMore.addEventListener('click', onButtonShowMoreClick);
 export {filmCardsMap};
