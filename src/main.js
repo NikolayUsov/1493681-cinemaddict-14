@@ -24,7 +24,7 @@ const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render (header, headerProfileTemplate(), 'beforeend');
+render (header, headerProfileTemplate(filmCards), 'beforeend');
 render (main, mainNavigationTemplate(filmCards), 'beforeend');
 render (main, mainFilterTemplate(), 'beforeend');
 render (main, filmListcontainerTemplate(), 'beforeend');
@@ -63,7 +63,6 @@ render (footer, popupContainerTemplate(filmCards[0]),'afterend');
 
 renderFilmCards(filmCards);
 
-renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
 renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
 renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
 

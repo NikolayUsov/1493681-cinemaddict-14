@@ -11,7 +11,8 @@ const createFilmCardMap = (items) => {
 };
 
 const filmCardsMap = createFilmCardMap(MAX_FILM_CARD);
-
+// eslint-disable-next-line no-console
+console.log(filmCardsMap);
 export {filmCardsMap};
 
 

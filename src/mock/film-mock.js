@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { getRandomInteger, getRandomFloat } from '../util.js';
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration.js';
-dayjs.extend(duration);
 
 const POSTERS = [
   'made-for-each-other.png',
@@ -85,14 +83,6 @@ const getDateCreate = () => {
     .subtract(day,'day');
 };
 
-const getDuration = () => {
-  return dayjs.duration({
-    seconds: getRandomInteger(0, 59),
-    minutes: getRandomInteger(0,59),
-    hours: getRandomInteger(0, 4),
-  });
-};
-
 const createId = ()=> {
   let id = 0;
   return () => {
@@ -107,7 +97,6 @@ const generateFilmInfo = () => {
   const pathToPoster = '/images/posters/';
   const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
-  const duration = getDuration();
 
   return {
     id:filmId(),
@@ -120,9 +109,13 @@ const generateFilmInfo = () => {
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
     rating: getRandomFloat(0, 10, 1),
     dateCreate : getDateCreate(),
-    filmDuration: duration,
+    runtime: getRandomInteger(60, 250),
+    get runtimeMessage () {
+      const hour = Math.trunc(this.runtime/60);
+      const minutes = this.runtime % 60;
+      return `${hour > 0 ? `${hour}h` : ''} ${minutes > 0 ? `${minutes}m` : ''}`;
+    },
     genres: GENRES.shuffle().slice(0, getRandomInteger(0, GENRES.length - 1)),
-    comments: {},
     country: COUNTRY.randomElement(),
     adult: ADULT.randomElement(),
     userInfo: {

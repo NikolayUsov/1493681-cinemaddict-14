@@ -5,7 +5,6 @@ const popupContainerTemplate = (card) => {
     title,
     rating,
     dateCreate,
-    filmDuration,
     director,
     genres,
     poster,
@@ -16,6 +15,7 @@ const popupContainerTemplate = (card) => {
     adult,
     country,
     originalTitle,
+    runtimeMessage,
   } = card;
 
   const {isWatchList,
@@ -23,9 +23,6 @@ const popupContainerTemplate = (card) => {
     isWatched,
   } = userInfo;
 
-  const minutesDuration = filmDuration.get('minutes');
-  let hourDuration = filmDuration.get('hours');
-  hourDuration === 0 ? hourDuration = '' : hourDuration = `${hourDuration}h`;
   const genreTitle = genres.length > 1 ? 'Genres': 'Genre';
   const generateGenresTemplate = () => {
     return `${genres.map((elem) => `<span class="film-details__genre">${elem}</span>`).join('')}`;
@@ -98,7 +95,7 @@ const popupContainerTemplate = (card) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${hourDuration} ${minutesDuration}m</td>
+              <td class="film-details__cell">${runtimeMessage}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

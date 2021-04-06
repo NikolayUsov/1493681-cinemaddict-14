@@ -1,12 +1,13 @@
-import {countUserInfo} from '../util.js';
+import {userStatistic} from '../util.js';
 
 export const mainNavigationTemplate = (data) => {
-  const userCounter =  countUserInfo(data);
+  const userCounter =  userStatistic(data);
   const {
     favorits,
     watchedFilms,
     watchlists,
   } = userCounter;
+
   return `<nav class="main-navigation">
   <div class="main-navigation__items">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
