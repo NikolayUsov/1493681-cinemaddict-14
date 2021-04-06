@@ -2,45 +2,82 @@
 import { headerProfileTemplate } from './view/profile.js';
 import { mainNavigationTemplate } from './view/navigation.js';
 import { mainFilterTemplate } from './view/filter.js';
-import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-list-container.js';
+import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-card.js';
 import { footerStatisticTemplate } from './view/footer-statistic.js';
-import { popupContainerTemplate, commentTemplate} from './view/popup.js';
+import { popupContainerTemplate } from './view/popup.js';
+import { filmCardsMap } from './mock/data.js';
+import { sortByRaiting, sortByComments } from './filters.js';
+
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
 const footer = document.querySelector('.footer');
 
-const MAX_MAIN_FILM_CARD = 5;
-const MAX_EXTRA_FILM_CARD = 2;
-const DEFOULT_COMMENTS_COUNTER = 4;
+const CARD_STEP = 5;
+let startCard = CARD_STEP;
+
+const filmCards = Array.from(filmCardsMap.keys());
+const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
+const sortFilmCardByComments = sortByComments(filmCardsMap);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const renderSomeElements = (container, template, items, place = 'beforeend') => {
-  for (let i = 1; i <= items; i++) {
-    render(container, template, place);
-  }
-};
-
-render (header, headerProfileTemplate(), 'beforeend');
-render (main, mainNavigationTemplate(), 'beforeend');
+render (header, headerProfileTemplate(filmCards), 'beforeend');
+render (main, mainNavigationTemplate(filmCards), 'beforeend');
 render (main, mainFilterTemplate(), 'beforeend');
 render (main, filmListcontainerTemplate(), 'beforeend');
 
-// Задать вопрос в ПП про данное решение
-const filmCardContainers = document.querySelectorAll('.films-list__container');
-// Задать вопрос о целесообразности использовать индексы
-renderSomeElements(filmCardContainers[0], filmCardTemplate(), MAX_MAIN_FILM_CARD);
-renderSomeElements(filmCardContainers[1], filmCardTemplate(), MAX_EXTRA_FILM_CARD);
-renderSomeElements(filmCardContainers[2], filmCardTemplate(), MAX_EXTRA_FILM_CARD);
+const mainFilmCardContainer = document.querySelector('.film-list--main');
+const topRaitingContainer = document.querySelector('.films-list--raiting').querySelector('.films-list__container');
+const topCommentedContainer = document.querySelector('.films-list--top-commented').querySelector('.films-list__container');
 
-render (filmCardContainers[0], showMoreButtonTemplate(), 'afterend');
+const renderFilmCards = (data) => {
+  mainFilmCardContainer.innerHTML = '';
+
+  let items;
+  if (filmCards.length < startCard) {
+    items = filmCards.length;
+  } else {
+    items = startCard;
+  }
+
+  for (let i = 0; i < items; i++) {
+    const filmCard = data[i];
+    render(mainFilmCardContainer, filmCardTemplate(filmCard), 'beforeend');
+  }
+};
+
+const renderExtraFilmCard = (template, data) => {
+  const MAX_EXTRA_CARD =2;
+  for (let i = 0; i < MAX_EXTRA_CARD; i++) {
+    const filmCard = data[i];
+    render(template, filmCardTemplate(filmCard), 'beforeend');
+  }
+};
 
 render (footerStatistic, footerStatisticTemplate(), 'beforeend');
-
-
 // Рендер попапа
-render (footer, popupContainerTemplate(),'afterend');
-renderSomeElements(document.querySelector('.film-details__comments-list'), commentTemplate(), DEFOULT_COMMENTS_COUNTER);
+render (footer, popupContainerTemplate(filmCards[0]),'afterend');
+
+renderFilmCards(filmCards);
+
+renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
+renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
+
+render (mainFilmCardContainer, showMoreButtonTemplate(), 'afterend');
+const buttonShowMore = document.querySelector('.films-list__show-more');
+
+const onButtonShowMoreClick = (evt) => {
+  evt.preventDefault();
+  startCard += CARD_STEP;
+  if (startCard >= filmCards.length) {
+    startCard = filmCards.length;
+    evt.target.remove();
+  }
+  renderFilmCards(filmCards);
+};
+
+buttonShowMore.addEventListener('click', onButtonShowMoreClick);
+export {filmCardsMap};
