@@ -78,3 +78,18 @@ export const userStatistic = (filmData) => {
   };
 };
 
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const renderElement = (container, template, place) => {
+  container.insertAdjacentElement(place, template);
+};
+
+export const createNode = (template) => {
+  const container = document.createElement('div');
+  container.innerHTML = template;
+  return container.firstChild;
+};
+
+

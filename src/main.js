@@ -1,12 +1,13 @@
 
-import { headerProfileTemplate } from './view/profile.js';
+import ProfileView from './view/profile.js';
 import { mainNavigationTemplate } from './view/navigation.js';
-import { mainFilterTemplate } from './view/filter.js';
+import SortView from './view/sort.js';
 import { filmListcontainerTemplate, filmCardTemplate, showMoreButtonTemplate } from './view/film-card.js';
 import { footerStatisticTemplate } from './view/footer-statistic.js';
 import { popupContainerTemplate } from './view/popup.js';
 import { filmCardsMap } from './mock/data.js';
 import { sortByRaiting, sortByComments } from './filters.js';
+import { render,renderElement } from './util.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -20,13 +21,10 @@ const filmCards = Array.from(filmCardsMap.keys());
 const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
 const sortFilmCardByComments = sortByComments(filmCardsMap);
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
-render (header, headerProfileTemplate(filmCards), 'beforeend');
+renderElement (header, new ProfileView(filmCards).getElement(), 'beforeend');
 render (main, mainNavigationTemplate(filmCards), 'beforeend');
-render (main, mainFilterTemplate(), 'beforeend');
+renderElement (main, new SortView().getElement(), 'beforeend');
 render (main, filmListcontainerTemplate(), 'beforeend');
 
 const mainFilmCardContainer = document.querySelector('.film-list--main');
