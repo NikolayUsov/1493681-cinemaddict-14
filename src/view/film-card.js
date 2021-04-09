@@ -1,29 +1,6 @@
 /* eslint-disable quotes */
 import {filmCardsMap} from '../mock/data.js';
-
-export const filmListcontainerTemplate = () => {
-  return `<section class="films">
-  <section class="films-list">
-    <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-    <div class="films-list__container film-list--main">
-    </div>
-  </section>
-
-  <section class="films-list films-list--extra films-list--raiting">
-    <h2 class="films-list__title">Top rated</h2>
-
-    <div class="films-list__container"></div>
-  </section>
-
-  <section class="films-list films-list--extra films-list--top-commented">
-    <h2 class="films-list__title">Most commented</h2>
-
-    <div class="films-list__container"></div>
-  </section>
-  </section>`;
-};
-
+import { createNode } from '../util.js';
 
 export const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
@@ -66,6 +43,24 @@ export const filmCardTemplate = (card) => {
 </article>`;
 };
 
-export const showMoreButtonTemplate = () => {
-  return `<button class="films-list__show-more">Show more</button>`;
-};
+export default class filmCard {
+  constructor (data) {
+    this._data = data;
+    this.element = null;
+  }
+
+  getTemplate () {
+    return filmCardTemplate(this._data);
+  }
+
+  getElement () {
+    if(!this._element) {
+      return createNode(this.getTemplate());
+    }
+  }
+  removeElement () {
+    this._element = null;
+  }
+}
+
+

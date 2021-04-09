@@ -1,4 +1,5 @@
 import {userStatistic} from '../util.js';
+import { createNode } from '../util.js';
 
 export const mainNavigationTemplate = (data) => {
   const userCounter =  userStatistic(data);
@@ -18,3 +19,25 @@ export const mainNavigationTemplate = (data) => {
   <a href="#stats" class="main-navigation__additional">Stats</a>
 </nav>`;
 };
+
+export default class Filter {
+  constructor (data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return mainNavigationTemplate(this._data);
+  }
+
+  getElement () {
+    if (!this._elemen) {
+      return createNode (mainNavigationTemplate(this._data));
+    }
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}
