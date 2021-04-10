@@ -22,16 +22,32 @@ let startCard = CARD_STEP;
 const filmCards = Array.from(filmCardsMap.keys());
 const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
 const sortFilmCardByComments = sortByComments(filmCardsMap);
-
+const filmCardContainer = new FilmCardContainerView();
 
 renderElement (header, new ProfileView(filmCards).getElement(), 'beforeend');
 renderElement (main, new FilterView(filmCards).getElement(), 'beforeend');
 renderElement (main, new SortView().getElement(), 'beforeend');
-renderElement (main, new FilmCardContainerView().getElement(), 'beforeend');
+renderElement (main, filmCardContainer.getElement(), 'beforeend');
 
 const mainFilmCardContainer = document.querySelector('.film-list--main');
 const topRaitingContainer = document.querySelector('.films-list--raiting').querySelector('.films-list__container');
 const topCommentedContainer = document.querySelector('.films-list--top-commented').querySelector('.films-list__container');
+
+const renderFilmCard = (container,filmData) =>{
+  const filmCard = new filmCardView(filmData);
+  const link = filmCard.getElement().querySelector('.film-card__comments');
+
+  const onClick = () => {
+    // eslint-disable-next-line no-console
+    console.log('link click');
+  };
+
+  // eslint-disable-next-line no-console
+  console.log(link);
+
+  renderElement(container, filmCard.getElement(),'beforeend');
+  link.addEventListener('click', onClick);
+};
 
 const renderFilmCards = (data) => {
   mainFilmCardContainer.innerHTML = '';
@@ -44,8 +60,7 @@ const renderFilmCards = (data) => {
   }
 
   for (let i = 0; i < items; i++) {
-    const filmCard = data[i];
-    renderElement(mainFilmCardContainer, new filmCardView(filmCard).getElement(), 'beforeend');
+    renderFilmCard(mainFilmCardContainer,data[i]);
   }
 };
 
@@ -56,6 +71,7 @@ const renderExtraFilmCard = (template, data) => {
     renderElement(template, new filmCardView(filmCard).getElement(), 'beforeend');
   }
 };
+
 
 renderElement (footerStatistic, new FooterView(filmCards).getElement(), 'beforeend');
 

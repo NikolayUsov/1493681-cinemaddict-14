@@ -5,6 +5,7 @@ import { createNode } from '../util.js';
 export const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
+    id,
     title,
     rating,
     dateCreate,
@@ -24,7 +25,7 @@ export const filmCardTemplate = (card) => {
   let newDescription;
   description.length > MAX_DESCRIPTION_LENGTH ? newDescription = `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : newDescription = description;
 
-  return `<article class="film-card">
+  return `<article class="film-card" data-id="${id}">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
