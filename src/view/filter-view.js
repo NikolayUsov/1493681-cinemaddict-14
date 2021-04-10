@@ -32,7 +32,7 @@ export default class Filter {
 
   getElement () {
     if (!this._elemen) {
-      return createNode (mainNavigationTemplate(this._data));
+      this._element = createNode (mainNavigationTemplate(this._data));
     }
     return this._element;
   }

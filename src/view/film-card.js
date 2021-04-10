@@ -56,9 +56,11 @@ export default class filmCard {
 
   getElement () {
     if(!this._element) {
-      return createNode(this.getTemplate());
+      this._element = createNode(this.getTemplate());
     }
+    return this._element;
   }
+
   removeElement () {
     this._element = null;
   }

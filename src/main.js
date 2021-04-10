@@ -6,10 +6,10 @@ import FilmCardContainerView from './view/film-card-container.js';
 import ButtonShowMoreView from './view/button-show-more.js';
 import filmCardView from './view/film-card';
 import FooterView from './view/footer-statistic.js';
-import { popupContainerTemplate } from './view/popup.js';
+import PopUpFilmView from './view/popup.js';
 import { filmCardsMap } from './mock/data.js';
 import { sortByRaiting, sortByComments } from './filters.js';
-import { render,renderElement } from './util.js';
+import { renderElement } from './util.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -29,24 +29,28 @@ renderElement (main, new FilterView(filmCards).getElement(), 'beforeend');
 renderElement (main, new SortView().getElement(), 'beforeend');
 renderElement (main, filmCardContainer.getElement(), 'beforeend');
 
-const mainFilmCardContainer = document.querySelector('.film-list--main');
+const mainFilmCardContainer = filmCardContainer.getElement().querySelector('.film-list--main');
 const topRaitingContainer = document.querySelector('.films-list--raiting').querySelector('.films-list__container');
+
 const topCommentedContainer = document.querySelector('.films-list--top-commented').querySelector('.films-list__container');
 
 const renderFilmCard = (container,filmData) =>{
   const filmCard = new filmCardView(filmData);
+  const popUp = new PopUpFilmView(filmData);
+
   const link = filmCard.getElement().querySelector('.film-card__comments');
 
-  const onClick = () => {
-    // eslint-disable-next-line no-console
-    console.log('link click');
+  const onClickFilmCard = () => {
+    renderElement (footer, popUp.getElement(), 'afterend');
+    popUp.getButtonClose().addEventListener('click', () => {
+      popUp .getElement().remove();
+      popUp.removeElement();
+    });
   };
 
-  // eslint-disable-next-line no-console
-  console.log(link);
-
   renderElement(container, filmCard.getElement(),'beforeend');
-  link.addEventListener('click', onClick);
+  link.addEventListener('click', onClickFilmCard);
+
 };
 
 const renderFilmCards = (data) => {
@@ -75,8 +79,6 @@ const renderExtraFilmCard = (template, data) => {
 
 renderElement (footerStatistic, new FooterView(filmCards).getElement(), 'beforeend');
 
-// Рендер попапа
-render (footer, popupContainerTemplate(filmCards[0]),'afterend');
 
 renderFilmCards(filmCards);
 

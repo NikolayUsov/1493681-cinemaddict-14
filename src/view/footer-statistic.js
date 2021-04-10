@@ -16,7 +16,7 @@ export default class Footer {
 
   getElement () {
     if (!this._element) {
-      return createNode(this.getTemplate());
+      this._element = createNode(this.getTemplate());
     }
     return this._element;
   }
