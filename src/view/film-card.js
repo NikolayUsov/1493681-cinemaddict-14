@@ -47,7 +47,7 @@ export const filmCardTemplate = (card) => {
 export default class filmCard {
   constructor (data) {
     this._data = data;
-    this.element = null;
+    this._element = null;
   }
 
   getTemplate () {
@@ -59,6 +59,30 @@ export default class filmCard {
       this._element = createNode(this.getTemplate());
     }
     return this._element;
+  }
+
+  getTitle () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__title');
+  }
+
+  getPicture () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__poster');
+  }
+
+  getComment () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__comments');
   }
 
   removeElement () {

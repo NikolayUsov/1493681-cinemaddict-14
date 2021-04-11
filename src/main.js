@@ -7,9 +7,10 @@ import ButtonShowMoreView from './view/button-show-more.js';
 import filmCardView from './view/film-card';
 import FooterView from './view/footer-statistic.js';
 import PopUpFilmView from './view/popup.js';
+import NoFilmCardsView from './view/empty-film-card.js';
 import { filmCardsMap } from './mock/data.js';
 import { sortByRaiting, sortByComments } from './filters.js';
-import { renderElement } from './util.js';
+import { renderElement, isEscEvent} from './util.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -23,6 +24,7 @@ const filmCards = Array.from(filmCardsMap.keys());
 const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
 const sortFilmCardByComments = sortByComments(filmCardsMap);
 const filmCardContainer = new FilmCardContainerView();
+const buttonShowMore = new ButtonShowMoreView();
 
 renderElement (header, new ProfileView(filmCards).getElement(), 'beforeend');
 renderElement (main, new FilterView(filmCards).getElement(), 'beforeend');
@@ -38,23 +40,47 @@ const renderFilmCard = (container,filmData) =>{
   const filmCard = new filmCardView(filmData);
   const popUp = new PopUpFilmView(filmData);
 
-  const link = filmCard.getElement().querySelector('.film-card__comments');
+  const closePopUp = () => {
+    popUp .getElement().remove();
+    popUp.removeElement();
+  };
 
-  const onClickFilmCard = () => {
+  const onEscKeyDown = (evt) => {
+    if (isEscEvent(evt)) {
+      closePopUp();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  const onButtonClose = () => {
+    closePopUp();
+    document.removeEventListener('keydown', onEscKeyDown);
+  };
+
+  const onClickOpenPopUp = (evt) => {
+    evt.preventDefault();
     renderElement (footer, popUp.getElement(), 'afterend');
-    popUp.getButtonClose().addEventListener('click', () => {
-      popUp .getElement().remove();
-      popUp.removeElement();
-    });
+
+    document.addEventListener('keydown', onEscKeyDown);
+    popUp.getButtonClose().addEventListener('click', onButtonClose);
   };
 
   renderElement(container, filmCard.getElement(),'beforeend');
-  link.addEventListener('click', onClickFilmCard);
-
+  filmCard.getComment().addEventListener('click', onClickOpenPopUp);
+  filmCard.getTitle().addEventListener('click', onClickOpenPopUp);
+  filmCard.getPicture().addEventListener('click', onClickOpenPopUp);
 };
 
 const renderFilmCards = (data) => {
   mainFilmCardContainer.innerHTML = '';
+
+  if (data.length === 0) {
+    const mainContainer = filmCardContainer.getElement();
+    mainContainer.innerHTML = '';
+    renderElement(mainContainer, new NoFilmCardsView().getElement(), 'beforeend');
+
+    return;
+  }
 
   let items;
   if (filmCards.length < startCard) {
@@ -69,6 +95,10 @@ const renderFilmCards = (data) => {
 };
 
 const renderExtraFilmCard = (template, data) => {
+  if (data.length === 0 ) {
+    return;
+  }
+
   const MAX_EXTRA_CARD =2;
   for (let i = 0; i < MAX_EXTRA_CARD; i++) {
     const filmCard = data[i];
@@ -85,8 +115,7 @@ renderFilmCards(filmCards);
 renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
 renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
 
-renderElement (mainFilmCardContainer, new ButtonShowMoreView().getElement(), 'afterend');
-const buttonShowMore = document.querySelector('.films-list__show-more');
+renderElement (mainFilmCardContainer, buttonShowMore.getElement(), 'afterend');
 
 const onButtonShowMoreClick = (evt) => {
   evt.preventDefault();
@@ -98,5 +127,5 @@ const onButtonShowMoreClick = (evt) => {
   renderFilmCards(filmCards);
 };
 
-buttonShowMore.addEventListener('click', onButtonShowMoreClick);
+buttonShowMore.getElement().addEventListener('click', onButtonShowMoreClick);
 export {filmCardsMap};
