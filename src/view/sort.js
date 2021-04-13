@@ -1,5 +1,4 @@
-import { createNode } from '../util.js';
-
+import AbstractView from './abstract.js';
 const sortTemplate = () => {
   return `<ul class="sort">
   <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
@@ -9,24 +8,9 @@ const sortTemplate = () => {
 };
 
 
-export default class Sort {
-  constructor () {
-    this._element = null;
-  }
+export default class Sort extends AbstractView {
 
   getTemplate () {
     return sortTemplate();
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
   }
 }

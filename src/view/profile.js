@@ -1,5 +1,5 @@
-import {userStatistic} from '../util.js';
-import { createNode } from '../util.js';
+import {userStatistic} from '../utils/profile-util.js';
+import AbstractView from './abstract.js';
 
 const headerProfileTemplate = (data) => {
   const userInfo = userStatistic(data);
@@ -11,25 +11,13 @@ const headerProfileTemplate = (data) => {
 };
 
 
-export default class Profile {
+export default class Profile extends AbstractView {
   constructor (data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate () {
     return headerProfileTemplate(this._data);
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
   }
 }

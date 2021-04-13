@@ -1,5 +1,5 @@
-import {userStatistic} from '../util.js';
-import { createNode } from '../util.js';
+import {userStatistic} from '../utils/profile-util.js';
+import AbstractView from './abstract.js';
 
 export const mainNavigationTemplate = (data) => {
   const userCounter =  userStatistic(data);
@@ -20,24 +20,14 @@ export const mainNavigationTemplate = (data) => {
 </nav>`;
 };
 
-export default class Filter {
+export default class Filter extends AbstractView{
   constructor (data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate () {
     return mainNavigationTemplate(this._data);
   }
 
-  getElement () {
-    if (!this._elemen) {
-      this._element = createNode (mainNavigationTemplate(this._data));
-    }
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
-  }
 }
