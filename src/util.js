@@ -9,6 +9,10 @@ export const getRandomFloat = (min, max, point) => {
   return (Math.random() * (max - min) + min).toFixed(point);
 };
 
+export const isEscEvent = (evt) => {
+  return evt.key === 'Escape' || evt.key === 'Esc';
+};
+
 Array.prototype.shuffle = function() {
   for (let i = this.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -77,4 +81,19 @@ export const userStatistic = (filmData) => {
     userStatus: getStatus(watchedCounter),
   };
 };
+
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+export const renderElement = (container, template, place) => {
+  container.insertAdjacentElement(place, template);
+};
+
+export const createNode = (template) => {
+  const container = document.createElement('div');
+  container.innerHTML = template;
+  return container.firstChild;
+};
+
 

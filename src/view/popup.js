@@ -1,4 +1,5 @@
 import {filmCardsMap} from '../mock/data.js';
+import { createNode } from '../util.js';
 
 const popupContainerTemplate = (card) => {
   const {
@@ -50,8 +51,7 @@ const popupContainerTemplate = (card) => {
       </li>`).join('')}`;
   };
 
-  return `
-  <section class="film-details">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -75,7 +75,6 @@ const popupContainerTemplate = (card) => {
               <p class="film-details__total-rating">${rating}</p>
             </div>
           </div>
-
           <table class="film-details__table">
             <tr class="film-details__row">
               <td class="film-details__term">Director</td>
@@ -170,22 +169,29 @@ const popupContainerTemplate = (card) => {
   `;
 };
 
+export default class PopUpFilmInfo {
+  constructor (data) {
+    this._data = data;
+    this._element = null;
+  }
 
-const commentTemplate = () => {
-  return `<li class="film-details__comment">
-  <span class="film-details__comment-emoji">
-    <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji-sleeping">
-  </span>
-  <div>
-    <p class="film-details__comment-text">Booooooooooring</p>
-    <p class="film-details__comment-info">
-      <span class="film-details__comment-author">John Doe</span>
-      <span class="film-details__comment-day">2 days ago</span>
-      <button class="film-details__comment-delete">Delete</button>
-    </p>
-  </div>
-</li>`;
-};
+  getTemplate () {
+    return popupContainerTemplate(this._data);
+  }
 
-export {popupContainerTemplate, commentTemplate};
+  getElement () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  getButtonClose () {
+    return this._element.querySelector('.film-details__close-btn');
+  }
+  removeElement () {
+    this._element = null;
+  }
+}
+
 

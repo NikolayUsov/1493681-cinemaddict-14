@@ -1,33 +1,11 @@
 /* eslint-disable quotes */
 import {filmCardsMap} from '../mock/data.js';
-
-export const filmListcontainerTemplate = () => {
-  return `<section class="films">
-  <section class="films-list">
-    <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-
-    <div class="films-list__container film-list--main">
-    </div>
-  </section>
-
-  <section class="films-list films-list--extra films-list--raiting">
-    <h2 class="films-list__title">Top rated</h2>
-
-    <div class="films-list__container"></div>
-  </section>
-
-  <section class="films-list films-list--extra films-list--top-commented">
-    <h2 class="films-list__title">Most commented</h2>
-
-    <div class="films-list__container"></div>
-  </section>
-  </section>`;
-};
-
+import { createNode } from '../util.js';
 
 export const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
+    id,
     title,
     rating,
     dateCreate,
@@ -47,7 +25,7 @@ export const filmCardTemplate = (card) => {
   let newDescription;
   description.length > MAX_DESCRIPTION_LENGTH ? newDescription = `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : newDescription = description;
 
-  return `<article class="film-card">
+  return `<article class="film-card" data-id="${id}">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
@@ -66,6 +44,50 @@ export const filmCardTemplate = (card) => {
 </article>`;
 };
 
-export const showMoreButtonTemplate = () => {
-  return `<button class="films-list__show-more">Show more</button>`;
-};
+export default class filmCard {
+  constructor (data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return filmCardTemplate(this._data);
+  }
+
+  getElement () {
+    if(!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  getTitle () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__title');
+  }
+
+  getPicture () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__poster');
+  }
+
+  getComment () {
+    if (!this._element) {
+      this._element = createNode(this.getTemplate());
+    }
+
+    return this._element.querySelector('.film-card__comments');
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}
+
+
