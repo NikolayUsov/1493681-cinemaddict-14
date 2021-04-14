@@ -116,7 +116,6 @@ renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
 renderElement (mainFilmCardContainer, buttonShowMore, 'afterend');
 
 const onButtonShowMoreClick = () => {
-  console.log('this:',this);
   startCard += CARD_STEP;
   if (startCard >= filmCards.length) {
     startCard = filmCards.length;
