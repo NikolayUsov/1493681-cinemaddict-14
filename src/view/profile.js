@@ -1,8 +1,8 @@
-import {userStatistic} from '../utils/profile-util.js';
+import {getUserStatistic} from '../utils/profile-util.js';
 import AbstractView from './abstract.js';
 
 const headerProfileTemplate = (data) => {
-  const userInfo = userStatistic(data);
+  const userInfo = getUserStatistic(data);
   const { userStatus } = userInfo;
   return `<section class="header__profile profile">
   <p class="profile__rating">${userStatus}</p>

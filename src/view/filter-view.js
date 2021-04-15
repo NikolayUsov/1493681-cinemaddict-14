@@ -1,8 +1,8 @@
-import {userStatistic} from '../utils/profile-util.js';
+import {getUserStatistic} from '../utils/profile-util.js';
 import AbstractView from './abstract.js';
 
 export const mainNavigationTemplate = (data) => {
-  const userCounter =  userStatistic(data);
+  const userCounter =  getUserStatistic(data);
   const {
     favorits,
     watchedFilms,
