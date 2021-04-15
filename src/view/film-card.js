@@ -1,8 +1,8 @@
 /* eslint-disable quotes */
 import {filmCardsMap} from '../mock/data.js';
-import { createNode } from '../util.js';
+import AbstractView from './abstract.js';
 
-export const filmCardTemplate = (card) => {
+const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
     id,
@@ -44,50 +44,41 @@ export const filmCardTemplate = (card) => {
 </article>`;
 };
 
-export default class filmCard {
+export default class filmCard extends AbstractView {
   constructor (data) {
+    super();
     this._data = data;
-    this._element = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate () {
     return filmCardTemplate(this._data);
   }
 
-  getElement () {
-    if(!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-    return this._element;
-  }
-
   getTitle () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
+    this._initElement();
     return this._element.querySelector('.film-card__title');
   }
 
   getPicture () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
+    this._initElement();
     return this._element.querySelector('.film-card__poster');
   }
 
   getComment () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
+    this._initElement();
     return this._element.querySelector('.film-card__comments');
   }
 
-  removeElement () {
-    this._element = null;
+  _clickHandler (evt) {
+    evt.preventDefault();
+    this._calback.click();
+  }
+
+  setFilmCardClick (calback) {
+    this._calback.click = calback;
+    this.getTitle().addEventListener('click', this._clickHandler);
+    this.getComment().addEventListener('click', this._clickHandler);
+    this.getPicture().addEventListener('click', this._clickHandler);
   }
 }
-
-

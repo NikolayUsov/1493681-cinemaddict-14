@@ -1,5 +1,5 @@
 import {filmCardsMap} from '../mock/data.js';
-import { createNode } from '../util.js';
+import Abstract from './abstract.js';
 
 const popupContainerTemplate = (card) => {
   const {
@@ -169,28 +169,29 @@ const popupContainerTemplate = (card) => {
   `;
 };
 
-export default class PopUpFilmInfo {
+export default class PopUpFilmInfo extends Abstract {
   constructor (data) {
+    super();
     this._data = data;
-    this._element = null;
+    this._handlerButtonClose = this._handlerButtonClose.bind(this);
   }
 
   getTemplate () {
     return popupContainerTemplate(this._data);
   }
 
-  getElement () {
-    if (!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-    return this._element;
-  }
-
   getButtonClose () {
     return this._element.querySelector('.film-details__close-btn');
   }
-  removeElement () {
-    this._element = null;
+
+  _handlerButtonClose (evt) {
+    evt.preventDefault();
+    this._calback.clickCloseButton();
+  }
+
+  setClickCloseButton (calback) {
+    this._calback.clickCloseButton = calback;
+    this.getButtonClose().addEventListener('click', this._handlerButtonClose);
   }
 }
 

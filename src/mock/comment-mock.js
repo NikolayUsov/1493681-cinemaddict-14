@@ -1,6 +1,6 @@
 
 import {createId, getRandomText} from './film-mock.js';
-import { getRandomInteger } from '../util.js';
+import { getRandomInteger } from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const commentId = createId();

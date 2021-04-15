@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { getRandomInteger, getRandomFloat } from '../util.js';
+import { getRandomInteger, getRandomFloat } from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const POSTERS = [

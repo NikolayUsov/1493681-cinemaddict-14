@@ -1,4 +1,4 @@
-import { createNode } from '../util.js';
+import AbstractView from './abstract.js';
 
 const getEmptyFilmCardTemplate = () => {
   return `<section class="films-list">
@@ -6,24 +6,9 @@ const getEmptyFilmCardTemplate = () => {
 </section>`;
 };
 
-export default class EmptyFilmCard {
-  constructor () {
-    this._element = null;
-  }
+export default class EmptyFilmCard extends AbstractView {
 
   getTemplate () {
     return getEmptyFilmCardTemplate();
-  }
-
-  getElement () {
-    if(!this._element) {
-      this._element = createNode(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
   }
 }

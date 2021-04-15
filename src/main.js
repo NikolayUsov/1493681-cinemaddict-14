@@ -10,7 +10,8 @@ import PopUpFilmView from './view/popup.js';
 import NoFilmCardsView from './view/empty-film-card.js';
 import { filmCardsMap } from './mock/data.js';
 import { sortByRaiting, sortByComments } from './filters.js';
-import { renderElement, isEscEvent} from './util.js';
+import { renderElement } from './utils/render.js';
+import { isEscEvent } from './utils/common.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -26,14 +27,13 @@ const sortFilmCardByComments = sortByComments(filmCardsMap);
 const filmCardContainer = new FilmCardContainerView();
 const buttonShowMore = new ButtonShowMoreView();
 
-renderElement (header, new ProfileView(filmCards).getElement(), 'beforeend');
-renderElement (main, new FilterView(filmCards).getElement(), 'beforeend');
-renderElement (main, new SortView().getElement(), 'beforeend');
-renderElement (main, filmCardContainer.getElement(), 'beforeend');
+renderElement (header, new ProfileView(filmCards), 'beforeend');
+renderElement (main, new FilterView(filmCards), 'beforeend');
+renderElement (main, new SortView(), 'beforeend');
+renderElement (main, filmCardContainer, 'beforeend');
 
 const mainFilmCardContainer = filmCardContainer.getElement().querySelector('.film-list--main');
 const topRaitingContainer = document.querySelector('.films-list--raiting').querySelector('.films-list__container');
-
 const topCommentedContainer = document.querySelector('.films-list--top-commented').querySelector('.films-list__container');
 
 const renderFilmCard = (container,filmData) =>{
@@ -41,7 +41,7 @@ const renderFilmCard = (container,filmData) =>{
   const popUp = new PopUpFilmView(filmData);
 
   const closePopUp = () => {
-    popUp .getElement().remove();
+    popUp.getElement().remove();
     popUp.removeElement();
   };
 
@@ -57,18 +57,16 @@ const renderFilmCard = (container,filmData) =>{
     document.removeEventListener('keydown', onEscKeyDown);
   };
 
-  const onClickOpenPopUp = (evt) => {
-    evt.preventDefault();
-    renderElement (footer, popUp.getElement(), 'afterend');
+  const onClickOpenPopUp = () => {
+    renderElement (footer, popUp, 'afterend');
 
     document.addEventListener('keydown', onEscKeyDown);
-    popUp.getButtonClose().addEventListener('click', onButtonClose);
+    popUp.setClickCloseButton( onButtonClose );
   };
 
-  renderElement(container, filmCard.getElement(),'beforeend');
-  filmCard.getComment().addEventListener('click', onClickOpenPopUp);
-  filmCard.getTitle().addEventListener('click', onClickOpenPopUp);
-  filmCard.getPicture().addEventListener('click', onClickOpenPopUp);
+  renderElement(container, filmCard, 'beforeend');
+
+  filmCard.setFilmCardClick( onClickOpenPopUp );
 };
 
 const renderFilmCards = (data) => {
@@ -77,7 +75,7 @@ const renderFilmCards = (data) => {
   if (data.length === 0) {
     const mainContainer = filmCardContainer.getElement();
     mainContainer.innerHTML = '';
-    renderElement(mainContainer, new NoFilmCardsView().getElement(), 'beforeend');
+    renderElement(mainContainer, new NoFilmCardsView(), 'beforeend');
 
     return;
   }
@@ -102,12 +100,12 @@ const renderExtraFilmCard = (template, data) => {
   const MAX_EXTRA_CARD =2;
   for (let i = 0; i < MAX_EXTRA_CARD; i++) {
     const filmCard = data[i];
-    renderElement(template, new filmCardView(filmCard).getElement(), 'beforeend');
+    renderElement(template, new filmCardView(filmCard), 'beforeend');
   }
 };
 
 
-renderElement (footerStatistic, new FooterView(filmCards).getElement(), 'beforeend');
+renderElement (footerStatistic, new FooterView(filmCards), 'beforeend');
 
 
 renderFilmCards(filmCards);
@@ -115,17 +113,16 @@ renderFilmCards(filmCards);
 renderExtraFilmCard(topRaitingContainer, sortFilmCardByRaiting);
 renderExtraFilmCard(topCommentedContainer, sortFilmCardByComments);
 
-renderElement (mainFilmCardContainer, buttonShowMore.getElement(), 'afterend');
+renderElement (mainFilmCardContainer, buttonShowMore, 'afterend');
 
-const onButtonShowMoreClick = (evt) => {
-  evt.preventDefault();
+const onButtonShowMoreClick = () => {
   startCard += CARD_STEP;
   if (startCard >= filmCards.length) {
     startCard = filmCards.length;
-    evt.target.remove();
+    buttonShowMore.getElement().remove();
   }
   renderFilmCards(filmCards);
 };
 
-buttonShowMore.getElement().addEventListener('click', onButtonShowMoreClick);
+buttonShowMore.setClick(onButtonShowMoreClick);
 export {filmCardsMap};
