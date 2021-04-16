@@ -1,7 +1,7 @@
 import { generateFilmInfo } from './film-mock.js';
 import {generateCommentsListData} from './comment-mock.js';
 
-const MAX_FILM_CARD = 20;
+const MAX_FILM_CARD = 25;
 
 const createFilmCardMap = (items) => {
   const filmCardMap = new Map ();
