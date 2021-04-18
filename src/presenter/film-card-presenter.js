@@ -3,18 +3,20 @@ import PopUpFilmView from '../view/popup.js';
 import { renderElement } from '../utils/render.js';
 import { isEscEvent } from '../utils/common.js';
 import { remove } from '../utils/render.js';
-
+import { deepClone } from '../utils/common.js';
 const footer = document.querySelector('.footer');
 
 export default class FilmCardPresenter {
-  constructor (container) {
+  constructor (container, handlerChangeData) {
     this._container = container;
     this._filmCardComponent = null;
     this._popUpComponent = null;
+    this._handlerChangeData = handlerChangeData;
 
     this._handleOpenPopUp = this._handleOpenPopUp.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handlePopUpButtonClose =this._handlePopUpButtonClose.bind(this);
+    this._handlePopUpButtonClose = this._handlePopUpButtonClose.bind(this);
+    this._handlerAddToWatchList = this._handlerAddToWatchList.bind(this);
   }
 
   init (filmCardData) {
@@ -22,6 +24,8 @@ export default class FilmCardPresenter {
     this._popUpComponent = new PopUpFilmView(filmCardData);
     renderElement(this._container, this._filmCardComponent, 'beforeend');
 
+    this._movieCardData = filmCardData;
+    this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick( this._handleOpenPopUp );
   }
 
@@ -57,5 +61,10 @@ export default class FilmCardPresenter {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  _handlerAddToWatchList () {
+    this._updateFilmCard = deepClone(this._movieCardData);
+    this._updateFilmCard.userInfo.isWatchList = !this._updateFilmCard.userInfo.isWatchList;
+    this._handlerChangeData(this._updateFilmCard);
+  }
 }
 

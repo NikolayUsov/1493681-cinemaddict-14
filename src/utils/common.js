@@ -25,3 +25,30 @@ Array.prototype.shuffle = function() {
 Array.prototype.randomElement = function() {
   return this[getRandomInteger(0, this.length-1)];
 };
+
+
+export const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export const deepClone = (obj) => {
+  const cloneObject = {};
+  for (const i in obj) {
+    if (obj[i] instanceof Object) {
+      cloneObject[i] = deepClone(obj[i]);
+      continue;
+    }
+    cloneObject[i] = obj[i];
+  }
+  return cloneObject;
+};

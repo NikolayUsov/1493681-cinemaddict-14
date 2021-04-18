@@ -1,5 +1,6 @@
 import FilmCardContainer from '../view/film-card-container';
 import { renderElement } from '../utils/render.js';
+import { updateItem } from '../utils/common.js';
 import EmptyFilmCard from '../view/empty-film-card';
 import FilmCardPresenter from './film-card-presenter.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
@@ -20,17 +21,18 @@ export default class FilmCardList {
     this._topCommentedContainer = this._filmCardListWrapper.getElement().querySelector('.films-list--top-commented');
     this._topRaitingContainer = this._filmCardListWrapper.getElement().querySelector('.films-list--raiting');
     this._handleButtonShowMore =  this._handleButtonShowMore.bind(this);
+    this._handlerChangeData = this._handlerChangeData.bind(this);
     this._mainFilmCardPresenters = {};
   }
 
   init(filmCardsMap) {
     this._filmCardsMap = new Map([...filmCardsMap]);
     this._filmCardData = Array.from(this._filmCardsMap.keys());
-
     renderElement (this._filmCardListContainer,  this._filmCardListWrapper, 'beforeend');
     this._renderFilmCards(this._filmCardData);
     this._renderButtonShowMore();
     this._renderExtraCard();
+
   }
 
   _sortByRaiting(map) {
@@ -42,7 +44,7 @@ export default class FilmCardList {
   }
 
   _renderFilmCard (container,filmCardData) {
-    this._filmCardPresenter = new FilmCardPresenter(container);
+    this._filmCardPresenter = new FilmCardPresenter(container, this._handlerChangeData);
     this._filmCardPresenter.init(filmCardData);
   }
 
@@ -75,8 +77,16 @@ export default class FilmCardList {
   }
 
   _resetFilmCardList () {
-    this.__clearFilmCard();
+    this._clearFilmCard();
     this._renderedCard = CARD_STEP;
+  }
+
+  _handlerChangeData (updateFilmCard) {
+    console.log(this._filmCardData);
+    this._filmCardData = updateItem(this._filmCardData, updateFilmCard);
+    console.log('update:',this._filmCardData);
+    this._clearFilmCard();
+    this._renderFilmCards(this._filmCardData);
   }
 
   _handleButtonShowMore () {
@@ -110,6 +120,7 @@ export default class FilmCardList {
         this._renderFilmCard(this._topCommentedContainer.querySelector('.films-list__container'), filmCard);
       });
   }
+
   _renderButtonShowMore () {
     if (this._filmCardData.length < startCard) {
       return;
