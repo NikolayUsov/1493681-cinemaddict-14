@@ -13,6 +13,7 @@ const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
 const filmCards = Array.from(filmCardsMap.keys());
 
+
 //const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
 //const sortFilmCardByComments = sortByComments(filmCardsMap);
 renderElement (header, new ProfileView(filmCards), 'beforeend');

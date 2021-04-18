@@ -82,9 +82,7 @@ export default class FilmCardList {
   }
 
   _handlerChangeData (updateFilmCard) {
-    console.log(this._filmCardData);
     this._filmCardData = updateItem(this._filmCardData, updateFilmCard);
-    console.log('update:',this._filmCardData);
     this._clearFilmCard();
     this._renderFilmCards(this._filmCardData);
   }
