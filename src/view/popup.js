@@ -1,8 +1,10 @@
 import {filmCardsMap} from '../mock/data.js';
 import Abstract from './abstract.js';
+import { getCommentsByFilmId } from '../utils/filmCardMap.js';
 
 const popupContainerTemplate = (card) => {
   const {
+    id,
     title,
     rating,
     dateFormatToPopUP,
@@ -33,7 +35,7 @@ const popupContainerTemplate = (card) => {
   const isFavoriteChecked = isFavorite ? 'checked' : '';
   const isWatchedChecked = isWatched ? 'checked' : '';
 
-  const comments = filmCardsMap.get(card);
+  const comments = getCommentsByFilmId(id, filmCardsMap);
 
   const createCommentsList = () => {
     return `${comments.map((elem) => `<li class="film-details__comment">

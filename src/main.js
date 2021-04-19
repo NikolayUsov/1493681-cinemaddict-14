@@ -23,5 +23,4 @@ const presenter = new FilmCardListPresenter(main);
 presenter.init(filmCardsMap);
 renderElement (footerStatistic, new FooterView(filmCards), 'beforeend');
 
-
 export {filmCardsMap};

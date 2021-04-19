@@ -43,7 +43,7 @@ export default class FilmCardList {
     return sortByComments(map);
   }
 
-  _renderFilmCard (container,filmCardData) {
+  _renderFilmCard (container, filmCardData) {
     this._filmCardPresenter = new FilmCardPresenter(container, this._handlerChangeData);
     this._filmCardPresenter.init(filmCardData);
   }

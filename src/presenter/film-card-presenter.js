@@ -17,6 +17,8 @@ export default class FilmCardPresenter {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handlePopUpButtonClose = this._handlePopUpButtonClose.bind(this);
     this._handlerAddToWatchList = this._handlerAddToWatchList.bind(this);
+    this._handlerAddToFavorits = this._handlerAddToFavorits.bind(this);
+    this._handlerAddToWatched = this._handlerAddToWatched.bind(this);
   }
 
   init (filmCardData) {
@@ -27,6 +29,8 @@ export default class FilmCardPresenter {
     this._movieCardData = filmCardData;
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick( this._handleOpenPopUp );
+    this._filmCardComponent.setFilmCardFavoritsClick( this._handlerAddToFavorits);
+    this._filmCardComponent.setFilmCardWatchedClick( this._handlerAddToWatched);
   }
 
   destroy () {
@@ -61,10 +65,22 @@ export default class FilmCardPresenter {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
-  _handlerAddToWatchList () {
+  _updateFilmCardUserInfo (updateKey) {
     this._updateFilmCard = deepClone(this._movieCardData);
-    this._updateFilmCard.userInfo.isWatchList = !this._updateFilmCard.userInfo.isWatchList;
+    this._updateFilmCard.userInfo[updateKey] = !this._updateFilmCard.userInfo[updateKey];
     this._handlerChangeData(this._updateFilmCard);
+  }
+
+  _handlerAddToWatchList () {
+    this._updateFilmCardUserInfo('isWatchList');
+  }
+
+  _handlerAddToFavorits () {
+    this._updateFilmCardUserInfo('isFavorite');
+  }
+
+  _handlerAddToWatched () {
+    this._updateFilmCardUserInfo('isWatched');
   }
 }
 
