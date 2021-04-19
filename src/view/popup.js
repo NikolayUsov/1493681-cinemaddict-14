@@ -176,6 +176,7 @@ export default class PopUpFilmInfo extends Abstract {
     super();
     this._data = data;
     this._handlerButtonClose = this._handlerButtonClose.bind(this);
+    this._handlerControlButton = this._handlerControlButton.bind(this);
   }
 
   getTemplate () {
@@ -194,6 +195,16 @@ export default class PopUpFilmInfo extends Abstract {
   setClickCloseButton (calback) {
     this._calback.clickCloseButton = calback;
     this.getButtonClose().addEventListener('click', this._handlerButtonClose);
+  }
+
+  _handlerControlButton(evt) {
+    evt.preventDefault();
+    this._calback.inputControlPopUp(evt.target.id);
+  }
+
+  setPopUpControlChange (calback) {
+    this._calback.inputControlPopUp = calback;
+    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
   }
 }
 

@@ -22,6 +22,7 @@ export default class FilmCardList {
     this._topRaitingContainer = this._filmCardListWrapper.getElement().querySelector('.films-list--raiting');
     this._handleButtonShowMore =  this._handleButtonShowMore.bind(this);
     this._handlerChangeData = this._handlerChangeData.bind(this);
+    this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._mainFilmCardPresenters = {};
   }
 
@@ -44,7 +45,7 @@ export default class FilmCardList {
   }
 
   _renderFilmCard (container, filmCardData) {
-    this._filmCardPresenter = new FilmCardPresenter(container, this._handlerChangeData);
+    this._filmCardPresenter = new FilmCardPresenter(container, this._handlerChangeData, this._handlerChangePopUp);
     this._filmCardPresenter.init(filmCardData);
   }
 
@@ -81,10 +82,15 @@ export default class FilmCardList {
     this._renderedCard = CARD_STEP;
   }
 
-  _handlerChangeData (updateFilmCard) {
+  _handlerChangeData (updateFilmCard, popUpStatus) {
     this._filmCardData = updateItem(this._filmCardData, updateFilmCard);
-    this._clearFilmCard();
-    this._renderFilmCards(this._filmCardData);
+    this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+  }
+
+  _handlerChangePopUp () {
+    Object.values(this._mainFilmCardPresenters)
+      .forEach((filmCard) => {
+        filmCard.resetFilmView();});
   }
 
   _handleButtonShowMore () {
