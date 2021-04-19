@@ -111,7 +111,6 @@ export default class FilmCardPresenter {
   }
 
   _handlerChangePopUpControlButton (buttonType) {
-    console.log(`evt.id:${buttonType} мапа${PopUpControlType}`);
     if (buttonType === PopUpControlType.WATCHLIST) {
       this._updateFilmCardUserInfo('isWatchList');
     }
