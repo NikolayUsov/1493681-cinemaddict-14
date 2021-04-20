@@ -108,6 +108,7 @@ const generateFilmInfo = () => {
     screenWriters: WRITERS.shuffle().slice(0, getRandomInteger(0, WRITERS.length - 1)),
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
     rating: getRandomFloat(0, 10, 1),
+    dateCreate: dateCreate,
     dateCreateFormatToFilmCard : dateCreate.format('YYYY'),
     dateFormatToPopUP: dateCreate.format('D MMMM YYYY'),
     runtime: getRandomInteger(60, 250),

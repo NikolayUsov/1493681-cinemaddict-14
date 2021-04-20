@@ -1,6 +1,6 @@
 import {filmCardsMap} from '../mock/data.js';
 import Abstract from './abstract.js';
-import { getCommentsByFilmId } from '../utils/filmCardMap.js';
+import { getCommentsByFilmId } from '../utils/film-card-map.js';
 
 const popupContainerTemplate = (card) => {
   const {

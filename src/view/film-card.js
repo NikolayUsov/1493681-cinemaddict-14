@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 import {filmCardsMap} from '../mock/data.js';
 import AbstractView from './abstract.js';
-import { getCommentsByFilmId } from '../utils/filmCardMap.js';
+import { getCommentsByFilmId } from '../utils/film-card-map.js';
 const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
