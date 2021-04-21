@@ -23,7 +23,6 @@ export default class Sort extends AbstractView {
     if (evt.target.tagName !== 'A'){
       return;
     }
-    console.log(this._calback);
     evt.preventDefault();
     this._calback.sortClick(evt.target.dataset.sort);
   }
