@@ -29,6 +29,8 @@ export default class FilmCardList {
     this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
     this._mainFilmCardPresenters = {};
+    this._topRaitingFilmCardPresenter = {};
+    this._topCommentedFilmCardPresenter = {};
     this._sortMode = SortType.DEFAULT;
   }
 
@@ -116,11 +118,26 @@ export default class FilmCardList {
 
   _handlerChangeData (updateFilmCard, popUpStatus) {
     this._filmCardData = updateItem(this._filmCardData, updateFilmCard);
-    this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+
+    if (updateFilmCard.id in this._mainFilmCardPresenters) {
+      this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+    }
+
+    if (updateFilmCard.id in this._topRaitingFilmCardPresenter) {
+      this._topRaitingFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+    }
+
+    if (updateFilmCard.id in this._topCommentedFilmCardPresenter) {
+      this._topCommentedFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+    }
   }
 
   _handlerChangePopUp () {
-    Object.values(this._mainFilmCardPresenters)
+    [
+      ... Object.values(this._mainFilmCardPresenters),
+      ... Object.values(this._topCommentedFilmCardPresenter),
+      ... Object.values(this._topRaitingFilmCardPresenter),
+    ]
       .forEach((filmCard) => {
         filmCard.resetFilmView();});
   }
@@ -148,12 +165,14 @@ export default class FilmCardList {
       .slice(0, MAX_EXTRA_CARD)
       .forEach((filmCard) => {
         this._renderFilmCard(this._topRaitingContainer.querySelector('.films-list__container'), filmCard);
+        this._topRaitingFilmCardPresenter[filmCard.id] = this._filmCardPresenter;
       });
 
     sortedByComments
       .slice(0, MAX_EXTRA_CARD)
       .forEach((filmCard) => {
         this._renderFilmCard(this._topCommentedContainer.querySelector('.films-list__container'), filmCard);
+        this._topCommentedFilmCardPresenter[filmCard.id] = this._filmCardPresenter;
       });
   }
 
