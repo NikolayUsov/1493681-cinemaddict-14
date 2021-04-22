@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Nikolay Usov](https://up.htmlacademy.ru/ecmascript/14/user/1493681).
-* Наставник: [Иван Шалагин](https://htmlacademy.ru/profile/id386947).
+* Наставник: [Евгений Алипкин](https://htmlacademy.ru/profile/ealipkin).
 
 ---
 

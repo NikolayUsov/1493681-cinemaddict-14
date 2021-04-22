@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 import {filmCardsMap} from '../mock/data.js';
 import AbstractView from './abstract.js';
 import { getCommentsByFilmId } from '../utils/film-card-map.js';
@@ -8,7 +7,7 @@ const filmCardTemplate = (card) => {
     id,
     title,
     rating,
-    dateCreateFormatToFilmCard,
+    dateCreate,
     genres,
     poster,
     description,
@@ -23,10 +22,6 @@ const filmCardTemplate = (card) => {
 
   const comments = getCommentsByFilmId(id, filmCardsMap);
 
-  /*   console.log(filmCardsMap, ': Мапа');
-  console.log(comments,'комментарии');
-  console.log(card ,'Карточка'); */
-
   let newDescription;
   description.length > MAX_DESCRIPTION_LENGTH ? newDescription = `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : newDescription = description;
 
@@ -34,7 +29,7 @@ const filmCardTemplate = (card) => {
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">${dateCreateFormatToFilmCard}</span>
+    <span class="film-card__year">${dateCreate.format('YYYY')}</span>
     <span class="film-card__duration">${runtimeMessage}</span>
     <span class="film-card__genre">${genres.length > 0 ? genres.randomElement(): ''}</span>
   </p>

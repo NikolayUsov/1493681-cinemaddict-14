@@ -39,7 +39,7 @@ export default class FilmCardPresenter {
     const prevPopUpComponent = this._popUpComponent;
     this._filmCardComponent = new FilmCardView(filmCardData);
     this._popUpComponent = new PopUpFilmView(filmCardData);
-    this._movieCardData = filmCardData;
+    this._filmCardData = filmCardData;
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick( this._handleOpenPopUp );
     this._filmCardComponent.setFilmCardFavoritsClick( this._handlerAddToFavorits);
@@ -83,6 +83,7 @@ export default class FilmCardPresenter {
   _closePopUp () {
     this._popUpComponent.getElement().remove();
     this._popUpComponent.removeElement();
+    this._popUpStatus = PopUpStatus.CLOSE;
   }
 
   _openPopUp () {
@@ -125,7 +126,7 @@ export default class FilmCardPresenter {
   }
 
   _updateFilmCardUserInfo (updateKey) {
-    this._updateFilmCard = deepClone(this._movieCardData);
+    this._updateFilmCard = deepClone(this._filmCardData);
     this._updateFilmCard.userInfo[updateKey] = !this._updateFilmCard.userInfo[updateKey];
     this._handlerChangeData(this._updateFilmCard, this._popUpStatus);
   }

@@ -28,4 +28,16 @@ export default class FilmCardContainer extends AbstractView {
   getTemplate () {
     return filmListcontainerTemplate();
   }
+
+  getMainContainer () {
+    return this.getElement().querySelector('.film-list--main');
+  }
+
+  getTopRatingContainer () {
+    return this.getElement().querySelector('.films-list--raiting');
+  }
+
+  getTopCommentedContainer () {
+    return this.getElement().querySelector('.films-list--top-commented');
+  }
 }

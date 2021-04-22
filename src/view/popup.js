@@ -7,7 +7,7 @@ const popupContainerTemplate = (card) => {
     id,
     title,
     rating,
-    dateFormatToPopUP,
+    dateCreate,
     director,
     genres,
     poster,
@@ -92,7 +92,7 @@ const popupContainerTemplate = (card) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${dateFormatToPopUP}</td>
+              <td class="film-details__cell">${dateCreate.format('D MMMM YYYY')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

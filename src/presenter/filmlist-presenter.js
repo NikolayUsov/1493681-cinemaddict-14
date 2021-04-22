@@ -21,13 +21,13 @@ export default class FilmCardList {
     this._filmCardListWrapper = new FilmCardContainer();
     this._sortComponent = new SortView();
     this._renderedCard = startCard;
-    this._mainContainer = this._filmCardListWrapper.getElement().querySelector('.film-list--main');
-    this._topCommentedContainer = this._filmCardListWrapper.getElement().querySelector('.films-list--top-commented');
-    this._topRaitingContainer = this._filmCardListWrapper.getElement().querySelector('.films-list--raiting');
-    this._handleButtonShowMore =  this._handleButtonShowMore.bind(this);
+    this._mainContainer = this._filmCardListWrapper.getMainContainer();
+    this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
+    this._topRaitingContainer = this._filmCardListWrapper.getTopRatingContainer();
     this._handlerChangeData = this._handlerChangeData.bind(this);
     this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
+    this._handleButtonShowMore = this._handleButtonShowMore.bind(this);
     this._mainFilmCardPresenters = {};
     this._sortMode = SortType.DEFAULT;
   }

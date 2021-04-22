@@ -109,8 +109,6 @@ const generateFilmInfo = () => {
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
     rating: getRandomFloat(0, 10, 1),
     dateCreate: dateCreate,
-    dateCreateFormatToFilmCard : dateCreate.format('YYYY'),
-    dateFormatToPopUP: dateCreate.format('D MMMM YYYY'),
     runtime: getRandomInteger(60, 250),
     get runtimeMessage () {
       const hour = Math.trunc(this.runtime/60);
