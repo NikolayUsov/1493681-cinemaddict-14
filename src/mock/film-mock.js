@@ -97,7 +97,7 @@ const generateFilmInfo = () => {
   const pathToPoster = '/images/posters/';
   const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
-
+  const dateCreate = getDateCreate();
   return {
     id:filmId(),
     poster: `${pathToPoster}${poster}`,
@@ -108,7 +108,7 @@ const generateFilmInfo = () => {
     screenWriters: WRITERS.shuffle().slice(0, getRandomInteger(0, WRITERS.length - 1)),
     actors: ACTORS.shuffle().slice(0, getRandomInteger(0, ACTORS.length - 1)),
     rating: getRandomFloat(0, 10, 1),
-    dateCreate : getDateCreate(),
+    dateCreate: dateCreate,
     runtime: getRandomInteger(60, 250),
     get runtimeMessage () {
       const hour = Math.trunc(this.runtime/60);

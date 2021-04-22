@@ -1,8 +1,10 @@
 import {filmCardsMap} from '../mock/data.js';
 import Abstract from './abstract.js';
+import { getCommentsByFilmId } from '../utils/film-card-map.js';
 
 const popupContainerTemplate = (card) => {
   const {
+    id,
     title,
     rating,
     dateCreate,
@@ -33,7 +35,7 @@ const popupContainerTemplate = (card) => {
   const isFavoriteChecked = isFavorite ? 'checked' : '';
   const isWatchedChecked = isWatched ? 'checked' : '';
 
-  const comments = filmCardsMap.get(card);
+  const comments = getCommentsByFilmId(id, filmCardsMap);
 
   const createCommentsList = () => {
     return `${comments.map((elem) => `<li class="film-details__comment">
@@ -174,6 +176,7 @@ export default class PopUpFilmInfo extends Abstract {
     super();
     this._data = data;
     this._handlerButtonClose = this._handlerButtonClose.bind(this);
+    this._handlerControlButton = this._handlerControlButton.bind(this);
   }
 
   getTemplate () {
@@ -192,6 +195,16 @@ export default class PopUpFilmInfo extends Abstract {
   setClickCloseButton (calback) {
     this._calback.clickCloseButton = calback;
     this.getButtonClose().addEventListener('click', this._handlerButtonClose);
+  }
+
+  _handlerControlButton(evt) {
+    evt.preventDefault();
+    this._calback.inputControlPopUp(evt.target.id);
+  }
+
+  setPopUpControlChange (calback) {
+    this._calback.inputControlPopUp = calback;
+    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
   }
 }
 
