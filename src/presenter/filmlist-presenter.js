@@ -37,7 +37,6 @@ export default class FilmCardList {
   init(filmCardsMap) {
     this._filmCardsMap = new Map([...filmCardsMap]);
     this._filmCardData = Array.from(this._filmCardsMap.keys());
-
     this._defaultFilmCardData = this._filmCardData.slice();
     this._renderSort();
     renderElement (this._filmCardListContainer,  this._filmCardListWrapper, 'beforeend');

@@ -19,6 +19,7 @@ const popupContainerTemplate = (card) => {
     originalTitle,
     runtimeMessage,
     comments,
+    currentEmoji,
   } = card;
 
   const {isWatchList,
@@ -134,7 +135,9 @@ const popupContainerTemplate = (card) => {
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">
+          ${currentEmoji ? `<img src="images/emoji/${currentEmoji}.png" width="55" height="55" alt="emoji-smile">`: ''}
+          </div>
 
           <label class="film-details__comment-label">
             <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -172,9 +175,12 @@ const popupContainerTemplate = (card) => {
 export default class PopUpFilmInfo extends Abstract {
   constructor (data) {
     super();
-    this._data = data;
+    this._data = PopUpFilmInfo.parseFilmCardToState(data);
     this._handlerButtonClose = this._handlerButtonClose.bind(this);
     this._handlerControlButton = this._handlerControlButton.bind(this);
+    this._handlerEmojiChange = this._handlerEmojiChange.bind(this);
+
+    this.getEmojiControls().addEventListener('change', this._handlerEmojiChange);
   }
 
   getTemplate () {
@@ -183,6 +189,10 @@ export default class PopUpFilmInfo extends Abstract {
 
   getButtonClose () {
     return this._element.querySelector('.film-details__close-btn');
+  }
+
+  getEmojiControls () {
+    return this.getElement().querySelector('.film-details__emoji-list');
   }
 
   _handlerButtonClose (evt) {
@@ -204,6 +214,34 @@ export default class PopUpFilmInfo extends Abstract {
     this._calback.inputControlPopUp = calback;
     this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
   }
+
+  _handlerEmojiChange (evt) {
+    evt.preventDefault();
+    this.updateData({currentEmoji: evt.target.value});
+  }
+
+  updateData (update) {
+    this._data =  Object.assign(
+      {},
+      this._data,
+      update,
+    );
+    this.updateElement();
+  }
+
+  updateElement () {
+    const prevElement =  this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+    const newElement = this.getElement();
+    parent.replaceChild(newElement, prevElement);
+  }
+
+  static parseFilmCardToState (filmCard) {
+    return Object.assign (
+      {},
+      filmCard,
+      {currentEmoji: 'currentEmoji' in filmCard},
+    );
+  }
 }
-
-
