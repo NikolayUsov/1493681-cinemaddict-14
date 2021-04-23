@@ -12,11 +12,10 @@ const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
 const filmCards = Array.from(filmCardsMap.keys());
 
-//const sortFilmCardByRaiting = sortByRaiting(filmCardsMap);
-//const sortFilmCardByComments = sortByComments(filmCardsMap);
+
 renderElement (header, new ProfileView(filmCards), 'beforeend');
 renderElement (main, new FilterView(filmCards), 'beforeend');
-//renderElement (main, new SortView(),'beforeend');
+
 const presenter = new FilmCardListPresenter(main);
 presenter.init(filmCardsMap);
 renderElement (footerStatistic, new FooterView(filmCards), 'beforeend');

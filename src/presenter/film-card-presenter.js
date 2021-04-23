@@ -4,8 +4,8 @@ import { renderElement } from '../utils/render.js';
 import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
-const footer = document.querySelector('.footer');
 
+const footer = document.querySelector('.footer');
 const PopUpStatus = {
   OPEN: 'open',
   CLOSE: 'close',
@@ -34,12 +34,14 @@ export default class FilmCardPresenter {
   }
 
   init (filmCardData, popupStatus = PopUpStatus.CLOSE) {
+    this._filmCardData = filmCardData;
     this._popUpStatus = popupStatus;
     const prevFilmCardComponent = this._filmCardComponent;
     const prevPopUpComponent = this._popUpComponent;
+
     this._filmCardComponent = new FilmCardView(filmCardData);
-    this._popUpComponent = new PopUpFilmView(filmCardData);
-    this._filmCardData = filmCardData;
+    this._popUpComponent = new PopUpFilmView(this._filmCardData);
+
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick( this._handleOpenPopUp );
     this._filmCardComponent.setFilmCardFavoritsClick( this._handlerAddToFavorits);

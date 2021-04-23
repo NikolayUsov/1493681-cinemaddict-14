@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { getRandomInteger, getRandomFloat } from '../utils/common.js';
 import dayjs from 'dayjs';
-
+import {generateCommentsListData} from './comment-mock.js';
+import {createId, getRandomText } from '../utils/common.js';
 const POSTERS = [
   'made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -67,10 +68,6 @@ const ADULT = [
   '18+',
 ];
 
-const getRandomText = () => {
-  const phrase = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
-  return phrase.split('.').shuffle().slice(0, getRandomInteger(1,5)).join('.');
-};
 
 const getDateCreate = () => {
   const year = getRandomInteger(0, 60);
@@ -83,13 +80,7 @@ const getDateCreate = () => {
     .subtract(day,'day');
 };
 
-const createId = ()=> {
-  let id = 0;
-  return () => {
-    id++;
-    return id;
-  };
-};
+
 const filmId = createId();
 
 const generateFilmInfo = () => {
@@ -98,6 +89,7 @@ const generateFilmInfo = () => {
   const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
   const dateCreate = getDateCreate();
+  const commentsList = generateCommentsListData();
   return {
     id:filmId(),
     poster: `${pathToPoster}${poster}`,
@@ -123,8 +115,9 @@ const generateFilmInfo = () => {
       isFavorite: Boolean(getRandomInteger(0, 1)),
       isWatched: Boolean(getRandomInteger(0, 1)),
     },
+    comments: commentsList,
   };
 };
 
-export { generateFilmInfo, createId, getRandomText};
+export { generateFilmInfo, getRandomText};
 

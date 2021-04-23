@@ -7,7 +7,7 @@ import ButtonShowMoreView from '../view/button-show-more.js';
 import { sortByRaiting, sortByComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType } from  '../utils/const.js';
-import { compareRaiting, compareDate } from '../utils/compares.js';
+import { compareRaiting, compareDate} from '../utils/compares.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
@@ -37,6 +37,7 @@ export default class FilmCardList {
   init(filmCardsMap) {
     this._filmCardsMap = new Map([...filmCardsMap]);
     this._filmCardData = Array.from(this._filmCardsMap.keys());
+
     this._defaultFilmCardData = this._filmCardData.slice();
     this._renderSort();
     renderElement (this._filmCardListContainer,  this._filmCardListWrapper, 'beforeend');

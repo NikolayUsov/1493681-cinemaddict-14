@@ -3,7 +3,7 @@ const compareRaiting = (a, b) => {
 };
 
 const compareComments = (a, b) => {
-  return b[1].length - a[1].length;
+  return b.comments.length - a.comments.length;
 };
 
 const sortByRaiting = (map) => {
@@ -12,8 +12,8 @@ const sortByRaiting = (map) => {
 };
 
 const sortByComments = (map) => {
-  const sortMap = new Map([...map].sort(compareComments));
-  return Array.from(sortMap.keys());
+  const keys =  Array.from(map.keys());
+  return keys.sort(compareComments);
 };
 
 export { sortByRaiting, sortByComments};
