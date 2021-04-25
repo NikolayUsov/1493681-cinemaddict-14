@@ -9,7 +9,7 @@ const filmListcontainerTemplate = () => {
     </div>
   </section>
 
-  <section class="films-list films-list--extra films-list--raiting">
+  <section class="films-list films-list--extra films-list--rating">
     <h2 class="films-list__title">Top rated</h2>
 
     <div class="films-list__container"></div>
@@ -34,7 +34,7 @@ export default class FilmCardContainer extends AbstractView {
   }
 
   getTopRatingContainer () {
-    return this.getElement().querySelector('.films-list--raiting');
+    return this.getElement().querySelector('.films-list--rating');
   }
 
   getTopCommentedContainer () {

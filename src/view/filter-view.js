@@ -1,5 +1,4 @@
-//import {getUserStatistic} from '../utils/profile-util.js';
-import AbstractView from './abstract.js';
+import Smart from './smart-component.js';
 
 const FILTER = {
   ALL_MOVIES: 'All movies',
@@ -8,7 +7,8 @@ const FILTER = {
   HISTORY: 'History',
 };
 
-const filtersFunctionMap = {
+
+export const filtersFunctionMap = {
   [FILTER.ALL_MOVIES] : (filmCards) => filmCards,
   [FILTER.WATHCLIST]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatchList),
   [FILTER.FAVOURITES]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isFavorite),
@@ -33,7 +33,9 @@ const mainNavigationTemplate = (filmCards) => {
     const {filter, filtredFilm} = itemMenu;
 
     return `<a href="#${filter === FILTER.ALL_MOVIES ? 'all' : `${filter.toLowerCase()}`}"
-    class="main-navigation__item ${isActive ? 'main-navigation__item--active' : ''}">
+    class="main-navigation__item ${isActive ? 'main-navigation__item--active' : ''}"
+    data-filter = ${filter}
+    >
     ${filter === FILTER.ALL_MOVIES ?
     FILTER.ALL_MOVIES :
     `${filter} <span class="main-navigation__item-count">${filtredFilm.length}</span>`}
@@ -52,14 +54,36 @@ const mainNavigationTemplate = (filmCards) => {
 </nav>`;
 };
 
-export default class Filter extends AbstractView{
+export class Filter extends Smart{
   constructor (data) {
     super();
     this._data = data;
+    this._handlerFilterClick = this._handlerFilterClick.bind(this);
   }
 
   getTemplate () {
     return mainNavigationTemplate(this._data);
   }
 
+  updateData (update) {
+    this._data = update;
+    this.updateElement();
+  }
+
+  restoreHandlers () {
+    this.setFilterClick(this._calback.filterClick);
+  }
+
+  _handlerFilterClick(evt) {
+    if(evt.target.tagName !== 'A') {
+      return;
+    }
+
+    this._calback.filterClick(evt.target.dataset.filter);
+  }
+
+  setFilterClick (calback) {
+    this._calback.filterClick = calback;
+    this.getElement().addEventListener('click', this._handlerFilterClick);
+  }
 }

@@ -1,6 +1,6 @@
-import {filmCardsMap} from '../mock/data.js';
+
 import AbstractView from './abstract.js';
-import { getCommentsByFilmId } from '../utils/film-card-map.js';
+//import { getComments } from '../utils/film-card-map.js';
 const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
@@ -13,6 +13,7 @@ const filmCardTemplate = (card) => {
     description,
     userInfo,
     runtimeMessage,
+    comments,
   } = card;
 
   const {isWatchList,
@@ -20,7 +21,6 @@ const filmCardTemplate = (card) => {
     isWatched,
   } = userInfo;
 
-  const comments = getCommentsByFilmId(id, filmCardsMap);
 
   let newDescription;
   description.length > MAX_DESCRIPTION_LENGTH ? newDescription = `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : newDescription = description;
@@ -112,7 +112,7 @@ export default class filmCard extends AbstractView {
 
   _handlerAddToWatched (evt) {
     evt.preventDefault();
-    this._calback.addToWatchedClicl();
+    this._calback.addToWatchedClick();
   }
   setFilmCardWatchListClick (calback) {
     this._calback.onAddToWatchListClick = calback;
@@ -125,7 +125,7 @@ export default class filmCard extends AbstractView {
   }
 
   setFilmCardWatchedClick (calback) {
-    this._calback.addToWatchedClicl = calback;
+    this._calback.addToWatchedClick = calback;
     this.getButtonAddFilmToWatched().addEventListener('click', this._handlerAddToWatched);
   }
 }

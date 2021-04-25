@@ -1,10 +1,11 @@
-import {filmCardsMap} from '../mock/data.js';
-import Abstract from './abstract.js';
-import { getCommentsByFilmId } from '../utils/film-card-map.js';
+
+import Smart from './smart-component.js';
+import {generateCommetData} from '../mock/comment-mock.js';
+
 
 const popupContainerTemplate = (card) => {
+
   const {
-    id,
     title,
     rating,
     dateCreate,
@@ -19,6 +20,9 @@ const popupContainerTemplate = (card) => {
     country,
     originalTitle,
     runtimeMessage,
+    comments,
+    currentEmoji,
+    currentTextComment,
   } = card;
 
   const {isWatchList,
@@ -34,8 +38,6 @@ const popupContainerTemplate = (card) => {
   const isWatchListChecked = isWatchList ? 'checked' : '';
   const isFavoriteChecked = isFavorite ? 'checked' : '';
   const isWatchedChecked = isWatched ? 'checked' : '';
-
-  const comments = getCommentsByFilmId(id, filmCardsMap);
 
   const createCommentsList = () => {
     return `${comments.map((elem) => `<li class="film-details__comment">
@@ -136,10 +138,12 @@ const popupContainerTemplate = (card) => {
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">
+          ${currentEmoji ? `<img src="images/emoji/${currentEmoji}.png" width="55" height="55" alt="emoji-smile">`: ''}
+          </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${!currentTextComment ? '' : currentTextComment}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -171,12 +175,16 @@ const popupContainerTemplate = (card) => {
   `;
 };
 
-export default class PopUpFilmInfo extends Abstract {
+export default class PopUpFilmInfo extends Smart {
   constructor (data) {
     super();
-    this._data = data;
+    this._data = PopUpFilmInfo.parseFilmCardToState(data);
     this._handlerButtonClose = this._handlerButtonClose.bind(this);
     this._handlerControlButton = this._handlerControlButton.bind(this);
+    this._handlerEmojiChange = this._handlerEmojiChange.bind(this);
+    this._handlerInputCommentText = this._handlerInputCommentText.bind(this);
+    this._handlerSendNewComment = this._handlerSendNewComment.bind(this);
+    this._setInnerHandlers();
   }
 
   getTemplate () {
@@ -184,7 +192,34 @@ export default class PopUpFilmInfo extends Abstract {
   }
 
   getButtonClose () {
-    return this._element.querySelector('.film-details__close-btn');
+    return this.getElement().querySelector('.film-details__close-btn');
+  }
+
+  getEmojiControls () {
+    return this.getElement().querySelector('.film-details__emoji-list');
+  }
+
+  getCommentTextContent () {
+    return this.getElement().querySelector('.film-details__comment-input');
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setPopUpControlChange(this._calback.inputControlPopUp);
+    this.setClickCloseButton (this._calback.clickCloseButton);
+  }
+
+  reset(filmCard) {
+    this.updateData(
+      PopUpFilmInfo.parseFilmCardToState(filmCard),
+    );
+  }
+
+  _setInnerHandlers () {
+    this.getEmojiControls().addEventListener('change', this._handlerEmojiChange);
+    this.getCommentTextContent().addEventListener('input', this._handlerInputCommentText);
+    //this.getCommentTextContent().addEventListener('focus', this._handlerFocusCommentText);
+    this.getElement().addEventListener('keydown', this._handlerSendNewComment);
   }
 
   _handlerButtonClose (evt) {
@@ -192,20 +227,69 @@ export default class PopUpFilmInfo extends Abstract {
     this._calback.clickCloseButton();
   }
 
-  setClickCloseButton (calback) {
-    this._calback.clickCloseButton = calback;
-    this.getButtonClose().addEventListener('click', this._handlerButtonClose);
-  }
 
   _handlerControlButton(evt) {
     evt.preventDefault();
     this._calback.inputControlPopUp(evt.target.id);
   }
 
+  _handlerEmojiChange (evt) {
+    evt.preventDefault();
+    this.updateData({currentEmoji: evt.target.value});
+  }
+
+  _handlerInputCommentText (evt) {
+    evt.preventDefault();
+    this.updateData(
+      {currentTextComment: evt.target.value},
+      false,
+    );
+  }
+
+  /*   _handlerFocusCommentText () {
+    document.addEventListener('keydown',this._handlerSendNewComment);
+  } */
+
   setPopUpControlChange (calback) {
     this._calback.inputControlPopUp = calback;
     this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
   }
+
+  setClickCloseButton (calback) {
+    this._calback.clickCloseButton = calback;
+    this.getButtonClose().addEventListener('click', this._handlerButtonClose);
+  }
+
+  _handlerSendNewComment (evt) {
+    if (evt.ctrlKey && evt.keyCode == 13) {
+      this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
+      this._calback.setSendNewComment(this._data);
+      this.updateElement();
+    }
+  }
+
+  setSendNewComment (calback) {
+    this._calback.setSendNewComment = calback;
+  }
+
+  static parseFilmCardToState (filmCard) {
+    return Object.assign (
+      {},
+      filmCard,
+      {currentEmoji: 'currentEmoji' in filmCard,
+        currentTextComment: '',
+      },
+    );
+  }
+
+  static parseStateToFilmCard (filmCard) {
+    filmCard = Object.assign({}, filmCard);
+    const newComment = generateCommetData();
+    newComment.text = filmCard.currentTextComment;
+    newComment.emotion = filmCard.currentEmoji;
+    filmCard.comments.push(newComment);
+    delete filmCard.currentTextComment;
+    delete filmCard.currentEmoji;
+    return filmCard;
+  }
 }
-
-

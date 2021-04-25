@@ -1,5 +1,5 @@
 
-import {createId, getRandomText} from './film-mock.js';
+import {createId, getRandomText } from '../utils/common.js';
 import { getRandomInteger } from '../utils/common.js';
 import dayjs from 'dayjs';
 
@@ -41,5 +41,4 @@ const generateCommentsListData = () => {
   }
   return commentsList;
 };
-
-export {generateCommentsListData};
+export {generateCommentsListData, commentId, generateCommetData};

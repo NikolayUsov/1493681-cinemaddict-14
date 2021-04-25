@@ -4,8 +4,8 @@ import { renderElement } from '../utils/render.js';
 import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
-const footer = document.querySelector('.footer');
 
+const footer = document.querySelector('.footer');
 const PopUpStatus = {
   OPEN: 'open',
   CLOSE: 'close',
@@ -31,19 +31,26 @@ export default class FilmCardPresenter {
     this._handlerAddToFavorits = this._handlerAddToFavorits.bind(this);
     this._handlerAddToWatched = this._handlerAddToWatched.bind(this);
     this._handlerChangePopUpControlButton = this._handlerChangePopUpControlButton.bind(this);
+
+    this._handlerSendNewComment = this._handlerSendNewComment.bind(this);
   }
 
   init (filmCardData, popupStatus = PopUpStatus.CLOSE) {
+    this._filmCardData = filmCardData;
     this._popUpStatus = popupStatus;
     const prevFilmCardComponent = this._filmCardComponent;
     const prevPopUpComponent = this._popUpComponent;
+
     this._filmCardComponent = new FilmCardView(filmCardData);
-    this._popUpComponent = new PopUpFilmView(filmCardData);
-    this._filmCardData = filmCardData;
+    this._popUpComponent = new PopUpFilmView(this._filmCardData);
+
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick( this._handleOpenPopUp );
     this._filmCardComponent.setFilmCardFavoritsClick( this._handlerAddToFavorits);
     this._filmCardComponent.setFilmCardWatchedClick( this._handlerAddToWatched);
+
+
+    this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
 
     if (prevFilmCardComponent === null || prevPopUpComponent === null) {
       renderElement(this._container, this._filmCardComponent, 'beforeend');
@@ -83,11 +90,14 @@ export default class FilmCardPresenter {
   _closePopUp () {
     this._popUpComponent.getElement().remove();
     this._popUpComponent.removeElement();
+    this._popUpComponent.reset(this._filmCardData);
     this._popUpStatus = PopUpStatus.CLOSE;
+    document.body.style.overflow = '';
   }
 
   _openPopUp () {
     renderElement(footer, this._popUpComponent, 'afterend');
+    document.body.style.overflow = 'hidden';
     this._popUpComponent.setClickCloseButton( this._handlePopUpButtonClose);
     this._popUpComponent.setPopUpControlChange( this._handlerChangePopUpControlButton);
   }
@@ -142,5 +152,10 @@ export default class FilmCardPresenter {
   _handlerAddToWatched () {
     this._updateFilmCardUserInfo('isWatched');
   }
+
+  _handlerSendNewComment (updateFilmCard) {
+    this._handlerChangeData(updateFilmCard, this._popUpStatus);
+  }
+
 }
 
