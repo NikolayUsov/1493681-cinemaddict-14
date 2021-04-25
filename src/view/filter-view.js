@@ -70,7 +70,9 @@ export class Filter extends Smart{
     this.updateElement();
   }
 
-  restoreHandlers () {}
+  restoreHandlers () {
+    this.setFilterClick(this._calback.filterClick);
+  }
 
   _handlerFilterClick(evt) {
     if(evt.target.tagName !== 'A') {
