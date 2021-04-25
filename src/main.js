@@ -1,6 +1,6 @@
 
 import ProfileView from './view/profile.js';
-import FilterView from './view/filter-view.js';
+
 import FooterView from './view/footer-statistic.js';
 import { filmCardsMap } from './mock/data.js';
 //import SortView from './view/sort.js';
@@ -14,7 +14,6 @@ const filmCards = Array.from(filmCardsMap.keys());
 
 
 renderElement (header, new ProfileView(filmCards), 'beforeend');
-renderElement (main, new FilterView(filmCards), 'beforeend');
 
 const presenter = new FilmCardListPresenter(main);
 presenter.init(filmCardsMap);

@@ -8,6 +8,7 @@ import { sortByrating, sortByComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType } from  '../utils/const.js';
 import { comparerating, compareDate} from '../utils/compares.js';
+import {Filter, filtersFunctionMap} from '../view/filter-view.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
@@ -19,7 +20,6 @@ export default class FilmCardList {
     this._noFilmCard = new EmptyFilmCard();
     this._buttonShowMore = new ButtonShowMoreView();
     this._filmCardListWrapper = new FilmCardContainer();
-    this._sortComponent = new SortView();
     this._renderedCard = startCard;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
@@ -28,6 +28,7 @@ export default class FilmCardList {
     this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
     this._handleButtonShowMore = this._handleButtonShowMore.bind(this);
+    this._handlerFilterClick = this._handlerFilterClick.bind(this);
     this._mainFilmCardPresenters = {};
     this._topratingFilmCardPresenter = {};
     this._topCommentedFilmCardPresenter = {};
@@ -38,6 +39,9 @@ export default class FilmCardList {
     this._filmCardsMap = new Map([...filmCardsMap]);
     this._filmCardData = Array.from(this._filmCardsMap.keys());
     this._defaultFilmCardData = this._filmCardData.slice();
+    this._filterComponent = new Filter(this._filmCardData);
+    this._sortComponent = new SortView();
+    this._renderFilterMenu ();
     this._renderSort();
     renderElement (this._filmCardListContainer,  this._filmCardListWrapper, 'beforeend');
     this._renderFilmCards();
@@ -52,6 +56,7 @@ export default class FilmCardList {
   _sortByComments(map) {
     return sortByComments(map);
   }
+
 
   _sortFilmCard (type) {
     switch (type) {
@@ -73,9 +78,26 @@ export default class FilmCardList {
     this._renderFilmCards();
   }
 
+  _handlerFilterClick(filterType) {
+    this._filmCardData = this._defaultFilmCardData.slice();
+    if (filterType === 'All') {
+      this._renderFilmCards();
+      return;
+    }
+    this._filmCardData = this._defaultFilmCardData.slice();
+    const filterFunction = filtersFunctionMap[filterType];
+    this._filmCardData = filterFunction(this._filmCardData);
+    this._renderFilmCards();
+  }
+
   _renderSort () {
     renderElement ( this._filmCardListContainer, this._sortComponent,'beforeend');
     this._sortComponent.setSortClick(this._handlerSortClick);
+  }
+
+  _renderFilterMenu () {
+    renderElement (this._filmCardListContainer, this._filterComponent, 'beforeend');
+    this._filterComponent.setFilterClick(this._handlerFilterClick);
   }
 
   _renderFilmCard (container, filmCardData) {
@@ -118,7 +140,7 @@ export default class FilmCardList {
 
   _handlerChangeData (updateFilmCard, popUpStatus) {
     this._filmCardData = updateItem(this._filmCardData, updateFilmCard);
-
+    this._filterComponent.updateData(this._filmCardData);
     if (updateFilmCard.id in this._mainFilmCardPresenters) {
       this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
     }

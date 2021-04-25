@@ -143,7 +143,7 @@ const popupContainerTemplate = (card) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${currentTextComment}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${!currentTextComment ? '' : currentTextComment}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -218,7 +218,7 @@ export default class PopUpFilmInfo extends Smart {
   _setInnerHandlers () {
     this.getEmojiControls().addEventListener('change', this._handlerEmojiChange);
     this.getCommentTextContent().addEventListener('input', this._handlerInputCommentText);
-    this.getCommentTextContent().addEventListener('focus', this._handlerFocusCommentText);
+    //this.getCommentTextContent().addEventListener('focus', this._handlerFocusCommentText);
     this.getElement().addEventListener('keydown', this._handlerSendNewComment);
   }
 
@@ -235,9 +235,7 @@ export default class PopUpFilmInfo extends Smart {
 
   _handlerEmojiChange (evt) {
     evt.preventDefault();
-    this._scroll = this.getElement().scrollTop;
     this.updateData({currentEmoji: evt.target.value});
-    this.getElement().scrollTop = this._scroll;
   }
 
   _handlerInputCommentText (evt) {
@@ -248,9 +246,9 @@ export default class PopUpFilmInfo extends Smart {
     );
   }
 
-  _handlerFocusCommentText () {
+  /*   _handlerFocusCommentText () {
     document.addEventListener('keydown',this._handlerSendNewComment);
-  }
+  } */
 
   setPopUpControlChange (calback) {
     this._calback.inputControlPopUp = calback;
@@ -263,8 +261,10 @@ export default class PopUpFilmInfo extends Smart {
   }
 
   _handlerSendNewComment (evt) {
-    if (evt.ctrlKey || evt.metaKey) {
-      this._calback.setSendNewComment(PopUpFilmInfo.parseStateToFilmCard( this._data));
+    if (evt.ctrlKey && evt.keyCode == 13) {
+      this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
+      this._calback.setSendNewComment(this._data);
+      this.updateElement();
     }
   }
 
