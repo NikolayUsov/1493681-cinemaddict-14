@@ -41,4 +41,4 @@ const generateCommentsListData = () => {
   }
   return commentsList;
 };
-export {generateCommentsListData};
+export {generateCommentsListData, commentId, generateCommetData};

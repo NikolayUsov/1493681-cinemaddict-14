@@ -4,10 +4,10 @@ import { updateItem } from '../utils/common.js';
 import EmptyFilmCard from '../view/empty-film-card';
 import FilmCardPresenter from './film-card-presenter.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
-import { sortByRaiting, sortByComments } from '../filters.js';
+import { sortByrating, sortByComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType } from  '../utils/const.js';
-import { compareRaiting, compareDate} from '../utils/compares.js';
+import { comparerating, compareDate} from '../utils/compares.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
@@ -23,13 +23,13 @@ export default class FilmCardList {
     this._renderedCard = startCard;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
-    this._topRaitingContainer = this._filmCardListWrapper.getTopRatingContainer();
+    this._topratingContainer = this._filmCardListWrapper.getTopRatingContainer();
     this._handlerChangeData = this._handlerChangeData.bind(this);
     this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
     this._handleButtonShowMore = this._handleButtonShowMore.bind(this);
     this._mainFilmCardPresenters = {};
-    this._topRaitingFilmCardPresenter = {};
+    this._topratingFilmCardPresenter = {};
     this._topCommentedFilmCardPresenter = {};
     this._sortMode = SortType.DEFAULT;
   }
@@ -45,8 +45,8 @@ export default class FilmCardList {
     this._renderExtraCard();
   }
 
-  _sortByRaiting(map) {
-    return sortByRaiting(map);
+  _sortByrating(map) {
+    return sortByrating(map);
   }
 
   _sortByComments(map) {
@@ -56,7 +56,7 @@ export default class FilmCardList {
   _sortFilmCard (type) {
     switch (type) {
       case SortType.RATING :
-        this._filmCardData.sort(compareRaiting);
+        this._filmCardData.sort(comparerating);
         break;
       case SortType.DATE :
         this._filmCardData.sort(compareDate);
@@ -123,8 +123,8 @@ export default class FilmCardList {
       this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
     }
 
-    if (updateFilmCard.id in this._topRaitingFilmCardPresenter) {
-      this._topRaitingFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+    if (updateFilmCard.id in this._topratingFilmCardPresenter) {
+      this._topratingFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
     }
 
     if (updateFilmCard.id in this._topCommentedFilmCardPresenter) {
@@ -136,7 +136,7 @@ export default class FilmCardList {
     [
       ... Object.values(this._mainFilmCardPresenters),
       ... Object.values(this._topCommentedFilmCardPresenter),
-      ... Object.values(this._topRaitingFilmCardPresenter),
+      ... Object.values(this._topratingFilmCardPresenter),
     ]
       .forEach((filmCard) => {
         filmCard.resetFilmView();});
@@ -155,17 +155,17 @@ export default class FilmCardList {
   _renderExtraCard () {
     if (this._filmCardData.length === 0) {
       this._topCommentedContainer.innerHTML = '';
-      this._topRaitingContainer.innerHTML = '';
+      this._topratingContainer.innerHTML = '';
       return;
     }
-    const sortedByRaiting = this._sortByRaiting(this._filmCardsMap );
+    const sortedByrating = this._sortByrating(this._filmCardsMap );
     const sortedByComments = this._sortByComments(this._filmCardsMap);
 
-    sortedByRaiting
+    sortedByrating
       .slice(0, MAX_EXTRA_CARD)
       .forEach((filmCard) => {
-        this._renderFilmCard(this._topRaitingContainer.querySelector('.films-list__container'), filmCard);
-        this._topRaitingFilmCardPresenter[filmCard.id] = this._filmCardPresenter;
+        this._renderFilmCard(this._topratingContainer.querySelector('.films-list__container'), filmCard);
+        this._topratingFilmCardPresenter[filmCard.id] = this._filmCardPresenter;
       });
 
     sortedByComments

@@ -112,7 +112,7 @@ export default class filmCard extends AbstractView {
 
   _handlerAddToWatched (evt) {
     evt.preventDefault();
-    this._calback.addToWatchedClicl();
+    this._calback.addToWatchedClick();
   }
   setFilmCardWatchListClick (calback) {
     this._calback.onAddToWatchListClick = calback;
@@ -125,7 +125,7 @@ export default class filmCard extends AbstractView {
   }
 
   setFilmCardWatchedClick (calback) {
-    this._calback.addToWatchedClicl = calback;
+    this._calback.addToWatchedClick = calback;
     this.getButtonAddFilmToWatched().addEventListener('click', this._handlerAddToWatched);
   }
 }

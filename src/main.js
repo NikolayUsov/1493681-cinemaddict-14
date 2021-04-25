@@ -5,7 +5,7 @@ import FooterView from './view/footer-statistic.js';
 import { filmCardsMap } from './mock/data.js';
 //import SortView from './view/sort.js';
 import { renderElement } from './utils/render.js';
-import FilmCardListPresenter from './presenter/filmlist-presenter.js';
+import FilmCardListPresenter from './presenter/film-list-presenter.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');

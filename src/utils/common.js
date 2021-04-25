@@ -28,6 +28,33 @@ export const isEscEvent = (evt) => {
   return evt.key === 'Escape' || evt.key === 'Esc';
 };
 
+export const isCtrlEnterEvent = (evt) => {
+  return evt.code ==='Enter' && (evt.code === 'ControlLeft' || evt.code === 55);
+};
+
+export function runOnKeys (func, ...codes) {
+  const  pressed = new Set();
+
+  const checkKyedown = (evt) => {
+    pressed.add(evt.code);
+
+    for (const code of codes) {
+      if (!pressed.has(code)) {
+        return;
+      }
+    }
+    pressed.clear();
+
+    func();
+  };
+
+  document.addEventListener('keydown', checkKyedown);
+
+  document.addEventListener('keyup', (evt) => {
+    pressed.delete(evt.code);
+  });
+
+}
 Array.prototype.shuffle = function() {
   for (let i = this.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
