@@ -90,11 +90,11 @@ export default class filmCard extends AbstractView {
 
   _clickHandler (evt) {
     evt.preventDefault();
-    this._calback.click();
+    this._callback.click();
   }
 
-  setFilmCardClick (calback) {
-    this._calback.click = calback;
+  setFilmCardClick (callback) {
+    this._callback.click = callback;
     this.getTitle().addEventListener('click', this._clickHandler);
     this.getComment().addEventListener('click', this._clickHandler);
     this.getPicture().addEventListener('click', this._clickHandler);
@@ -102,30 +102,30 @@ export default class filmCard extends AbstractView {
 
   _handlerAddToWatchList (evt) {
     evt.preventDefault();
-    this._calback.onAddToWatchListClick();
+    this._callback.onAddToWatchListClick();
   }
 
   _handlerAddToFavorites (evt) {
     evt.preventDefault();
-    this._calback.addToFavoritesClick();
+    this._callback.addToFavoritesClick();
   }
 
   _handlerAddToWatched (evt) {
     evt.preventDefault();
-    this._calback.addToWatchedClick();
+    this._callback.addToWatchedClick();
   }
-  setFilmCardWatchListClick (calback) {
-    this._calback.onAddToWatchListClick = calback;
+  setFilmCardWatchListClick (callback) {
+    this._callback.onAddToWatchListClick = callback;
     this.getButtonAddToWatchList().addEventListener('click', this._handlerAddToWatchList);
   }
 
-  setFilmCardFavoritsClick (calback) {
-    this._calback.addToFavoritesClick = calback;
+  setFilmCardFavoritsClick (callback) {
+    this._callback.addToFavoritesClick = callback;
     this.getButtonAddToFavorits().addEventListener('click', this._handlerAddToFavorites);
   }
 
-  setFilmCardWatchedClick (calback) {
-    this._calback.addToWatchedClick = calback;
+  setFilmCardWatchedClick (callback) {
+    this._callback.addToWatchedClick = callback;
     this.getButtonAddFilmToWatched().addEventListener('click', this._handlerAddToWatched);
   }
 }

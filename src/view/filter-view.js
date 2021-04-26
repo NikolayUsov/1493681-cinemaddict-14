@@ -71,7 +71,7 @@ export class Filter extends Smart{
   }
 
   restoreHandlers () {
-    this.setFilterClick(this._calback.filterClick);
+    this.setFilterClick(this._callback.filterClick);
   }
 
   _handlerFilterClick(evt) {
@@ -79,11 +79,11 @@ export class Filter extends Smart{
       return;
     }
 
-    this._calback.filterClick(evt.target.dataset.filter);
+    this._callback.filterClick(evt.target.dataset.filter);
   }
 
-  setFilterClick (calback) {
-    this._calback.filterClick = calback;
+  setFilterClick (callback) {
+    this._callback.filterClick = callback;
     this.getElement().addEventListener('click', this._handlerFilterClick);
   }
 }
