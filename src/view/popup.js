@@ -256,7 +256,7 @@ export default class PopUpFilmInfo extends Smart {
   }
 
   _handlerSendNewComment (evt) {
-    if (evt.ctrlKey && evt.keyCode == 13) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13) {
       if ( !this._data.currentEmoji || !this._data.currentTextComment){
         return;
       }

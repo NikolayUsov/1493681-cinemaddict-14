@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import Smart from './smart-component.js';
 import { SortType } from  '../utils/const.js';
 
 const sortTemplate = () => {
@@ -9,33 +9,36 @@ const sortTemplate = () => {
   </ul>`;
 };
 
-export default class Sort extends AbstractView {
+export default class Sort extends Smart {
   constructor () {
     super();
     this._handlerClickSort = this._handlerClickSort.bind(this);
-    this._changeActiveButton = this._changeActiveButton.bind(this);
+    //this._changeActiveButton = this._changeActiveButton.bind(this);
+    this._activeClass = 'sort__button--active';
   }
 
   getTemplate () {
     return sortTemplate();
   }
 
-  _changeActiveButton (target) {
+  /*   _changeActiveButton (target) {
     const links = this.getElement().querySelectorAll('.sort__button');
     for(const link of links) {
       link.classList.remove('sort__button--active');
     }
     target.classList.add('sort__button--active');
   }
+ */
 
   _handlerClickSort (evt) {
     if (evt.target.tagName !== 'A'){
       return;
     }
     evt.preventDefault();
-    this._changeActiveButton(evt.target);
+    this.changeActiveStatus(evt.target);
     this._callback.sortClick(evt.target.dataset.sort);
   }
+
   setSortClick (callback) {
     this._callback.sortClick = callback;
     this.getElement().addEventListener('click', this._handlerClickSort);

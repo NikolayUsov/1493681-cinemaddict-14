@@ -8,11 +8,10 @@ import { sortByRating, sortByComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType } from '../utils/const.js';
 import { comparerating, compareDate } from '../utils/compares.js';
-import { Filter, filtersFunctionMap } from '../view/filter-view.js';
+import { Filter, filtersFunctionMap, FILTER } from '../view/filter-view.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
-const startCard = CARD_STEP;
 
 export default class FilmCardList {
   constructor(container) {
@@ -20,7 +19,7 @@ export default class FilmCardList {
     this._noFilmCard = new EmptyFilmCard();
     this._buttonShowMore = new ButtonShowMoreView();
     this._filmCardListWrapper = new FilmCardContainer();
-    this._renderedCard = startCard;
+    this._renderedCard = 0;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
     this._topratingContainer = this._filmCardListWrapper.getTopRatingContainer();
@@ -45,7 +44,7 @@ export default class FilmCardList {
     this._renderSort();
     renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
     this._renderFilmCards();
-    this._renderButtonShowMore();
+
     this._renderExtraCard();
   }
 
@@ -75,18 +74,19 @@ export default class FilmCardList {
 
   _handlerSortClick(type) {
     this._sortFilmCard(type);
+    this._resetFilmCardList();
     this._renderFilmCards();
   }
 
   _handlerFilterClick(filterType) {
+
+    const filterFunction = filterType === 'All'
+      ? filtersFunctionMap[FILTER.ALL_MOVIES]
+      : filtersFunctionMap[filterType];
+
     this._filmsInfo = this._defaultFilmCardData.slice();
-    if (filterType === 'All') {
-      this._renderFilmCards();
-      return;
-    }
-    this._filmsInfo = this._defaultFilmCardData.slice();
-    const filterFunction = filtersFunctionMap[filterType];
     this._filmsInfo = filterFunction(this._filmsInfo);
+    this._resetFilmCardList();
     this._renderFilmCards();
   }
 
@@ -106,8 +106,8 @@ export default class FilmCardList {
   }
 
   _renderFilmCards() {
-    this._clearFilmCard();
 
+    this._buttonShowMore.getElement().remove();
     if (!this._filmsInfo.length) {
       const mainContainer = this._filmCardListWrapper.getElement();
       mainContainer.innerHTML = '';
@@ -115,14 +115,23 @@ export default class FilmCardList {
       return;
     }
 
-
     if (this._filmsInfo.length < this._renderedCard) {
       this._renderedCard = this._filmsInfo.length;
     }
 
-    for (let i = 0; i < this._renderedCard; i++) {
-      this._renderFilmCard(this._mainContainer, this._filmsInfo[i]);
-      this._mainFilmCardPresenters[this._filmsInfo[i].id] = this._filmCardPresenter;
+    this._filmsInfo
+      .slice(this._renderedCard, this._renderedCard + CARD_STEP)
+      .forEach((filmInfo)  =>{
+        this._renderFilmCard(this._mainContainer, filmInfo);
+        this._mainFilmCardPresenters[filmInfo.id] = this._filmCardPresenter;
+      });
+    this._renderedCard += CARD_STEP;
+
+    if (this._renderedCard >= this._filmsInfo.length) {
+      this._renderedCard = this._filmsInfo.length;
+      this._buttonShowMore.getElement().remove();
+    } else {
+      this._renderButtonShowMore();
     }
   }
 
@@ -136,7 +145,7 @@ export default class FilmCardList {
 
   _resetFilmCardList() {
     this._clearFilmCard();
-    this._renderedCard = CARD_STEP;
+    this._renderedCard = 0;
   }
 
   _handlerChangeData(updateFilmCard, popUpStatus) {
@@ -167,11 +176,6 @@ export default class FilmCardList {
   }
 
   _handleButtonShowMore() {
-    this._renderedCard += CARD_STEP;
-    if (this._renderedCard >= this._filmsInfo.length) {
-      this._renderedCard = this._filmsInfo.length;
-      this._buttonShowMore.getElement().remove();
-    }
 
     this._renderFilmCards();
   }
@@ -201,10 +205,6 @@ export default class FilmCardList {
   }
 
   _renderButtonShowMore() {
-    if (this._filmsInfo.length < startCard) {
-      return;
-    }
-
     renderElement(this._mainContainer, this._buttonShowMore, RenderPosition.AFTEREND);
     this._buttonShowMore.setClick(this._handleButtonShowMore);
   }
