@@ -1,6 +1,6 @@
 import Smart from './smart-component.js';
 
-const FILTER = {
+export const FILTER = {
   ALL_MOVIES: 'All movies',
   WATHCLIST: 'Watchlist',
   FAVOURITES: 'Favorites',
@@ -59,6 +59,7 @@ export class Filter extends Smart{
     super();
     this._data = data;
     this._handlerFilterClick = this._handlerFilterClick.bind(this);
+    this._activeClass = 'main-navigation__item--active';
   }
 
   getTemplate () {
@@ -71,19 +72,19 @@ export class Filter extends Smart{
   }
 
   restoreHandlers () {
-    this.setFilterClick(this._calback.filterClick);
+    this.setFilterClick(this._callback.filterClick);
   }
 
   _handlerFilterClick(evt) {
     if(evt.target.tagName !== 'A') {
       return;
     }
-
-    this._calback.filterClick(evt.target.dataset.filter);
+    this.changeActiveStatus(evt.target);
+    this._callback.filterClick(evt.target.dataset.filter);
   }
 
-  setFilterClick (calback) {
-    this._calback.filterClick = calback;
+  setFilterClick (callback) {
+    this._callback.filterClick = callback;
     this.getElement().addEventListener('click', this._handlerFilterClick);
   }
 }

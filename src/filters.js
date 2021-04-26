@@ -6,7 +6,7 @@ const compareComments = (a, b) => {
   return b.comments.length - a.comments.length;
 };
 
-const sortByrating = (map) => {
+const sortByRating = (map) => {
   const keys =  Array.from(map.keys());
   return keys.sort(comparerating);
 };
@@ -16,5 +16,5 @@ const sortByComments = (map) => {
   return keys.sort(compareComments);
 };
 
-export { sortByrating, sortByComments};
+export { sortByRating, sortByComments};
 

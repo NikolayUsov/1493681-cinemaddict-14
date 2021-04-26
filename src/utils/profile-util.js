@@ -53,7 +53,7 @@ export const getUserStatistic = (filmData) => {
   });
 
   return {
-    favorits: favoriteCounter,
+    favorites: favoriteCounter,
     watchedFilms: watchedCounter,
     watchlists: watchlistCounter,
     userStatus: getStatus(watchedCounter),

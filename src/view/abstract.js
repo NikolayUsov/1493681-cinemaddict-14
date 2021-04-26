@@ -6,7 +6,7 @@ export default class Abstract {
       throw new Error ('Can\'t instantiate abstract class!');
     }
     this._element = null;
-    this._calback = {};
+    this._callback = {};
   }
 
   _initElement () {

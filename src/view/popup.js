@@ -205,8 +205,8 @@ export default class PopUpFilmInfo extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setPopUpControlChange(this._calback.inputControlPopUp);
-    this.setClickCloseButton (this._calback.clickCloseButton);
+    this.setPopUpControlChange(this._callback.inputControlPopUp);
+    this.setClickCloseButton (this._callback.clickCloseButton);
   }
 
   reset(filmCard) {
@@ -218,19 +218,18 @@ export default class PopUpFilmInfo extends Smart {
   _setInnerHandlers () {
     this.getEmojiControls().addEventListener('change', this._handlerEmojiChange);
     this.getCommentTextContent().addEventListener('input', this._handlerInputCommentText);
-    //this.getCommentTextContent().addEventListener('focus', this._handlerFocusCommentText);
     this.getElement().addEventListener('keydown', this._handlerSendNewComment);
   }
 
   _handlerButtonClose (evt) {
     evt.preventDefault();
-    this._calback.clickCloseButton();
+    this._callback.clickCloseButton();
   }
 
 
   _handlerControlButton(evt) {
     evt.preventDefault();
-    this._calback.inputControlPopUp(evt.target.id);
+    this._callback.inputControlPopUp(evt.target.id);
   }
 
   _handlerEmojiChange (evt) {
@@ -246,37 +245,37 @@ export default class PopUpFilmInfo extends Smart {
     );
   }
 
-  /*   _handlerFocusCommentText () {
-    document.addEventListener('keydown',this._handlerSendNewComment);
-  } */
-
-  setPopUpControlChange (calback) {
-    this._calback.inputControlPopUp = calback;
+  setPopUpControlChange (callback) {
+    this._callback.inputControlPopUp = callback;
     this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
   }
 
-  setClickCloseButton (calback) {
-    this._calback.clickCloseButton = calback;
+  setClickCloseButton (callback) {
+    this._callback.clickCloseButton = callback;
     this.getButtonClose().addEventListener('click', this._handlerButtonClose);
   }
 
   _handlerSendNewComment (evt) {
-    if (evt.ctrlKey && evt.keyCode == 13) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13) {
+      if ( !this._data.currentEmoji || !this._data.currentTextComment){
+        return;
+      }
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
-      this._calback.setSendNewComment(this._data);
+      this._callback.setSendNewComment(this._data);
       this.updateElement();
     }
   }
 
-  setSendNewComment (calback) {
-    this._calback.setSendNewComment = calback;
+  setSendNewComment (callback) {
+    this._callback.setSendNewComment = callback;
   }
 
   static parseFilmCardToState (filmCard) {
     return Object.assign (
       {},
       filmCard,
-      {currentEmoji: 'currentEmoji' in filmCard,
+      {
+        currentEmoji: 'currentEmoji' in filmCard,
         currentTextComment: '',
       },
     );
