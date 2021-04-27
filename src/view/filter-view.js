@@ -9,7 +9,7 @@ export const FILTER = {
 
 
 export const filtersFunctionMap = {
-  [FILTER.ALL_MOVIES] : (filmCards) => filmCards,
+  [FILTER.ALL_MOVIES]: (filmCards) => filmCards,
   [FILTER.WATHCLIST]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatchList),
   [FILTER.FAVOURITES]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isFavorite),
   [FILTER.HISTORY]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatched),
@@ -30,7 +30,10 @@ const mainNavigationTemplate = (filmCards) => {
   const filters = generateFilter(filmCards);
 
   const mainNavigationItem = (itemMenu, isActive) => {
-    const {filter, filtredFilm} = itemMenu;
+    const {
+      filter,
+      filtredFilm,
+    } = itemMenu;
 
     return `<a href="#${filter === FILTER.ALL_MOVIES ? 'all' : `${filter.toLowerCase()}`}"
     class="main-navigation__item ${isActive ? 'main-navigation__item--active' : ''}"
@@ -42,7 +45,7 @@ const mainNavigationTemplate = (filmCards) => {
     </a>`;
   };
 
-  const  createMainNavigationTemplate = () => {
+  const createMainNavigationTemplate = () => {
     return filters.map((filterMenu, index) => mainNavigationItem(filterMenu, index === 0)).join('');
   };
 
@@ -54,37 +57,37 @@ const mainNavigationTemplate = (filmCards) => {
 </nav>`;
 };
 
-export class Filter extends Smart{
-  constructor (data) {
+export class Filter extends Smart {
+  constructor(data) {
     super();
     this._data = data;
-    this._handlerFilterClick = this._handlerFilterClick.bind(this);
+    this._filterClickHandler = this._filterClickHandler.bind(this);
     this._activeClass = 'main-navigation__item--active';
   }
 
-  getTemplate () {
+  getTemplate() {
     return mainNavigationTemplate(this._data);
   }
 
-  updateData (update) {
+  updateData(update) {
     this._data = update;
     this.updateElement();
   }
 
-  restoreHandlers () {
+  restoreHandlers() {
     this.setFilterClick(this._callback.filterClick);
   }
 
-  _handlerFilterClick(evt) {
-    if(evt.target.tagName !== 'A') {
+  _filterClickHandler(evt) {
+    if (evt.target.tagName !== 'A') {
       return;
     }
     this.changeActiveStatus(evt.target);
     this._callback.filterClick(evt.target.dataset.filter);
   }
 
-  setFilterClick (callback) {
+  setFilterClick(callback) {
     this._callback.filterClick = callback;
-    this.getElement().addEventListener('click', this._handlerFilterClick);
+    this.getElement().addEventListener('click', this._filterClickHandler);
   }
 }

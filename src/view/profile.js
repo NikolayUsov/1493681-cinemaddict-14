@@ -1,4 +1,4 @@
-import {getUserStatistic} from '../utils/profile-util.js';
+import { getUserStatistic } from '../utils/profile-util.js';
 import AbstractView from './abstract.js';
 
 const headerProfileTemplate = (data) => {
@@ -12,12 +12,12 @@ const headerProfileTemplate = (data) => {
 
 
 export default class Profile extends AbstractView {
-  constructor (data) {
+  constructor(data) {
     super();
     this._data = data;
   }
 
-  getTemplate () {
+  getTemplate() {
     return headerProfileTemplate(this._data);
   }
 }

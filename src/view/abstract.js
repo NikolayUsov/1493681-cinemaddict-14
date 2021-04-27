@@ -1,15 +1,15 @@
 import { createNode } from '../utils/abstract-utils.js';
 
 export default class Abstract {
-  constructor () {
+  constructor() {
     if (new.target === Abstract) {
-      throw new Error ('Can\'t instantiate abstract class!');
+      throw new Error('Can\'t instantiate abstract class!');
     }
     this._element = null;
     this._callback = {};
   }
 
-  _initElement () {
+  _initElement() {
     if (!this._element) {
       this._element = createNode(this.getTemplate());
     }
@@ -18,12 +18,12 @@ export default class Abstract {
     throw new Error(`Abstract method not implemented: ${this.getTemplate.name}`);
   }
 
-  getElement () {
+  getElement() {
     this._initElement();
     return this._element;
   }
 
-  removeElement () {
+  removeElement() {
     this._element = null;
   }
 }

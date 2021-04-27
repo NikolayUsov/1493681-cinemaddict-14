@@ -1,5 +1,5 @@
 import Smart from './smart-component.js';
-import { SortType } from  '../utils/const.js';
+import { SortType } from '../utils/const.js';
 
 const sortTemplate = () => {
   return `<ul class="sort">
@@ -10,28 +10,18 @@ const sortTemplate = () => {
 };
 
 export default class Sort extends Smart {
-  constructor () {
+  constructor() {
     super();
-    this._handlerClickSort = this._handlerClickSort.bind(this);
-    //this._changeActiveButton = this._changeActiveButton.bind(this);
+    this._clickSortHandler = this._clickSortHandler.bind(this);
     this._activeClass = 'sort__button--active';
   }
 
-  getTemplate () {
+  getTemplate() {
     return sortTemplate();
   }
 
-  /*   _changeActiveButton (target) {
-    const links = this.getElement().querySelectorAll('.sort__button');
-    for(const link of links) {
-      link.classList.remove('sort__button--active');
-    }
-    target.classList.add('sort__button--active');
-  }
- */
-
-  _handlerClickSort (evt) {
-    if (evt.target.tagName !== 'A'){
+  _clickSortHandler(evt) {
+    if (evt.target.tagName !== 'A') {
       return;
     }
     evt.preventDefault();
@@ -39,8 +29,8 @@ export default class Sort extends Smart {
     this._callback.sortClick(evt.target.dataset.sort);
   }
 
-  setSortClick (callback) {
+  setSortClick(callback) {
     this._callback.sortClick = callback;
-    this.getElement().addEventListener('click', this._handlerClickSort);
+    this.getElement().addEventListener('click', this._clickSortHandler);
   }
 }

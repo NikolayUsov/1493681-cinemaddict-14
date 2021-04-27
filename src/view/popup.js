@@ -1,6 +1,6 @@
 
 import Smart from './smart-component.js';
-import {generateCommetData} from '../mock/comment-mock.js';
+import { generateCommetData } from '../mock/comment-mock.js';
 
 
 const popupContainerTemplate = (card) => {
@@ -25,12 +25,12 @@ const popupContainerTemplate = (card) => {
     currentTextComment,
   } = card;
 
-  const {isWatchList,
+  const { isWatchList,
     isFavorite,
     isWatched,
   } = userInfo;
 
-  const genreTitle = genres.length > 1 ? 'Genres': 'Genre';
+  const genreTitle = genres.length > 1 ? 'Genres' : 'Genre';
   const generateGenresTemplate = () => {
     return `${genres.map((elem) => `<span class="film-details__genre">${elem}</span>`).join('')}`;
   };
@@ -139,7 +139,7 @@ const popupContainerTemplate = (card) => {
 
         <div class="film-details__new-comment">
           <div class="film-details__add-emoji-label">
-          ${currentEmoji ? `<img src="images/emoji/${currentEmoji}.png" width="55" height="55" alt="emoji-smile">`: ''}
+          ${currentEmoji ? `<img src="images/emoji/${currentEmoji}.png" width="55" height="55" alt="emoji-smile">` : ''}
           </div>
 
           <label class="film-details__comment-label">
@@ -176,37 +176,37 @@ const popupContainerTemplate = (card) => {
 };
 
 export default class PopUpFilmInfo extends Smart {
-  constructor (data) {
+  constructor(data) {
     super();
     this._data = PopUpFilmInfo.parseFilmCardToState(data);
-    this._handlerButtonClose = this._handlerButtonClose.bind(this);
-    this._handlerControlButton = this._handlerControlButton.bind(this);
-    this._handlerEmojiChange = this._handlerEmojiChange.bind(this);
-    this._handlerInputCommentText = this._handlerInputCommentText.bind(this);
-    this._handlerSendNewComment = this._handlerSendNewComment.bind(this);
+    this._buttonCloseHandler = this._buttonCloseHandler.bind(this);
+    this._ControlListHandler = this._ControlListHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
+    this._sendNewCommentHandler = this._sendNewCommentHandler.bind(this);
     this._setInnerHandlers();
   }
 
-  getTemplate () {
+  getTemplate() {
     return popupContainerTemplate(this._data);
   }
 
-  getButtonClose () {
+  getButtonClose() {
     return this.getElement().querySelector('.film-details__close-btn');
   }
 
-  getEmojiControls () {
+  getEmojiControls() {
     return this.getElement().querySelector('.film-details__emoji-list');
   }
 
-  getCommentTextContent () {
+  getCommentField() {
     return this.getElement().querySelector('.film-details__comment-input');
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
     this.setPopUpControlChange(this._callback.inputControlPopUp);
-    this.setClickCloseButton (this._callback.clickCloseButton);
+    this.setClickCloseButton(this._callback.clickCloseButton);
   }
 
   reset(filmCard) {
@@ -215,63 +215,63 @@ export default class PopUpFilmInfo extends Smart {
     );
   }
 
-  _setInnerHandlers () {
-    this.getEmojiControls().addEventListener('change', this._handlerEmojiChange);
-    this.getCommentTextContent().addEventListener('input', this._handlerInputCommentText);
-    this.getElement().addEventListener('keydown', this._handlerSendNewComment);
+  _setInnerHandlers() {
+    this.getEmojiControls().addEventListener('change', this._emojiChangeHandler);
+    this.getCommentField().addEventListener('input', this._inputTextCommentHandler);
+    this.getElement().addEventListener('keydown', this._sendNewCommentHandler);
   }
 
-  _handlerButtonClose (evt) {
+  _buttonCloseHandler(evt) {
     evt.preventDefault();
     this._callback.clickCloseButton();
   }
 
 
-  _handlerControlButton(evt) {
+  _ControlListHandler(evt) {
     evt.preventDefault();
     this._callback.inputControlPopUp(evt.target.id);
   }
 
-  _handlerEmojiChange (evt) {
+  _emojiChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData({currentEmoji: evt.target.value});
+    this.updateData({ currentEmoji: evt.target.value });
   }
 
-  _handlerInputCommentText (evt) {
+  _inputTextCommentHandler(evt) {
     evt.preventDefault();
     this.updateData(
-      {currentTextComment: evt.target.value},
+      { currentTextComment: evt.target.value },
       false,
     );
   }
 
-  setPopUpControlChange (callback) {
+  setPopUpControlChange(callback) {
     this._callback.inputControlPopUp = callback;
-    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._handlerControlButton);
+    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._ControlListHandler);
   }
 
-  setClickCloseButton (callback) {
+  setClickCloseButton(callback) {
     this._callback.clickCloseButton = callback;
-    this.getButtonClose().addEventListener('click', this._handlerButtonClose);
+    this.getButtonClose().addEventListener('click', this._buttonCloseHandler);
   }
 
-  _handlerSendNewComment (evt) {
-    if ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13) {
-      if ( !this._data.currentEmoji || !this._data.currentTextComment){
-        return;
-      }
+  _sendNewCommentHandler(evt) {
+    const isRightKeys = ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13);
+    const isHasTextContentAndEmoji = (!this._data.currentEmoji || !this._data.currentTextComment.trim());
+    if (isRightKeys && isHasTextContentAndEmoji) {
+
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
       this._callback.setSendNewComment(this._data);
       this.updateElement();
     }
   }
 
-  setSendNewComment (callback) {
+  setSendNewComment(callback) {
     this._callback.setSendNewComment = callback;
   }
 
-  static parseFilmCardToState (filmCard) {
-    return Object.assign (
+  static parseFilmCardToState(filmCard) {
+    return Object.assign(
       {},
       filmCard,
       {
@@ -281,7 +281,7 @@ export default class PopUpFilmInfo extends Smart {
     );
   }
 
-  static parseStateToFilmCard (filmCard) {
+  static parseStateToFilmCard(filmCard) {
     filmCard = Object.assign({}, filmCard);
     const newComment = generateCommetData();
     newComment.text = filmCard.currentTextComment;
