@@ -258,8 +258,8 @@ export default class PopUpFilmInfo extends Smart {
   _sendNewCommentHandler(evt) {
     const isRightKeys = ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13);
     const isHasTextContentAndEmoji = (!this._data.currentEmoji || !this._data.currentTextComment.trim());
-    if (isRightKeys && isHasTextContentAndEmoji) {
 
+    if (isRightKeys && !isHasTextContentAndEmoji) {
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
       this._callback.setSendNewComment(this._data);
       this.updateElement();

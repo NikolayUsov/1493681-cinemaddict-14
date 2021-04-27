@@ -7,16 +7,20 @@ import { filmCardsMap } from './mock/data.js';
 import { renderElement } from './utils/render.js';
 import FilmCardListPresenter from './presenter/film-list-presenter.js';
 import {RenderPosition} from './utils/render.js';
+import FilmsModel from './model/films-model.js';
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
-const filmCards = Array.from(filmCardsMap.keys());
+const films = Array.from(filmCardsMap.keys());
+const filmsModel = new FilmsModel();
 
-renderElement (header, new ProfileView(filmCards), RenderPosition.BEFOREEND);
+filmsModel.setData(films);
+renderElement (header, new ProfileView(films), RenderPosition.BEFOREEND);
 
-const presenter = new FilmCardListPresenter(main);
-presenter.init(filmCardsMap);
-renderElement (footerStatistic, new FooterView(filmCards), RenderPosition.BEFOREEND);
+const presenter = new FilmCardListPresenter(main, filmsModel);
+presenter.init();
+
+renderElement (footerStatistic, new FooterView(films), RenderPosition.BEFOREEND);
 
 export {filmCardsMap};

@@ -5,6 +5,7 @@ import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
+import { UpdateType, UserAction } from '../utils/const';//to-do удалить ipdateItem
 
 const footer = document.querySelector('.footer');
 const PopUpStatus = {
@@ -140,7 +141,7 @@ export default class FilmCardPresenter {
   _updateFilmCardUserInfo(updateKey) {
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateKey] = !this._updateFilmCard.userInfo[updateKey];
-    this._handlerChangeData(this._updateFilmCard, this._popUpStatus);
+    this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, this._popUpStatus);
   }
 
   _handlerAddToWatchList() {

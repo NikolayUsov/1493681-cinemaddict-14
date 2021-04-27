@@ -2,7 +2,7 @@ const comparerating = (a, b) => {
   return b.rating - a.rating;
 };
 
-const compareComments = (a, b) => {
+export const compareComments = (a, b) => {
   return b.comments.length - a.comments.length;
 };
 
