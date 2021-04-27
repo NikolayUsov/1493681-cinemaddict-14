@@ -19,7 +19,6 @@ export default class FilmCardList {
     this._buttonShowMore = null;
     this._filmCardListWrapper = new FilmCardContainer();
     this._filmsModel = filmModel;
-    this._renderedCard = 0;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
     this._topratingContainer = this._filmCardListWrapper.getTopRatingContainer();
@@ -29,7 +28,7 @@ export default class FilmCardList {
     this._handlerFilterClick = this._handlerFilterClick.bind(this);
     this._handleChangeFromModel = this._handleChangeFromModel.bind(this);
     this._handleChangeOnView = this._handleChangeOnView.bind(this);
-
+    this._renderedCard = CARD_STEP;
 
     this._mainFilmCardPresenters = {};
     this._topratingFilmCardPresenter = {};
@@ -47,7 +46,7 @@ export default class FilmCardList {
     this._renderFilterMenu();
     this._renderSort();
     renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
-    this._renderFilmCards();
+    this._renderMainFilmCards();
     this._renderExtraCard();
     //this._renderMainElements();
   }
@@ -118,7 +117,7 @@ export default class FilmCardList {
   _handlerSortClick(type) {
     this._sortMode = type;
     this._resetFilmCardList();
-    this._renderFilmCards();
+    this._renderMainFilmCards();
   }
 
   _handlerFilterClick(filterType) {
@@ -130,7 +129,7 @@ export default class FilmCardList {
     this._filmsInfo = this._defaultFilmCardData.slice();
     this._filmsInfo = filterFunction(this._filmsInfo);
     this._resetFilmCardList();
-    this._renderFilmCards();
+    this._renderMainFilmCards();
   }
 
   _renderSort() {
@@ -148,7 +147,7 @@ export default class FilmCardList {
     this._filmCardPresenter.init(filmCardData);
   }
 
-  _renderFilmCards() {
+  _renderMainFilmCards() {
     if (!this._getData().length) {
       const mainContainer = this._filmCardListWrapper.getElement();
       mainContainer.innerHTML = '';
@@ -162,7 +161,7 @@ export default class FilmCardList {
 
     this._getData()
       .slice(this._renderedCard, this._renderedCard + CARD_STEP)
-      .forEach((filmInfo)  =>{
+      .forEach((filmInfo) => {
         this._renderFilmCard(this._mainContainer, filmInfo);
         this._mainFilmCardPresenters[filmInfo.id] = this._filmCardPresenter;
       });
@@ -192,7 +191,7 @@ export default class FilmCardList {
 
   _handleButtonShowMore() {
 
-    this._renderFilmCards();
+    this._renderMainFilmCards();
   }
 
   _renderExtraCard() {
@@ -231,7 +230,7 @@ export default class FilmCardList {
 /*   _renderMainElements() {
     this._renderSort();
     renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
-    this._renderFilmCards();
+    this._renderMainFilmCards();
     this._renderExtraCard();
   } */
 }
