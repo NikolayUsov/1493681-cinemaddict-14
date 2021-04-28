@@ -7,15 +7,17 @@ import { compareComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction } from '../utils/const.js';
 import { comparerating, compareDate } from '../utils/compares.js';
-import { Filter, filtersFunctionMap, FILTER } from '../view/filter-view.js';
+import {filtersFunctionMap} from '../utils/filter-utils.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
 
 export default class FilmCardList {
-  constructor(container, filmModel) {
+  constructor(container, filterPresenter, filmModel, filterModel) {
     this._filmCardListContainer = container;
     this._noFilmCard = new EmptyFilmCard();
+    this._filterPresenter = filterPresenter;
+    this._filterModel = filterModel;
     this._buttonShowMore = null;
     this._sortComponent = null;
     this._filmCardListWrapper = new FilmCardContainer();
@@ -26,7 +28,6 @@ export default class FilmCardList {
     this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
     this._handleButtonShowMore = this._handleButtonShowMore.bind(this);
-    this._handlerFilterClick = this._handlerFilterClick.bind(this);
     this._handleChangeFromModel = this._handleChangeFromModel.bind(this);
     this._handleChangeOnView = this._handleChangeOnView.bind(this);
     this._renderedCard = CARD_STEP;
@@ -37,13 +38,13 @@ export default class FilmCardList {
     this._sortType = SortType.DEFAULT;
 
     this._filmsModel.addToObserve(this._handleChangeFromModel);
+    this._filterModel.addToObserve(this._handleChangeFromModel);
   }
 
   init() {
     this._filmsInfo = this._filmsModel.getData();
     this._defaultFilmCardData = this._filmsInfo.slice();
-    this._filterComponent = new Filter(this._filmsInfo);
-    this._renderFilterMenu();
+    this._filterPresenter.init();
     renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
     this._renderMainFilmCards();
     this._renderExtraCard();
@@ -52,16 +53,18 @@ export default class FilmCardList {
 
 
   _getData () {
+    const filterType = this._filterModel.getFilter();
+    const filtredData = filtersFunctionMap[filterType](this._filmsModel.getData());
+
     switch(this._sortType) {
       case SortType.RATING:
-        return this._filmsModel.getData().slice().sort(comparerating);
+        return filtredData.sort(comparerating);
       case SortType.DATE:
-        return this._filmsModel.getData().slice().sort(compareDate);
+        return filtredData.sort(compareDate);
       case SortType.DEFAULT:
-        return this._filmsModel.getData().slice();
+        return filtredData;
     }
   }
-
 
   _handleChangeFromModel (updateType, updateFilmCard, popUpStatus) {
     switch(updateType) {
@@ -79,6 +82,8 @@ export default class FilmCardList {
         }
         break;
       case UpdateType.MINOR:
+        this._clearMainFilmCards();
+        this._renderMainFilmCards();
         console.log('Действия при МИНОРНОМ ОБНОВЛЕНИИ');
         break;
       case UpdateType.MAJOR:
@@ -119,17 +124,6 @@ export default class FilmCardList {
     this._renderMainFilmCards();
   }
 
-  _handlerFilterClick(filterType) {
-
-    const filterFunction = filterType === 'All'
-      ? filtersFunctionMap[FILTER.ALL_MOVIES]
-      : filtersFunctionMap[filterType];
-
-    this._filmsInfo = this._defaultFilmCardData.slice();
-    this._filmsInfo = filterFunction(this._filmsInfo);
-    this._resetFilmCardList();
-    this._renderMainFilmCards();
-  }
 
   _renderSort() {
     if ( this._sortComponent !== null ){
@@ -138,11 +132,6 @@ export default class FilmCardList {
     this._sortComponent = new SortView(this._sortType);
     this._sortComponent.setSortClick(this._handlerSortClick);
     renderElement(this._filmCardListWrapper , this._sortComponent,  RenderPosition.BEFOREBEGIN);
-  }
-
-  _renderFilterMenu() {
-    renderElement(this._filmCardListContainer, this._filterComponent, RenderPosition.BEFOREEND);
-    this._filterComponent.setFilterClick(this._handlerFilterClick);
   }
 
   _renderFilmCard(filmInfo) {
