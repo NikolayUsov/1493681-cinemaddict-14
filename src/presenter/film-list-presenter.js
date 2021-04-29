@@ -7,7 +7,7 @@ import { compareComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction } from '../utils/const.js';
 import { comparerating, compareDate } from '../utils/compares.js';
-import {filtersFunctionMap} from '../utils/filter-utils.js';
+import {FILTER, filtersFunctionMap} from '../utils/filter-utils.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
@@ -48,7 +48,6 @@ export default class FilmCardList {
     renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
     this._renderMainFilmCards();
     this._renderExtraCard();
-    //this._renderMainElements();
   }
 
 
@@ -67,6 +66,7 @@ export default class FilmCardList {
   }
 
   _handleChangeFromModel (updateType, updateFilmCard, popUpStatus) {
+
     switch(updateType) {
       case UpdateType.PATH :
         if (updateFilmCard.id in this._mainFilmCardPresenters) {
@@ -84,16 +84,19 @@ export default class FilmCardList {
       case UpdateType.MINOR:
         this._clearMainFilmCards();
         this._renderMainFilmCards();
-        console.log('Действия при МИНОРНОМ ОБНОВЛЕНИИ');
         break;
       case UpdateType.MAJOR:
-        console.log('Действия при мажорном обновлении');
+        this._clearMainFilmCards({resetRenderedCard:false, resetSortType:true });
+        this._renderMainFilmCards();
         break;
     }
   }
 
   _handleChangeOnView (userAction, updateType, update, popUpStatus) {
-    console.log(userAction, updateType, update, popUpStatus);
+    const filterType = this._filterModel.getFilter();
+    if (filterType != FILTER.ALL_MOVIES) {
+      updateType = UpdateType.MINOR;
+    }
     switch (userAction) {
       case UserAction.UPDATE:
         this._filmsModel.updateData(updateType, update, popUpStatus);
@@ -147,7 +150,6 @@ export default class FilmCardList {
   _renderMainFilmCards() {
     const films = this._getData();
     const filmsCount = films.length;
-
     if (!filmsCount) {
       this._mainContainer.innerHTML = '';
       renderElement( this._mainContainer, this._noFilmCard, RenderPosition.BEFOREEND);
@@ -160,31 +162,13 @@ export default class FilmCardList {
     if (filmsCount > this._renderedCard) {
       this._renderButtonShowMore();
     }
-    /*
-    if (this._getData().length < this._renderedCard) {
-      this._renderedCard = this._filmsInfo.length;
-    }
-
-    this._getData()
-      .slice(this._renderedCard, this._renderedCard + CARD_STEP)
-      .forEach((filmInfo) => {
-        this._renderFilmCard(this._mainContainer, filmInfo);
-        // this._mainFilmCardPresenters[filmInfo.id] = this._filmCardPresenter;
-      });
-    this._renderedCard += CARD_STEP;
-
-    if (this._renderedCard >= this._getData().length) {
-      this._renderedCard = this._getData().length;
-      this._buttonShowMore.getElement().remove();
-    } else {
-      this._renderButtonShowMore();
-    } */
   }
 
   _clearMainFilmCards ({resetRenderedCard = false, resetSortType = false } = {}) {
     this._clearMainFilmsPresenters();
     remove(this._sortComponent);
     remove(this._buttonShowMore);
+    remove(this._noFilmCard);
 
     if (resetRenderedCard) {
       this._renderedCard = CARD_STEP;
@@ -193,7 +177,7 @@ export default class FilmCardList {
     }
 
     if (resetSortType) {
-      resetSortType = SortType.DEFAULT;
+      this._sortType = SortType.DEFAULT;
     }
   }
 
@@ -255,10 +239,4 @@ export default class FilmCardList {
     renderElement(this._mainContainer, this._buttonShowMore, RenderPosition.AFTEREND);
   }
 
-/*   _renderMainElements() {
-    this._renderSort();
-    renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
-    this._renderMainFilmCards();
-    this._renderExtraCard();
-  } */
 }

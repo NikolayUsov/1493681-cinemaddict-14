@@ -50,7 +50,7 @@ export class FilterView extends Smart {
       return;
     }
 
-    this._callback.filterClick(UpdateType.MINOR, evt.target.dataset.filter);
+    this._callback.filterClick(UpdateType.MAJOR, evt.target.dataset.filter);
   }
 
   setFilterClick(callback) {
