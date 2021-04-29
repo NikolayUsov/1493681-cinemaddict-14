@@ -2,7 +2,7 @@ import Smart from './smart-component.js';
 import { SortType } from '../utils/const.js';
 
 const sortTemplate = (sortType) => {
-  console.log(sortType);
+
   return `<ul class="sort">
   <li><a href="#" class="sort__button ${sortType === SortType.DEFAULT ? 'sort__button--active': ''}" data-sort = ${SortType.DEFAULT}>Sort by default</a></li>
   <li><a href="#" class="sort__button ${sortType === SortType.DATE ? 'sort__button--active': ''}" data-sort = ${SortType.DATE}>Sort by date</a></li>

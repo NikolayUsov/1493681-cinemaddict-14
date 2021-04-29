@@ -16,3 +16,7 @@ export const UpdateType = {
   PATH: 'path',
 };
 
+export const PopUpStatus = {
+  OPEN: 'open',
+  CLOSE: 'close',
+};

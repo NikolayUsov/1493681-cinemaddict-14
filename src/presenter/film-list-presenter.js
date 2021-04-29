@@ -7,8 +7,8 @@ import { compareComments } from '../filters.js';
 import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction } from '../utils/const.js';
 import { comparerating, compareDate } from '../utils/compares.js';
-import {FILTER, filtersFunctionMap} from '../utils/filter-utils.js';
-
+import {FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl} from '../utils/filter-utils.js';
+import { PopUpStatus } from '..//utils/const.js';
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
 
@@ -92,11 +92,17 @@ export default class FilmCardList {
     }
   }
 
-  _handleChangeOnView (userAction, updateType, update, popUpStatus) {
+  _handleChangeOnView (userAction, updateType, update, updateControl, popUpStatus) {
     const filterType = this._filterModel.getFilter();
-    if (filterType != FILTER.ALL_MOVIES) {
+
+    if (filterType != FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
       updateType = UpdateType.MINOR;
     }
+
+    if (FilterTypeMatchToFilmsControl[filterType] !== updateControl && this._popUpStatus === PopUpStatus.OPEN) {
+      updateType = UpdateType.PATH;
+    }
+
     switch (userAction) {
       case UserAction.UPDATE:
         this._filmsModel.updateData(updateType, update, popUpStatus);
@@ -138,7 +144,7 @@ export default class FilmCardList {
   }
 
   _renderFilmCard(filmInfo) {
-    this._filmCardPresenter = new FilmCardPresenter(this._mainContainer, this._handleChangeOnView, this._handlerChangePopUp);
+    this._filmCardPresenter = new FilmCardPresenter(this._mainContainer, this._handleChangeOnView, this._handlerChangePopUp, this._filterModel);
     this._filmCardPresenter.init(filmInfo);
     this._mainFilmCardPresenters[filmInfo.id] = this._filmCardPresenter;
   }
@@ -187,11 +193,6 @@ export default class FilmCardList {
         filmCard.destroy();
       });
     this._mainFilmCardPresenters = {};
-  }
-
-  _resetFilmCardList() {
-    this._clearFilmCard();
-    this._renderedCard = 0;
   }
 
 

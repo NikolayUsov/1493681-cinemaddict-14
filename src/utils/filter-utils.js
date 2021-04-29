@@ -11,3 +11,9 @@ export const filtersFunctionMap = {
   [FILTER.FAVORITES]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isFavorite),
   [FILTER.HISTORY]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatched),
 };
+
+export const FilterTypeMatchToFilmsControl = {
+  [FILTER.WATCHLIST]: 'isFavorite',
+  [FILTER.FAVORITES]: 'isFavorite',
+  [FILTER.HISTORY]: 'isWatched',
+};

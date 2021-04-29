@@ -5,13 +5,11 @@ import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
+import { PopUpStatus } from '..//utils/const.js';
 import { UpdateType, UserAction } from '../utils/const';//to-do удалить ipdateItem
+import { FILTER, FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
 
 const footer = document.querySelector('.footer');
-const PopUpStatus = {
-  OPEN: 'open',
-  CLOSE: 'close',
-};
 
 const PopUpControlType = {
   FAVORITE: 'favorite',
@@ -20,8 +18,9 @@ const PopUpControlType = {
 };
 
 export default class FilmCardPresenter {
-  constructor(container, handlerChangeData, handlerChangeView) {
+  constructor(container, handlerChangeData, handlerChangeView, filterModel) {
     this._container = container;
+    this._filterModel = filterModel;
     this._filmCardComponent = null;
     this._popUpComponent = null;
     this._handlerChangeData = handlerChangeData;
@@ -44,15 +43,15 @@ export default class FilmCardPresenter {
     const prevFilmCardComponent = this._filmCardComponent;
     const prevPopUpComponent = this._popUpComponent;
 
-    this._filmCardComponent = new FilmCardView(filmCardData);
+    this._filmCardComponent = new FilmCardView(this._filmInfo);
     this._popUpComponent = new PopUpFilmView(this._filmInfo);
 
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick(this._handleOpenPopUp);
     this._filmCardComponent.setFilmCardFavoritsClick(this._handlerAddToFavorits);
     this._filmCardComponent.setFilmCardWatchedClick(this._handlerAddToWatched);
-
-
+    this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
+    this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
     this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
 
     if (prevFilmCardComponent === null || prevPopUpComponent === null) {
@@ -60,21 +59,16 @@ export default class FilmCardPresenter {
       return;
     }
 
-    if (this._container.contains(prevFilmCardComponent.getElement())) {
+    if (this._popUpStatus === PopUpStatus.CLOSE) {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
     if (this._popUpStatus === PopUpStatus.OPEN) {
-      this._popUpComponent = prevPopUpComponent;
-      return;
+      replace( this._popUpComponent, prevPopUpComponent);
+      console.log(this._popUpPosition, 'Записали');
+      this._popUpComponent.scrollTop = this._popUpPosition;
+      replace(this._filmCardComponent, prevFilmCardComponent);
     }
-
-    if (this._container.contains(prevPopUpComponent.getElement())) {
-      replace(this._popUpComponent, prevPopUpComponent);
-    }
-
-    remove(prevFilmCardComponent);
-    remove(prevPopUpComponent);
 
   }
 
@@ -101,8 +95,6 @@ export default class FilmCardPresenter {
   _openPopUp() {
     renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
     document.body.style.overflow = 'hidden';
-    this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
-    this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
   }
 
   _escKeyDownHandler(evt) {
@@ -124,6 +116,7 @@ export default class FilmCardPresenter {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+
   _handlerChangePopUpControlButton(buttonType) {
     if (buttonType === PopUpControlType.WATCHLIST) {
       this._updateFilmCardUserInfo('isWatchList');
@@ -138,10 +131,16 @@ export default class FilmCardPresenter {
     }
   }
 
-  _updateFilmCardUserInfo(updateKey) {
+  _updateFilmCardUserInfo(updateControl) {
+    const currentFilter = this._filterModel.getFilter();
     this._updateFilmCard = deepClone(this._filmInfo);
-    this._updateFilmCard.userInfo[updateKey] = !this._updateFilmCard.userInfo[updateKey];
-    this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, this._popUpStatus);
+    this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
+    this._popUpPosition = this._popUpComponent.scrollTop;
+    console.log(this._popUpPosition, 'запомнили');
+    if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopUpStatus.OPEN) {
+      this._closePopUp();
+    }
+    this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, updateControl, this._popUpStatus);
   }
 
   _handlerAddToWatchList() {

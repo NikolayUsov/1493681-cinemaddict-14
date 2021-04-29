@@ -33,12 +33,6 @@ export default class Smart extends Abstract {
     this.restoreHandlers();
   }
 
-  changeActiveStatus(target) {
-    const activeLinks = this.getElement().querySelector(`.${this._activeClass}`);
-    activeLinks.classList.remove(this._activeClass);
-    target.classList.add(this._activeClass);
-  }
-
   restoreHandlers() {
     throw new Error(`Abstract method not implemented: ${this.restoreListeners.name}`);
   }
