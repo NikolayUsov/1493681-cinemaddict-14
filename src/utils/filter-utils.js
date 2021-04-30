@@ -13,7 +13,7 @@ export const filtersFunctionMap = {
 };
 
 export const FilterTypeMatchToFilmsControl = {
-  [FILTER.WATCHLIST]: 'isFavorite',
+  [FILTER.WATCHLIST]: 'isWatchList',
   [FILTER.FAVORITES]: 'isFavorite',
   [FILTER.HISTORY]: 'isWatched',
 };

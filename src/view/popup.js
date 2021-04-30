@@ -49,7 +49,7 @@ const popupContainerTemplate = (card) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${elem.author}</span>
         <span class="film-details__comment-day">${elem.diffmessage}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="film-details__comment-delete" data-comment-id = "${elem.id}">Delete</button>
       </p>
     </div>
       </li>`).join('')}`;
@@ -180,10 +180,11 @@ export default class PopUpFilmInfo extends Smart {
     super();
     this._data = PopUpFilmInfo.parseFilmCardToState(data);
     this._buttonCloseHandler = this._buttonCloseHandler.bind(this);
-    this._ControlListHandler = this._ControlListHandler.bind(this);
+    this._ControlListClickHandler = this._ControlListClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
     this._sendNewCommentHandler = this._sendNewCommentHandler.bind(this);
+    this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
     this._setInnerHandlers();
   }
 
@@ -219,6 +220,7 @@ export default class PopUpFilmInfo extends Smart {
     this.getEmojiControls().addEventListener('change', this._emojiChangeHandler);
     this.getCommentField().addEventListener('input', this._inputTextCommentHandler);
     this.getElement().addEventListener('keydown', this._sendNewCommentHandler);
+    this.getElement().querySelector('.film-details__comments-list').addEventListener('click',this._deleteCommentHandler);
   }
 
   _buttonCloseHandler(evt) {
@@ -227,7 +229,7 @@ export default class PopUpFilmInfo extends Smart {
   }
 
 
-  _ControlListHandler(evt) {
+  _ControlListClickHandler(evt) {
     evt.preventDefault();
     this._callback.inputControlPopUp(evt.target.id);
   }
@@ -247,7 +249,7 @@ export default class PopUpFilmInfo extends Smart {
 
   setPopUpControlChange(callback) {
     this._callback.inputControlPopUp = callback;
-    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._ControlListHandler);
+    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._ControlListClickHandler);
   }
 
   setClickCloseButton(callback) {
@@ -256,8 +258,8 @@ export default class PopUpFilmInfo extends Smart {
   }
 
   _sendNewCommentHandler(evt) {
-    const isRightKeys = ((evt.ctrlKey || evt.metaKey) && evt.keyCode == 13);
-    const isHasTextContentAndEmoji = (!this._data.currentEmoji || !this._data.currentTextComment.trim());
+    const isRightKeys = (evt.ctrlKey || evt.metaKey) && evt.keyCode == 13;
+    const isHasTextContentAndEmoji = !this._data.currentEmoji || !this._data.currentTextComment.trim();
 
     if (isRightKeys && !isHasTextContentAndEmoji) {
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
@@ -266,8 +268,20 @@ export default class PopUpFilmInfo extends Smart {
     }
   }
 
+  _deleteCommentHandler(evt) {
+    if (!evt.target.classList.contains('film-details__comment-delete')) {
+      return;
+    }
+    evt.preventDefault();
+    this._callback.deleteComment(evt.target.dataset.commentId);
+  }
+
   setSendNewComment(callback) {
     this._callback.setSendNewComment = callback;
+  }
+
+  setDeleteComment (callback) {
+    this._callback.deleteComment = callback;
   }
 
   static parseFilmCardToState(filmCard) {

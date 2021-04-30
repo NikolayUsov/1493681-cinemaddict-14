@@ -27,7 +27,6 @@ export default class Sort extends Smart {
       return;
     }
     evt.preventDefault();
-    //this.changeActiveStatus(evt.target);
     this._callback.sortClick(evt.target.dataset.sort);
   }
 

@@ -35,6 +35,7 @@ export default class FilmCardPresenter {
     this._handlerChangePopUpControlButton = this._handlerChangePopUpControlButton.bind(this);
 
     this._handlerSendNewComment = this._handlerSendNewComment.bind(this);
+    this._handlerDeleteComment = this._handlerDeleteComment.bind(this);
   }
 
   init(filmCardData, popupStatus = PopUpStatus.CLOSE) {
@@ -44,15 +45,13 @@ export default class FilmCardPresenter {
     const prevPopUpComponent = this._popUpComponent;
 
     this._filmCardComponent = new FilmCardView(this._filmInfo);
-    this._popUpComponent = new PopUpFilmView(this._filmInfo);
+
 
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick(this._handleOpenPopUp);
     this._filmCardComponent.setFilmCardFavoritsClick(this._handlerAddToFavorits);
     this._filmCardComponent.setFilmCardWatchedClick(this._handlerAddToWatched);
-    this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
-    this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
-    this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
+
 
     if (prevFilmCardComponent === null || prevPopUpComponent === null) {
       renderElement(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
@@ -64,12 +63,10 @@ export default class FilmCardPresenter {
     }
 
     if (this._popUpStatus === PopUpStatus.OPEN) {
-      replace( this._popUpComponent, prevPopUpComponent);
-      console.log(this._popUpPosition, 'Записали');
-      this._popUpComponent.scrollTop = this._popUpPosition;
+      replace(this._popUpComponent, prevPopUpComponent);
+      this._popUpComponent.getElement().scrollTop = this._popUpPosition;
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
-
   }
 
   destroy() {
@@ -93,7 +90,12 @@ export default class FilmCardPresenter {
   }
 
   _openPopUp() {
+    this._popUpComponent = new PopUpFilmView(this._filmInfo);
     renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
+    this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
+    this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
+    this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
+    this._popUpComponent.setDeleteComment(this._handlerDeleteComment);
     document.body.style.overflow = 'hidden';
   }
 
@@ -135,8 +137,8 @@ export default class FilmCardPresenter {
     const currentFilter = this._filterModel.getFilter();
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
-    this._popUpPosition = this._popUpComponent.scrollTop;
-    console.log(this._popUpPosition, 'запомнили');
+    this._popUpPosition = this._popUpComponent.getElement().scrollTop;
+
     if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopUpStatus.OPEN) {
       this._closePopUp();
     }
@@ -157,6 +159,13 @@ export default class FilmCardPresenter {
 
   _handlerSendNewComment(updateFilmCard) {
     this._handlerChangeData(updateFilmCard, this._popUpStatus);
+  }
+
+  _handlerDeleteComment(commnetId) {
+    const updateFilmCard = deepClone(this._filmInfo);
+    const comment =  updateFilmCard.comments.filter((comment) => comment.id != commnetId);
+    updateFilmCard.comments = comment;
+    console.log(updateFilmCard);
   }
 
 }
