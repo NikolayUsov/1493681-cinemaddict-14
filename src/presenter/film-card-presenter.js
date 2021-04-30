@@ -9,8 +9,8 @@ import { PopUpStatus } from '..//utils/const.js';
 import { UpdateType, UserAction } from '../utils/const';//to-do удалить ipdateItem
 import { FILTER, FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
 
-const footer = document.querySelector('.footer');
 
+const footer = document.querySelector('.footer');
 const PopUpControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
@@ -38,22 +38,18 @@ export default class FilmCardPresenter {
     this._handlerDeleteComment = this._handlerDeleteComment.bind(this);
   }
 
-  init(filmCardData, popupStatus = PopUpStatus.CLOSE) {
+  init(filmCardData) {
     this._filmInfo = filmCardData;
-    this._popUpStatus = popupStatus;
     const prevFilmCardComponent = this._filmCardComponent;
-    const prevPopUpComponent = this._popUpComponent;
 
     this._filmCardComponent = new FilmCardView(this._filmInfo);
-
-
     this._filmCardComponent.setFilmCardWatchListClick(this._handlerAddToWatchList);
     this._filmCardComponent.setFilmCardClick(this._handleOpenPopUp);
     this._filmCardComponent.setFilmCardFavoritsClick(this._handlerAddToFavorits);
     this._filmCardComponent.setFilmCardWatchedClick(this._handlerAddToWatched);
 
 
-    if (prevFilmCardComponent === null || prevPopUpComponent === null) {
+    if (prevFilmCardComponent === null) {
       renderElement(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -63,9 +59,8 @@ export default class FilmCardPresenter {
     }
 
     if (this._popUpStatus === PopUpStatus.OPEN) {
-      replace(this._popUpComponent, prevPopUpComponent);
-      this._popUpComponent.getElement().scrollTop = this._popUpPosition;
       replace(this._filmCardComponent, prevFilmCardComponent);
+      this._popUpComponent.updateData( this._filmInfo);
     }
   }
 
@@ -137,8 +132,6 @@ export default class FilmCardPresenter {
     const currentFilter = this._filterModel.getFilter();
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
-    this._popUpPosition = this._popUpComponent.getElement().scrollTop;
-
     if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopUpStatus.OPEN) {
       this._closePopUp();
     }
@@ -161,11 +154,12 @@ export default class FilmCardPresenter {
     this._handlerChangeData(updateFilmCard, this._popUpStatus);
   }
 
-  _handlerDeleteComment(commnetId) {
-    const updateFilmCard = deepClone(this._filmInfo);
-    const comment =  updateFilmCard.comments.filter((comment) => comment.id != commnetId);
-    updateFilmCard.comments = comment;
-    console.log(updateFilmCard);
+  _handlerDeleteComment(commnetID) {
+    const updatedFilmCard = deepClone(this._filmInfo);
+    const comment =  updatedFilmCard.comments.filter((comment) => comment.id != commnetID);
+    updatedFilmCard.comments = comment;
+    this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard,'',this._popUpStatus);
+
   }
 
 }

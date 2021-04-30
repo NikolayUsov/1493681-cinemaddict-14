@@ -65,20 +65,20 @@ export default class FilmCardList {
     }
   }
 
-  _handleChangeFromModel (updateType, updateFilmCard, popUpStatus) {
+  _handleChangeFromModel (updateType, updateFilmCard) {
 
     switch(updateType) {
       case UpdateType.PATH :
         if (updateFilmCard.id in this._mainFilmCardPresenters) {
-          this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+          this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard);
         }
 
         if (updateFilmCard.id in this._topratingFilmCardPresenter) {
-          this._topratingFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+          this._topratingFilmCardPresenter[updateFilmCard.id].init(updateFilmCard);
         }
 
         if (updateFilmCard.id in this._topCommentedFilmCardPresenter) {
-          this._topCommentedFilmCardPresenter[updateFilmCard.id].init(updateFilmCard, popUpStatus);
+          this._topCommentedFilmCardPresenter[updateFilmCard.id].init(updateFilmCard);
         }
         break;
       case UpdateType.MINOR:
@@ -105,13 +105,13 @@ export default class FilmCardList {
 
     switch (userAction) {
       case UserAction.UPDATE:
-        this._filmsModel.updateData(updateType, update, popUpStatus);
+        this._filmsModel.updateData(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
         console.log('Действия при добавлени комментария');
         break;
       case UserAction.DELETE_COMMENT:
-        console.log('Дейсвтие при удалении комментария');
+        this._filmsModel.updateData(updateType, update);
         break;
     }
   }

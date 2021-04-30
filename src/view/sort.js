@@ -15,7 +15,7 @@ export default class Sort extends Smart {
     super();
     this._data = sortType;
     this._clickSortHandler = this._clickSortHandler.bind(this);
-    this._activeClass = 'sort__button--active';
+
   }
 
   getTemplate() {
