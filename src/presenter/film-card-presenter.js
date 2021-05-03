@@ -18,11 +18,13 @@ const PopUpControlType = {
 };
 
 export default class FilmCardPresenter {
-  constructor(container, handlerChangeData, handlerChangeView, filterModel) {
+  constructor(container, handlerChangeData, handlerChangeView, filterModel, renderExtraCard) {
     this._container = container;
     this._filterModel = filterModel;
     this._filmCardComponent = null;
     this._popUpComponent = null;
+    this._renderExtraCard = renderExtraCard;
+    this._isChangeComment = false;
     this._handlerChangeData = handlerChangeData;
     this._handlerChangeView = handlerChangeView;
     this._popUpStatus = PopUpStatus.CLOSE;
@@ -60,13 +62,14 @@ export default class FilmCardPresenter {
 
     if (this._popUpStatus === PopUpStatus.OPEN) {
       replace(this._filmCardComponent, prevFilmCardComponent);
-      this._popUpComponent.updateData( this._filmInfo);
+      this._popUpComponent.updateData(this._filmInfo);
+
     }
   }
 
   destroy() {
     remove(this._filmCardComponent);
-    remove(this._popUpComponent);
+
   }
 
   resetFilmView() {
@@ -82,6 +85,10 @@ export default class FilmCardPresenter {
     this._popUpComponent.reset(this._filmInfo);
     this._popUpStatus = PopUpStatus.CLOSE;
     document.body.style.overflow = '';
+    if (this._isChangeComment) {
+      this._renderExtraCard();
+      this._isChangeComment = false;
+    }
   }
 
   _openPopUp() {
@@ -152,15 +159,15 @@ export default class FilmCardPresenter {
 
   _handlerSendNewComment(updateFilmCard) {
     this._handlerChangeData(updateFilmCard, this._popUpStatus);
+    this._isChangeComment = true;
   }
 
   _handlerDeleteComment(commnetID) {
     const updatedFilmCard = deepClone(this._filmInfo);
-    const comment =  updatedFilmCard.comments.filter((comment) => comment.id != commnetID);
+    const comment = updatedFilmCard.comments.filter((comment) => comment.id != commnetID);
     updatedFilmCard.comments = comment;
-    this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard,'',this._popUpStatus);
-
+    this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
+    this._isChangeComment = true;
   }
-
 }
 

@@ -1,7 +1,7 @@
 
 import Smart from './smart-component.js';
 import { generateCommetData } from '../mock/comment-mock.js';
-
+import he from 'he';
 
 const popupContainerTemplate = (card) => {
 
@@ -45,7 +45,7 @@ const popupContainerTemplate = (card) => {
       <img src="./images/emoji/${elem.emotion}.png" width="55" height="55" alt="emoji-sleeping">
     </span>
     <div>
-      <p class="film-details__comment-text">${elem.text}</p>
+      <p class="film-details__comment-text">${he.encode(elem.text)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${elem.author}</span>
         <span class="film-details__comment-day">${elem.diffmessage}</span>
