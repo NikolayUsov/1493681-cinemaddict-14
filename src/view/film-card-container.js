@@ -25,19 +25,19 @@ const filmListcontainerTemplate = () => {
 
 export default class FilmCardContainer extends AbstractView {
 
-  getTemplate () {
+  getTemplate() {
     return filmListcontainerTemplate();
   }
 
-  getMainContainer () {
+  getMainContainer() {
     return this.getElement().querySelector('.film-list--main');
   }
 
-  getTopRatingContainer () {
+  getTopRatingContainer() {
     return this.getElement().querySelector('.films-list--rating');
   }
 
-  getTopCommentedContainer () {
+  getTopCommentedContainer() {
     return this.getElement().querySelector('.films-list--top-commented');
   }
 }

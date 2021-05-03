@@ -1,46 +1,37 @@
 import Smart from './smart-component.js';
-import { SortType } from  '../utils/const.js';
+import { SortType } from '../utils/const.js';
 
-const sortTemplate = () => {
+const sortTemplate = (sortType) => {
+
   return `<ul class="sort">
-  <li><a href="#" class="sort__button sort__button--active" data-sort = ${SortType.DEFAULT}>Sort by default</a></li>
-  <li><a href="#" class="sort__button" data-sort = ${SortType.DATE}>Sort by date</a></li>
-  <li><a href="#" class="sort__button" data-sort = ${SortType.RATING}>Sort by rating</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.DEFAULT ? 'sort__button--active': ''}" data-sort = ${SortType.DEFAULT}>Sort by default</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.DATE ? 'sort__button--active': ''}" data-sort = ${SortType.DATE}>Sort by date</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.RATING ? 'sort__button--active': ''}" data-sort = ${SortType.RATING}>Sort by rating</a></li>
   </ul>`;
 };
 
 export default class Sort extends Smart {
-  constructor () {
+  constructor(sortType) {
     super();
-    this._handlerClickSort = this._handlerClickSort.bind(this);
-    //this._changeActiveButton = this._changeActiveButton.bind(this);
-    this._activeClass = 'sort__button--active';
+    this._data = sortType;
+    this._clickSortHandler = this._clickSortHandler.bind(this);
+
   }
 
-  getTemplate () {
-    return sortTemplate();
+  getTemplate() {
+    return sortTemplate(this._data);
   }
 
-  /*   _changeActiveButton (target) {
-    const links = this.getElement().querySelectorAll('.sort__button');
-    for(const link of links) {
-      link.classList.remove('sort__button--active');
-    }
-    target.classList.add('sort__button--active');
-  }
- */
-
-  _handlerClickSort (evt) {
-    if (evt.target.tagName !== 'A'){
+  _clickSortHandler(evt) {
+    if (evt.target.tagName !== 'A') {
       return;
     }
     evt.preventDefault();
-    this.changeActiveStatus(evt.target);
     this._callback.sortClick(evt.target.dataset.sort);
   }
 
-  setSortClick (callback) {
+  setSortClick(callback) {
     this._callback.sortClick = callback;
-    this.getElement().addEventListener('click', this._handlerClickSort);
+    this.getElement().addEventListener('click', this._clickSortHandler);
   }
 }

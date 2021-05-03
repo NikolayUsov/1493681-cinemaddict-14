@@ -8,7 +8,7 @@ const getEmptyFilmCardTemplate = () => {
 
 export default class EmptyFilmCard extends AbstractView {
 
-  getTemplate () {
+  getTemplate() {
     return getEmptyFilmCardTemplate();
   }
 }

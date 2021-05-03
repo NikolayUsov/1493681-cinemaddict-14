@@ -5,12 +5,12 @@ const footerStatisticTemplate = (data) => {
 };
 
 export default class Footer extends AbstractView {
-  constructor(data){
+  constructor(data) {
     super();
     this._data = data;
   }
 
-  getTemplate (){
+  getTemplate() {
     return footerStatisticTemplate(this._data);
   }
 }

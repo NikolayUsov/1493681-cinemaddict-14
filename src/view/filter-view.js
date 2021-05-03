@@ -1,90 +1,60 @@
 import Smart from './smart-component.js';
+import { FILTER } from '../utils/filter-utils.js';
+import { UpdateType } from '../utils/const.js';
 
-export const FILTER = {
-  ALL_MOVIES: 'All movies',
-  WATHCLIST: 'Watchlist',
-  FAVOURITES: 'Favorites',
-  HISTORY: 'History',
-};
+const mainNavigationTemplate = (filters, activeFilter) => {
+  const genereFilterItem = (filter) => {
 
-
-export const filtersFunctionMap = {
-  [FILTER.ALL_MOVIES] : (filmCards) => filmCards,
-  [FILTER.WATHCLIST]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatchList),
-  [FILTER.FAVOURITES]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isFavorite),
-  [FILTER.HISTORY]: (filmCards) => filmCards.filter((filmCard) => filmCard.userInfo.isWatched),
-};
-
-
-const generateFilter = (filmCards) => {
-  return Object.entries(filtersFunctionMap).map(([filterName, filterFunction]) => {
-    return {
-      filter: filterName,
-      filtredFilm: filterFunction(filmCards),
-    };
-  });
-};
-
-const mainNavigationTemplate = (filmCards) => {
-
-  const filters = generateFilter(filmCards);
-
-  const mainNavigationItem = (itemMenu, isActive) => {
-    const {filter, filtredFilm} = itemMenu;
-
-    return `<a href="#${filter === FILTER.ALL_MOVIES ? 'all' : `${filter.toLowerCase()}`}"
-    class="main-navigation__item ${isActive ? 'main-navigation__item--active' : ''}"
-    data-filter = ${filter}
-    >
-    ${filter === FILTER.ALL_MOVIES ?
-    FILTER.ALL_MOVIES :
-    `${filter} <span class="main-navigation__item-count">${filtredFilm.length}</span>`}
-    </a>`;
+    const {type, filterName, count} = filter;
+    return `<a href="#${filterName}"
+    data-filter = "${type}"
+    class="main-navigation__item ${activeFilter === type ? 'main-navigation__item--active' : ''}">
+    ${type} ${type === FILTER.ALL_MOVIES ? '' : `<span class="main-navigation__item-count">${count}</span>`}</a>`;
   };
 
-  const  createMainNavigationTemplate = () => {
-    return filters.map((filterMenu, index) => mainNavigationItem(filterMenu, index === 0)).join('');
+  const generateFiltersTemplate =() => {
+    return filters.map((filter) => genereFilterItem(filter)).join('');
   };
 
   return `<nav class="main-navigation">
-  <div class="main-navigation__items">
-    ${createMainNavigationTemplate()}
-  </div>
-  <a href="#stats" class="main-navigation__additional">Stats</a>
-</nav>`;
+   <div class="main-navigation__items">
+    ${generateFiltersTemplate()}
+    </div>
+    <a href="#stats" class="main-navigation__additional">Stats</a>
+    </nav>`;
 };
 
-export class Filter extends Smart{
-  constructor (data) {
+export class FilterView extends Smart {
+  constructor(filters, currentFilter) {
     super();
-    this._data = data;
-    this._handlerFilterClick = this._handlerFilterClick.bind(this);
-    this._activeClass = 'main-navigation__item--active';
+    this._data =filters;
+    this._currentFilter = currentFilter;
+    this._filterClickHandler = this._filterClickHandler.bind(this);
   }
 
-  getTemplate () {
-    return mainNavigationTemplate(this._data);
+  getTemplate() {
+    return mainNavigationTemplate(this._data, this._currentFilter);
   }
 
-  updateData (update) {
+  updateData(update) {
     this._data = update;
     this.updateElement();
   }
 
-  restoreHandlers () {
+  restoreHandlers() {
     this.setFilterClick(this._callback.filterClick);
   }
 
-  _handlerFilterClick(evt) {
-    if(evt.target.tagName !== 'A') {
+  _filterClickHandler(evt) {
+    if (!evt.target.classList.contains('main-navigation__item')) {
       return;
     }
-    this.changeActiveStatus(evt.target);
-    this._callback.filterClick(evt.target.dataset.filter);
+
+    this._callback.filterClick(UpdateType.MAJOR, evt.target.dataset.filter);
   }
 
-  setFilterClick (callback) {
+  setFilterClick(callback) {
     this._callback.filterClick = callback;
-    this.getElement().addEventListener('click', this._handlerFilterClick);
+    this.getElement().addEventListener('click', this._filterClickHandler);
   }
 }

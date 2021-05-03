@@ -1,4 +1,3 @@
-
 import AbstractView from './abstract.js';
 //import { getComments } from '../utils/film-card-map.js';
 const filmCardTemplate = (card) => {
@@ -16,7 +15,8 @@ const filmCardTemplate = (card) => {
     comments,
   } = card;
 
-  const {isWatchList,
+  const {
+    isWatchList,
     isFavorite,
     isWatched,
   } = userInfo;
@@ -31,7 +31,7 @@ const filmCardTemplate = (card) => {
   <p class="film-card__info">
     <span class="film-card__year">${dateCreate.format('YYYY')}</span>
     <span class="film-card__duration">${runtimeMessage}</span>
-    <span class="film-card__genre">${genres.length > 0 ? genres.randomElement(): ''}</span>
+    <span class="film-card__genre">${genres.length > 0 ? genres.randomElement() : ''}</span>
   </p>
   <img src="${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${newDescription}</p>
@@ -45,87 +45,88 @@ const filmCardTemplate = (card) => {
 };
 
 export default class filmCard extends AbstractView {
-  constructor (data) {
+  constructor(data) {
     super();
     this._data = data;
-    this._clickHandler = this._clickHandler.bind(this);
-    this._handlerAddToWatchList = this._handlerAddToWatchList.bind(this);
-    this._handlerAddToFavorites = this._handlerAddToFavorites.bind(this);
-    this._handlerAddToWatched = this._handlerAddToWatched.bind(this);
+    this._clickFilmCardHandler = this._clickFilmCardHandler.bind(this);
+    this._addToWatchListHandler = this._addToWatchListHandler.bind(this);
+    this._addToFavoritesHandler = this._addToFavoritesHandler.bind(this);
+    this._addToWatchedHandler = this._addToWatchedHandler.bind(this);
   }
 
-  getTemplate () {
+  getTemplate() {
     return filmCardTemplate(this._data);
   }
 
-  getTitle () {
+  getTitle() {
     this._initElement();
     return this._element.querySelector('.film-card__title');
   }
 
-  getPicture () {
+  getPicture() {
     this._initElement();
     return this._element.querySelector('.film-card__poster');
   }
 
-  getComment () {
+  getComment() {
     this._initElement();
     return this._element.querySelector('.film-card__comments');
   }
 
-  getButtonAddToWatchList () {
+  getButtonAddToWatchList() {
     this._initElement();
     return this._element.querySelector('.film-card__controls-item--add-to-watchlist');
   }
 
-  getButtonAddToFavorits () {
+  getButtonAddToFavorits() {
     this._initElement();
     return this._element.querySelector('.film-card__controls-item--favorite');
   }
 
-  getButtonAddFilmToWatched () {
+  getButtonAddFilmToWatched() {
     this._initElement();
     return this._element.querySelector('.film-card__controls-item--mark-as-watched');
   }
 
-  _clickHandler (evt) {
+  _clickFilmCardHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
 
-  setFilmCardClick (callback) {
+  setFilmCardClick(callback) {
     this._callback.click = callback;
-    this.getTitle().addEventListener('click', this._clickHandler);
-    this.getComment().addEventListener('click', this._clickHandler);
-    this.getPicture().addEventListener('click', this._clickHandler);
+    this.getTitle().addEventListener('click', this._clickFilmCardHandler);
+    this.getComment().addEventListener('click', this._clickFilmCardHandler);
+    this.getPicture().addEventListener('click', this._clickFilmCardHandler);
   }
 
-  _handlerAddToWatchList (evt) {
+  _addToWatchListHandler(evt) {
     evt.preventDefault();
     this._callback.onAddToWatchListClick();
   }
 
-  _handlerAddToFavorites (evt) {
+  _addToFavoritesHandler(evt) {
     evt.preventDefault();
     this._callback.addToFavoritesClick();
   }
 
-  _handlerAddToWatched (evt) {
+  _addToWatchedHandler(evt) {
     evt.preventDefault();
     this._callback.addToWatchedClick();
   }
-  setFilmCardWatchListClick (callback) {
+
+  setFilmCardWatchListClick(callback) {
     this._callback.onAddToWatchListClick = callback;
-    this.getButtonAddToWatchList().addEventListener('click', this._handlerAddToWatchList);
+    this.getButtonAddToWatchList().addEventListener('click', this._addToWatchListHandler);
   }
 
-  setFilmCardFavoritsClick (callback) {
+  setFilmCardFavoritsClick(callback) {
     this._callback.addToFavoritesClick = callback;
-    this.getButtonAddToFavorits().addEventListener('click', this._handlerAddToFavorites);
+    this.getButtonAddToFavorits().addEventListener('click', this._addToFavoritesHandler);
   }
 
-  setFilmCardWatchedClick (callback) {
+  setFilmCardWatchedClick(callback) {
     this._callback.addToWatchedClick = callback;
-    this.getButtonAddFilmToWatched().addEventListener('click', this._handlerAddToWatched);
+    this.getButtonAddFilmToWatched().addEventListener('click', this._addToWatchedHandler);
   }
 }

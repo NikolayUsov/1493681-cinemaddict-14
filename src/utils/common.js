@@ -67,7 +67,7 @@ Array.prototype.randomElement = function() {
   return this[getRandomInteger(0, this.length-1)];
 };
 
-
+// to-do удалить
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
