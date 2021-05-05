@@ -34,6 +34,6 @@ export default class Smart extends Abstract {
   }
 
   restoreHandlers() {
-    throw new Error(`Abstract method not implemented: ${this.restoreListeners.name}`);
+    throw new Error(`Abstract method not implemented: ${this.restoreHandlers.name}`);
   }
 }

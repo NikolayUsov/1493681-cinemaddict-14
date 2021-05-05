@@ -1,4 +1,5 @@
 import AbstractView from './abstract.js';
+import dayjs from 'dayjs';
 //import { getComments } from '../utils/film-card-map.js';
 const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
@@ -24,14 +25,13 @@ const filmCardTemplate = (card) => {
 
   let newDescription;
   description.length > MAX_DESCRIPTION_LENGTH ? newDescription = `${description.slice(0, MAX_DESCRIPTION_LENGTH)}...` : newDescription = description;
-
   return `<article class="film-card" data-id="${id}">
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">${dateCreate.format('YYYY')}</span>
+    <span class="film-card__year">${dayjs(dateCreate).format('YYYY')}</span>
     <span class="film-card__duration">${runtimeMessage}</span>
-    <span class="film-card__genre">${genres.length > 0 ? genres.randomElement() : ''}</span>
+    <span class="film-card__genre">${genres.length > 0 ? genres[0] : ''}</span>
   </p>
   <img src="${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${newDescription}</p>
