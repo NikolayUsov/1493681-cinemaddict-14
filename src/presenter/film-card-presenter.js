@@ -8,14 +8,14 @@ import { RenderPosition } from '../utils/render.js';
 import { PopUpStatus } from '..//utils/const.js';
 import { UpdateType, UserAction } from '../utils/const';
 import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
-
-
-const footer = document.querySelector('.footer');
 const PopUpControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
   WATCHED: 'watched',
 };
+
+const footer = document.querySelector('.footer');
+
 
 export default class FilmCardPresenter {
   constructor(container, handlerChangeData, handlerChangeView, filterModel, renderExtraCard, api) {
@@ -139,7 +139,7 @@ export default class FilmCardPresenter {
   }
 
   _updateFilmCardUserInfo(updateControl) {
-    const currentFilter = this._filterModel.getFilter();
+    const currentFilter = this._filterModel.get();
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
     if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopUpStatus.OPEN) {
@@ -167,7 +167,7 @@ export default class FilmCardPresenter {
 
   _handlerDeleteComment(commnetID) {
     const updatedFilmCard = deepClone(this._filmInfo);
-    const comment = updatedFilmCard.comments.filter((comment) => comment.id != commnetID);
+    const comment = updatedFilmCard.comments.filter((comment) => comment.id !== commnetID);
     updatedFilmCard.comments = comment;
     this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
     this._isChangeComment = true;

@@ -4,10 +4,9 @@ import EmptyFilmCard from '../view/empty-film-card';
 import FilmCardPresenter from './film-card-presenter.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
 import SortView from '../view/sort.js';
-import { SortType, UpdateType, UserAction } from '../utils/const.js';
-import { comparerating, compareDate, compareComments } from '../utils/compares.js';
+import { SortType, UpdateType, UserAction, PopUpStatus } from '../utils/const.js';
+import { comparerRating, compareDate, compareComments } from '../utils/compares.js';
 import { FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl } from '../utils/filter-utils.js';
-import { PopUpStatus } from '../utils/const.js';
 import  LoadingView from '../view/loading.js';
 
 const CARD_STEP = 5;
@@ -23,7 +22,6 @@ export default class FilmCardList {
     this._buttonShowMore = null;
     this._sortComponent = null;
     this._filmCardListWrapper = new FilmCardContainer();
-    this._isLoading = true;
     this._loadingComponent = new LoadingView();
     this._filmsModel = filmModel;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
@@ -53,16 +51,16 @@ export default class FilmCardList {
 
 
   _getData() {
-    const filterType = this._filterModel.getFilter();
-    const filtredData = filtersFunctionMap[filterType](this._filmsModel.getData());
+    const filterType = this._filterModel.get();
+    const filteredData = filtersFunctionMap[filterType](this._filmsModel.getData());
 
     switch (this._sortType) {
       case SortType.RATING:
-        return filtredData.sort(comparerating);
+        return filteredData.sort(comparerRating);
       case SortType.DATE:
-        return filtredData.sort(compareDate);
+        return filteredData.sort(compareDate);
       case SortType.DEFAULT:
-        return filtredData;
+        return filteredData;
     }
   }
 
@@ -102,9 +100,9 @@ export default class FilmCardList {
   }
 
   _handleChangeOnView(userAction, updateType, update, updateControl, popUpStatus) {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
 
-    if (filterType != FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
+    if (filterType !== FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
       updateType = UpdateType.MINOR;
     }
 
@@ -249,10 +247,10 @@ export default class FilmCardList {
       this._topRatingContainer.innerHTML = '';
       return;
     }
-    const sortedByrating = this._filmsModel.getData().slice().sort(comparerating);
+    const sortedByRating = this._filmsModel.getData().slice().sort(comparerRating);
     const sortedByComments = this._filmsModel.getData().slice().sort(compareComments);
 
-    sortedByrating
+    sortedByRating
       .slice(0, MAX_EXTRA_CARD)
       .forEach((filmCard) => {
         this._renderFilmCard(filmCard, this._topRatingContainer.querySelector('.films-list__container'));

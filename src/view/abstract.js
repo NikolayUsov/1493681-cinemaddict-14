@@ -1,4 +1,4 @@
-import { createNode } from '../utils/abstract-utils.js';
+import { createNode } from '../utils/common.js';
 
 export default class Abstract {
   constructor() {

@@ -16,7 +16,7 @@ export default class FilterPresenter {
 
   init(){
     const prevFilterComponent = this._filterComponent;
-    this._filterComponent = new FilterView(this._getFilters(), this._filterModel.getFilter());
+    this._filterComponent = new FilterView(this._getFilters(), this._filterModel.get());
     this._filterComponent.setFilterClick(this._handlerFilterClick);
 
     if (prevFilterComponent === null) {
@@ -33,7 +33,7 @@ export default class FilterPresenter {
   }
 
   _handlerFilterClick(updateType, filterType) {
-    this._filterModel.setFilter(updateType, filterType);
+    this._filterModel.set(updateType, filterType);
   }
 
   _getFilters () {

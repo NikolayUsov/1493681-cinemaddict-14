@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 
-export const comparerating = (a, b) => {
+export const comparerRating = (a, b) => {
   return b.rating - a.rating;
 };
 
