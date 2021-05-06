@@ -3,6 +3,14 @@ import Smart from './smart-component.js';
 import { generateCommetData } from '../mock/comment-mock.js';
 import he from 'he';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
+
+const createNewCommentObj = (comment, emoji) =>{
+  return {
+    'comment': comment,
+    'emotion': emoji,
+  };
+};
 
 const popupContainerTemplate = (card, comments) => {
   const {
@@ -180,7 +188,7 @@ export default class PopUpFilmInfo extends Smart {
     this._data = PopUpFilmInfo.parseFilmCardToState(data);
     this._comments = comments;
     this._buttonCloseHandler = this._buttonCloseHandler.bind(this);
-    this._ControlListClickHandler = this._ControlListClickHandler.bind(this);
+    this._controlListClickHandler = this._controlListClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
     this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
     this._sendNewCommentHandler = this._sendNewCommentHandler.bind(this);
@@ -229,7 +237,7 @@ export default class PopUpFilmInfo extends Smart {
   }
 
 
-  _ControlListClickHandler(evt) {
+  _controlListClickHandler(evt) {
     evt.preventDefault();
     this._callback.inputControlPopUp(evt.target.id);
   }
@@ -249,7 +257,7 @@ export default class PopUpFilmInfo extends Smart {
 
   setPopUpControlChange(callback) {
     this._callback.inputControlPopUp = callback;
-    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._ControlListClickHandler);
+    this.getElement().querySelector('.film-details__controls').addEventListener('change', this._controlListClickHandler);
   }
 
   setClickCloseButton(callback) {
@@ -262,8 +270,9 @@ export default class PopUpFilmInfo extends Smart {
     const isHasTextContentAndEmoji = !this._data.currentEmoji || !this._data.currentTextComment.trim();
 
     if (isRightKeys && !isHasTextContentAndEmoji) {
+      //this._comments.push(createNewCommentObj(this._data.currentTextComment, this._data.currentEmoji));
+      this._callback.setSendNewComment(this._data, createNewCommentObj(this._data.currentTextComment, this._data.currentEmoji));
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
-      this._callback.setSendNewComment(this._data);
       this.updateElement();
     }
   }
@@ -297,10 +306,6 @@ export default class PopUpFilmInfo extends Smart {
 
   static parseStateToFilmCard(filmCard) {
     filmCard = Object.assign({}, filmCard);
-    const newComment = generateCommetData();
-    newComment.comment = filmCard.currentTextComment;
-    newComment.emotion = filmCard.currentEmoji;
-    filmCard.comments.push(newComment);
     delete filmCard.currentTextComment;
     delete filmCard.currentEmoji;
     return filmCard;

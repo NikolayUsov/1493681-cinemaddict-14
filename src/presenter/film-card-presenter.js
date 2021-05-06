@@ -23,6 +23,7 @@ export default class FilmCardPresenter {
     this._filterModel = filterModel;
     this._filmCardComponent = null;
     this._popUpComponent = null;
+    this._comments = null;
     this._api = api;
     this._renderExtraCard = renderExtraCard;
     this._isChangeComment = false;
@@ -62,8 +63,7 @@ export default class FilmCardPresenter {
 
     if (this._popUpStatus === PopUpStatus.OPEN) {
       replace(this._filmCardComponent, prevFilmCardComponent);
-      this._popUpComponent.updateData(this._filmInfo);
-
+      this._popUpComponent.updateData(this._filmInfo, true, this._comments);
     }
   }
 
@@ -84,6 +84,7 @@ export default class FilmCardPresenter {
     this._popUpComponent.removeElement();
     this._popUpComponent.reset(this._filmInfo);
     this._popUpStatus = PopUpStatus.CLOSE;
+    this._comments = null;
     document.body.style.overflow = '';
     if (this._isChangeComment) {
       this._renderExtraCard();
@@ -94,7 +95,8 @@ export default class FilmCardPresenter {
   _openPopUp() {
     this._api.getComments(this._filmInfo.id)
       .then((comments) => {
-        this._popUpComponent = new PopUpFilmView(this._filmInfo, comments);
+        this._comments = comments;
+        this._popUpComponent = new PopUpFilmView(this._filmInfo, this._comments);
         renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
         this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
         this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
@@ -160,9 +162,16 @@ export default class FilmCardPresenter {
     this._updateFilmCardUserInfo('isWatched');
   }
 
-  _handlerSendNewComment(updateFilmCard) {
-    this._handlerChangeData(updateFilmCard, this._popUpStatus);
-    this._isChangeComment = true;
+  _handlerSendNewComment(updateFilmCard, comment) {
+    this._api.addComment(updateFilmCard, comment)
+      .then((result) =>{
+        console.log(result);
+        this._comments = result.comments;
+        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
+        this._isChangeComment = true;
+      });
+    //this._handlerChangeData(updateFilmCard, this._popUpStatus);
+    //this._isChangeComment = true;
   }
 
   _handlerDeleteComment(commnetID) {

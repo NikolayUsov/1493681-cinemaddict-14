@@ -5,7 +5,7 @@ export default class Smart extends Abstract {
     super();
   }
 
-  updateData(update, isUpdateNow = true) {
+  updateData(update, isUpdateNow = true, comments = '') {
     if (!update) {
       return;
     }
@@ -15,6 +15,11 @@ export default class Smart extends Abstract {
       this._data,
       update,
     );
+
+    if (comments) {
+      this._comments = comments.slice();
+    }
+
 
     if (!isUpdateNow) {
       return;
