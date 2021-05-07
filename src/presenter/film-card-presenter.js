@@ -6,23 +6,24 @@ import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
 import { PopUpStatus } from '..//utils/const.js';
-import { UpdateType, UserAction } from '../utils/const';//to-do удалить ipdateItem
-import { FILTER, FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
-
-
-const footer = document.querySelector('.footer');
+import { UpdateType, UserAction } from '../utils/const';
+import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
 const PopUpControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
   WATCHED: 'watched',
 };
 
+const footer = document.querySelector('.footer');
+
+
 export default class FilmCardPresenter {
-  constructor(container, handlerChangeData, handlerChangeView, filterModel, renderExtraCard) {
+  constructor(container, handlerChangeData, handlerChangeView, filterModel, renderExtraCard, api) {
     this._container = container;
     this._filterModel = filterModel;
     this._filmCardComponent = null;
     this._popUpComponent = null;
+    this._api = api;
     this._renderExtraCard = renderExtraCard;
     this._isChangeComment = false;
     this._handlerChangeData = handlerChangeData;
@@ -35,7 +36,6 @@ export default class FilmCardPresenter {
     this._handlerAddToFavorits = this._handlerAddToFavorits.bind(this);
     this._handlerAddToWatched = this._handlerAddToWatched.bind(this);
     this._handlerChangePopUpControlButton = this._handlerChangePopUpControlButton.bind(this);
-
     this._handlerSendNewComment = this._handlerSendNewComment.bind(this);
     this._handlerDeleteComment = this._handlerDeleteComment.bind(this);
   }
@@ -92,13 +92,16 @@ export default class FilmCardPresenter {
   }
 
   _openPopUp() {
-    this._popUpComponent = new PopUpFilmView(this._filmInfo);
-    renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
-    this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
-    this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
-    this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
-    this._popUpComponent.setDeleteComment(this._handlerDeleteComment);
-    document.body.style.overflow = 'hidden';
+    this._api.getComments(this._filmInfo.id)
+      .then((comments) => {
+        this._popUpComponent = new PopUpFilmView(this._filmInfo, comments);
+        renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
+        this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
+        this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
+        this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
+        this._popUpComponent.setDeleteComment(this._handlerDeleteComment);
+        document.body.style.overflow = 'hidden';
+      });
   }
 
   _escKeyDownHandler(evt) {
@@ -136,7 +139,7 @@ export default class FilmCardPresenter {
   }
 
   _updateFilmCardUserInfo(updateControl) {
-    const currentFilter = this._filterModel.getFilter();
+    const currentFilter = this._filterModel.get();
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
     if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopUpStatus.OPEN) {
@@ -164,7 +167,7 @@ export default class FilmCardPresenter {
 
   _handlerDeleteComment(commnetID) {
     const updatedFilmCard = deepClone(this._filmInfo);
-    const comment = updatedFilmCard.comments.filter((comment) => comment.id != commnetID);
+    const comment = updatedFilmCard.comments.filter((comment) => comment.id !== commnetID);
     updatedFilmCard.comments = comment;
     this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
     this._isChangeComment = true;

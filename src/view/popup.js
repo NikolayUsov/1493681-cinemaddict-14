@@ -2,9 +2,9 @@
 import Smart from './smart-component.js';
 import { generateCommetData } from '../mock/comment-mock.js';
 import he from 'he';
+import dayjs from 'dayjs';
 
-const popupContainerTemplate = (card) => {
-
+const popupContainerTemplate = (card, comments) => {
   const {
     title,
     rating,
@@ -20,7 +20,6 @@ const popupContainerTemplate = (card) => {
     country,
     originalTitle,
     runtimeMessage,
-    comments,
     currentEmoji,
     currentTextComment,
   } = card;
@@ -45,10 +44,10 @@ const popupContainerTemplate = (card) => {
       <img src="./images/emoji/${elem.emotion}.png" width="55" height="55" alt="emoji-sleeping">
     </span>
     <div>
-      <p class="film-details__comment-text">${he.encode(elem.text)}</p>
+      <p class="film-details__comment-text">${he.encode(elem.comment)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${elem.author}</span>
-        <span class="film-details__comment-day">${elem.diffmessage}</span>
+        <span class="film-details__comment-day">${elem.date}</span>
         <button class="film-details__comment-delete" data-comment-id = "${elem.id}">Delete</button>
       </p>
     </div>
@@ -94,7 +93,7 @@ const popupContainerTemplate = (card) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${dateCreate.format('D MMMM YYYY')}</td>
+              <td class="film-details__cell">${dayjs(dateCreate).format('D MMMM YYYY')}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -176,9 +175,10 @@ const popupContainerTemplate = (card) => {
 };
 
 export default class PopUpFilmInfo extends Smart {
-  constructor(data) {
+  constructor(data, comments) {
     super();
     this._data = PopUpFilmInfo.parseFilmCardToState(data);
+    this._comments = comments;
     this._buttonCloseHandler = this._buttonCloseHandler.bind(this);
     this._ControlListClickHandler = this._ControlListClickHandler.bind(this);
     this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
@@ -189,7 +189,7 @@ export default class PopUpFilmInfo extends Smart {
   }
 
   getTemplate() {
-    return popupContainerTemplate(this._data);
+    return popupContainerTemplate(this._data, this._comments);
   }
 
   getButtonClose() {
@@ -258,7 +258,7 @@ export default class PopUpFilmInfo extends Smart {
   }
 
   _sendNewCommentHandler(evt) {
-    const isRightKeys = (evt.ctrlKey || evt.metaKey) && evt.keyCode == 13;
+    const isRightKeys = (evt.ctrlKey || evt.metaKey) && evt.keyCode === 13;
     const isHasTextContentAndEmoji = !this._data.currentEmoji || !this._data.currentTextComment.trim();
 
     if (isRightKeys && !isHasTextContentAndEmoji) {
@@ -298,7 +298,7 @@ export default class PopUpFilmInfo extends Smart {
   static parseStateToFilmCard(filmCard) {
     filmCard = Object.assign({}, filmCard);
     const newComment = generateCommetData();
-    newComment.text = filmCard.currentTextComment;
+    newComment.comment = filmCard.currentTextComment;
     newComment.emotion = filmCard.currentEmoji;
     filmCard.comments.push(newComment);
     delete filmCard.currentTextComment;

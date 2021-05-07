@@ -12,7 +12,6 @@ const createFilmCardMap = (items) => {
 };
 
 const filmCardsMap = createFilmCardMap(MAX_FILM_CARD);
-console.log(filmCardsMap);
 export {filmCardsMap};
 
 

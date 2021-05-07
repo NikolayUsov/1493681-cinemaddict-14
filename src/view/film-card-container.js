@@ -1,6 +1,6 @@
 import AbstractView from './abstract.js';
 
-const filmListcontainerTemplate = () => {
+const filmListContainerTemplate = () => {
   return `<section class="films">
   <section class="films-list">
     <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
@@ -26,7 +26,7 @@ const filmListcontainerTemplate = () => {
 export default class FilmCardContainer extends AbstractView {
 
   getTemplate() {
-    return filmListcontainerTemplate();
+    return filmListContainerTemplate();
   }
 
   getMainContainer() {

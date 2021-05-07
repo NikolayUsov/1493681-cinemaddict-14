@@ -14,6 +14,7 @@ export const UpdateType = {
   MINOR: 'minor',
   MAJOR: 'major',
   PATH: 'path',
+  INIT: 'init',
 };
 
 export const PopUpStatus = {

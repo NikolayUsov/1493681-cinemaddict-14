@@ -2,23 +2,25 @@ import Smart from './smart-component.js';
 import { FILTER } from '../utils/filter-utils.js';
 import { UpdateType } from '../utils/const.js';
 
+const generateFilterItem = (filter, activeFilter) => {
+
+  const {type, filterName, count} = filter;
+  return `<a href="#${filterName}"
+  data-filter = "${type}"
+  class="main-navigation__item ${activeFilter === type ? 'main-navigation__item--active' : ''}">
+  ${type} ${type === FILTER.ALL_MOVIES ? '' : `<span class="main-navigation__item-count">${count}</span>`}</a>`;
+};
+
+const generateFiltersTemplate =(filters, activeFilter) => {
+  return filters.map((filter) => generateFilterItem(filter, activeFilter)).join('');
+};
+
 const mainNavigationTemplate = (filters, activeFilter) => {
-  const genereFilterItem = (filter) => {
 
-    const {type, filterName, count} = filter;
-    return `<a href="#${filterName}"
-    data-filter = "${type}"
-    class="main-navigation__item ${activeFilter === type ? 'main-navigation__item--active' : ''}">
-    ${type} ${type === FILTER.ALL_MOVIES ? '' : `<span class="main-navigation__item-count">${count}</span>`}</a>`;
-  };
-
-  const generateFiltersTemplate =() => {
-    return filters.map((filter) => genereFilterItem(filter)).join('');
-  };
 
   return `<nav class="main-navigation">
    <div class="main-navigation__items">
-    ${generateFiltersTemplate()}
+    ${generateFiltersTemplate(filters, activeFilter)}
     </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;

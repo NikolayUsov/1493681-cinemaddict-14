@@ -3,17 +3,18 @@ import { remove, renderElement, RenderPosition } from '../utils/render.js';
 import EmptyFilmCard from '../view/empty-film-card';
 import FilmCardPresenter from './film-card-presenter.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
-import { compareComments } from '../filters.js';
 import SortView from '../view/sort.js';
-import { SortType, UpdateType, UserAction } from '../utils/const.js';
-import { comparerating, compareDate } from '../utils/compares.js';
+import { SortType, UpdateType, UserAction, PopUpStatus } from '../utils/const.js';
+import { comparerRating, compareDate, compareComments } from '../utils/compares.js';
 import { FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl } from '../utils/filter-utils.js';
-import { PopUpStatus } from '..//utils/const.js';
+import  LoadingView from '../view/loading.js';
+
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
 
 export default class FilmCardList {
-  constructor(container, filterPresenter, filmModel, filterModel) {
+  constructor(container, filterPresenter, filmModel, filterModel, api) {
+    this._api = api;
     this._filmCardListContainer = container;
     this._noFilmCard = new EmptyFilmCard();
     this._filterPresenter = filterPresenter;
@@ -21,6 +22,7 @@ export default class FilmCardList {
     this._buttonShowMore = null;
     this._sortComponent = null;
     this._filmCardListWrapper = new FilmCardContainer();
+    this._loadingComponent = new LoadingView();
     this._filmsModel = filmModel;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
@@ -43,32 +45,34 @@ export default class FilmCardList {
   }
 
   init() {
-    this._filmsInfo = this._filmsModel.getData();
-    this._defaultFilmCardData = this._filmsInfo.slice();
     this._filterPresenter.init();
-    renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
-    this._renderMainFilmCards();
-    this._renderExtraCards();
+    this._renderLoading();
   }
 
 
   _getData() {
-    const filterType = this._filterModel.getFilter();
-    const filtredData = filtersFunctionMap[filterType](this._filmsModel.getData());
+    const filterType = this._filterModel.get();
+    const filteredData = filtersFunctionMap[filterType](this._filmsModel.getData());
 
     switch (this._sortType) {
       case SortType.RATING:
-        return filtredData.sort(comparerating);
+        return filteredData.sort(comparerRating);
       case SortType.DATE:
-        return filtredData.sort(compareDate);
+        return filteredData.sort(compareDate);
       case SortType.DEFAULT:
-        return filtredData;
+        return filteredData;
     }
   }
 
   _handleChangeFromModel(updateType, updateFilmCard) {
 
     switch (updateType) {
+      case UpdateType.INIT:
+        remove(this._loadingComponent);
+        renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
+        this._renderMainFilmCards();
+        this._renderExtraCards();
+        break;
       case UpdateType.PATH:
         if (updateFilmCard.id in this._mainFilmCardPresenters) {
           this._mainFilmCardPresenters[updateFilmCard.id].init(updateFilmCard);
@@ -96,9 +100,9 @@ export default class FilmCardList {
   }
 
   _handleChangeOnView(userAction, updateType, update, updateControl, popUpStatus) {
-    const filterType = this._filterModel.getFilter();
+    const filterType = this._filterModel.get();
 
-    if (filterType != FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
+    if (filterType !== FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
       updateType = UpdateType.MINOR;
     }
 
@@ -108,10 +112,10 @@ export default class FilmCardList {
 
     switch (userAction) {
       case UserAction.UPDATE:
-        this._filmsModel.updateData(updateType, update);
+        this._api.updateData(update).
+          then((update) => this._filmsModel.updateData(updateType, update));
         break;
       case UserAction.ADD_COMMENT:
-        console.log('Действия при добавлени комментария');
         break;
       case UserAction.DELETE_COMMENT:
         //updateType = UpdateType.MINOR;
@@ -147,8 +151,12 @@ export default class FilmCardList {
     renderElement(this._filmCardListWrapper, this._sortComponent, RenderPosition.BEFOREBEGIN);
   }
 
+  _renderLoading() {
+    renderElement(this._filmCardListContainer,  this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _renderFilmCard(filmInfo, renderContainer) {
-    this._filmCardPresenter = new FilmCardPresenter(renderContainer, this._handleChangeOnView, this._handlerChangePopUp, this._filterModel, this._renderExtraCards);
+    this._filmCardPresenter = new FilmCardPresenter(renderContainer, this._handleChangeOnView, this._handlerChangePopUp, this._filterModel, this._renderExtraCards, this._api);
     this._filmCardPresenter.init(filmInfo);
     switch (renderContainer) {
       case (this._mainContainer):
@@ -234,15 +242,15 @@ export default class FilmCardList {
 
   _renderExtraCards() {
     this._clearExtraFilmsPresenters();
-    if (!this._getData().length) {//to-do
+    if (!this._filmsModel.getData().length) {
       this._topCommentedContainer.innerHTML = '';
       this._topRatingContainer.innerHTML = '';
       return;
     }
-    const sortedByrating = this._filmsModel.getData().slice().sort(comparerating);
+    const sortedByRating = this._filmsModel.getData().slice().sort(comparerRating);
     const sortedByComments = this._filmsModel.getData().slice().sort(compareComments);
 
-    sortedByrating
+    sortedByRating
       .slice(0, MAX_EXTRA_CARD)
       .forEach((filmCard) => {
         this._renderFilmCard(filmCard, this._topRatingContainer.querySelector('.films-list__container'));
