@@ -165,21 +165,22 @@ export default class FilmCardPresenter {
   _handlerSendNewComment(updateFilmCard, comment) {
     this._api.addComment(updateFilmCard, comment)
       .then((result) =>{
-        console.log(result);
         this._comments = result.comments;
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
         this._isChangeComment = true;
       });
-    //this._handlerChangeData(updateFilmCard, this._popUpStatus);
-    //this._isChangeComment = true;
   }
 
   _handlerDeleteComment(commnetID) {
-    const updatedFilmCard = deepClone(this._filmInfo);
-    const comment = updatedFilmCard.comments.filter((comment) => comment.id !== commnetID);
-    updatedFilmCard.comments = comment;
-    this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
-    this._isChangeComment = true;
+    this._api.deleteComment(commnetID)
+      .then(() => {
+        const updatedFilmCard = deepClone(this._filmInfo);
+        const comment = updatedFilmCard.comments.filter((comment) => comment !== commnetID);
+        updatedFilmCard.comments = comment;
+        this._comments = this._comments.filter((comment) => comment.id !== commnetID);
+        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
+        this._isChangeComment = true;
+      });
   }
 }
 

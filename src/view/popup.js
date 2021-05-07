@@ -1,9 +1,8 @@
 
 import Smart from './smart-component.js';
-import { generateCommetData } from '../mock/comment-mock.js';
 import he from 'he';
 import dayjs from 'dayjs';
-import {nanoid} from 'nanoid';
+
 
 const createNewCommentObj = (comment, emoji) =>{
   return {

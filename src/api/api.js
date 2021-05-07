@@ -54,6 +54,14 @@ export default class Api {
       });
   }
 
+  deleteComment(id) {
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.DELETE,
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+  }
+
   _load ({
     url,
     method = Method.GET,
