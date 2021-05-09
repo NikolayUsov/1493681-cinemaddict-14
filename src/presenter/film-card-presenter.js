@@ -5,9 +5,9 @@ import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
 import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
-import { PopUpStatus } from '..//utils/const.js';
-import { UpdateType, UserAction } from '../utils/const';
+import { UpdateType, UserAction, PopUpStatus, PopUpState } from '../utils/const.js';
 import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
+
 const PopUpControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
@@ -163,15 +163,18 @@ export default class FilmCardPresenter {
   }
 
   _handlerSendNewComment(updateFilmCard, comment) {
+    this._popUpComponent.setState(PopUpState.DISABLED);
     this._api.addComment(updateFilmCard, comment)
       .then((result) =>{
         this._comments = result.comments;
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
         this._isChangeComment = true;
+        this._popUpComponent.setState(PopUpState.DEFAULT);
       });
   }
 
   _handlerDeleteComment(commnetID) {
+    this._popUpComponent.setState(PopUpState.DELETE, commnetID);
     this._api.deleteComment(commnetID)
       .then(() => {
         const updatedFilmCard = deepClone(this._filmInfo);
@@ -180,6 +183,7 @@ export default class FilmCardPresenter {
         this._comments = this._comments.filter((comment) => comment.id !== commnetID);
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
         this._isChangeComment = true;
+        this._popUpComponent.setState(PopUpState.DEFAULT);
       });
   }
 }

@@ -22,7 +22,12 @@ const mainNavigationTemplate = (filters, activeFilter) => {
    <div class="main-navigation__items">
     ${generateFiltersTemplate(filters, activeFilter)}
     </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
+    <a href="#stats"
+    class="main-navigation__additional
+    ${activeFilter === FILTER.STATS ?
+    'main-navigation__additional--active':
+    ''}"
+    data-filter = "${FILTER.STATS}">Stats</a>
     </nav>`;
 };
 
@@ -48,7 +53,10 @@ export class FilterView extends Smart {
   }
 
   _filterClickHandler(evt) {
-    if (!evt.target.classList.contains('main-navigation__item')) {
+    const isNavigation = evt.target.classList.contains('main-navigation__item') ||
+    evt.target.classList.contains('main-navigation__additional');
+
+    if (!isNavigation) {
       return;
     }
 
