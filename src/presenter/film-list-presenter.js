@@ -1,7 +1,8 @@
 import FilmCardContainer from '../view/film-card-container';
-import { remove, renderElement, RenderPosition } from '../utils/render.js';
+import { remove, renderElement, RenderPosition, replace } from '../utils/render.js';
 import EmptyFilmCard from '../view/empty-film-card';
 import FilmCardPresenter from './film-card-presenter.js';
+import StatsView from '../view/stats.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
 import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction, PopUpStatus } from '../utils/const.js';
@@ -13,9 +14,10 @@ const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
 
 export default class FilmCardList {
-  constructor(container, filterPresenter, filmModel, filterModel, api) {
+  constructor(container, filterPresenter, filmModel, filterModel, api, userProfile) {
     this._api = api;
     this._filmCardListContainer = container;
+    this._userProfile = userProfile;
     this._noFilmCard = new EmptyFilmCard();
     this._filterPresenter = filterPresenter;
     this._filterModel = filterModel;
@@ -23,6 +25,7 @@ export default class FilmCardList {
     this._sortComponent = null;
     this._filmCardListWrapper = new FilmCardContainer();
     this._loadingComponent = new LoadingView();
+    this._statsComponent = null;
     this._filmsModel = filmModel;
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
@@ -65,8 +68,16 @@ export default class FilmCardList {
   }
 
   _handleChangeFromModel(updateType, updateFilmCard) {
+    if (updateFilmCard === FILTER.STATS) {
+      updateType = FILTER.STATS;
+    }
 
     switch (updateType) {
+      case FILTER.STATS:
+        this._clearMainFilmCards({ resetRenderedCard: true, resetSortType: true });
+        this._renderStatsComponent();
+        replace(this._statsComponent,this._filmCardListWrapper);
+        break;
       case UpdateType.INIT:
         remove(this._loadingComponent);
         renderElement(this._filmCardListContainer, this._filmCardListWrapper, RenderPosition.BEFOREEND);
@@ -85,6 +96,7 @@ export default class FilmCardList {
         if (updateFilmCard.id in this._topCommentedFilmCardPresenter) {
           this._topCommentedFilmCardPresenter[updateFilmCard.id].init(updateFilmCard);
         }
+        this._userProfile.updateData(this._filmsModel.getData());
         break;
       case UpdateType.MINOR:
         this._clearMainFilmCards();
@@ -92,6 +104,11 @@ export default class FilmCardList {
         this._renderExtraCards();
         break;
       case UpdateType.MAJOR:
+        if (this._statsComponent !== null) {
+          replace(this._filmCardListWrapper,this._statsComponent);
+          remove(this._statsComponent);
+          this._statsComponent = null;
+        }
         this._clearMainFilmCards({ resetRenderedCard: false, resetSortType: true });
         this._renderMainFilmCards();
         this._renderExtraCards();
@@ -183,8 +200,8 @@ export default class FilmCardList {
       renderElement(this._mainContainer, this._noFilmCard, RenderPosition.BEFOREEND);
       return;
     }
-
     this._renderSort();
+    this._userProfile.updateData(this._filmsModel.getData());
     this._renderFilmCards(films.slice(0, Math.min(filmsCount, this._renderedCard)));
 
     if (filmsCount > this._renderedCard) {
@@ -273,4 +290,8 @@ export default class FilmCardList {
     renderElement(this._mainContainer, this._buttonShowMore, RenderPosition.AFTEREND);
   }
 
+  _renderStatsComponent () {
+    this._statsComponent = new StatsView(this._filmsModel.getData());
+    renderElement(this._filmCardListContainer, this._statsComponent, RenderPosition.BEFOREEND);
+  }
 }

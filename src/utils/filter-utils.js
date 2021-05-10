@@ -3,6 +3,7 @@ export const FILTER = {
   WATCHLIST: 'Watchlist',
   FAVORITES: 'Favorites',
   HISTORY: 'History',
+  STATS: 'Stats',
 };
 
 export const filtersFunctionMap = {

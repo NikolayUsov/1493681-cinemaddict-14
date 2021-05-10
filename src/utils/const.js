@@ -21,3 +21,10 @@ export const PopUpStatus = {
   OPEN: 'open',
   CLOSE: 'close',
 };
+
+export const PopUpState = {
+  DELETE: 'delete',
+  DISABLED: 'disable',
+  DEFAULT: 'default',
+  SUBMIT: 'submit',
+};

@@ -18,11 +18,13 @@ const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
+const profileView = new ProfileView();
 const api = new Api(END_POINT, AUTHORIZATION);
 
 const succesStartApp = (films) => {
+  profileView.setData(films);
   filmsModel.setData(films, UpdateType.INIT);
-  renderElement (header, new ProfileView(films), RenderPosition.BEFOREEND);
+  renderElement (header, profileView, RenderPosition.BEFOREEND);
   renderElement (footerStatistic, new FooterView(films), RenderPosition.BEFOREEND);
 };
 
@@ -33,7 +35,7 @@ const errorStartApp = () => {
 
 
 const filterPresenter = new FilterPresenter(main,filmsModel, filterModel);
-const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, api);
+const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, api, profileView);
 presenter.init();
 
 
