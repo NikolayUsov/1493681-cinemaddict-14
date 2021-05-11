@@ -129,13 +129,20 @@ export default class FilmCardList {
 
     switch (userAction) {
       case UserAction.UPDATE:
-        this._api.updateData(update).
-          then((update) => this._filmsModel.updateData(updateType, update));
+        this._api.updateData(update)
+          .then((update) => this._filmsModel.updateData(updateType, update))
+          .catch(() => {
+            [
+              ...Object.values(this._mainFilmCardPresenters),
+              ...Object.values(this._topCommentedFilmCardPresenter),
+              ...Object.values(this._topratingFilmCardPresenter),
+            ]
+              .forEach((elem) => elem.errorUpdate());
+          });
         break;
       case UserAction.ADD_COMMENT:
         break;
       case UserAction.DELETE_COMMENT:
-        //updateType = UpdateType.MINOR;
         this._filmsModel.updateData(updateType, update, popUpStatus);
         break;
     }

@@ -21,6 +21,14 @@ const filterModel = new FilterModel();
 const profileView = new ProfileView();
 const api = new Api(END_POINT, AUTHORIZATION);
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => {console.log('success sw');})
+      .catch(() => {console.log('err sw');});
+  });
+}
+
 const succesStartApp = (films) => {
   profileView.setData(films);
   filmsModel.setData(films, UpdateType.INIT);

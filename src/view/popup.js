@@ -31,7 +31,6 @@ const popupContainerTemplate = (card, comments) => {
     currentTextComment,
     isDelete,
     deleteID,
-    isSave,
     isDisable,
   } = card;
 
@@ -366,8 +365,17 @@ export default class PopUpFilmInfo extends Smart {
           },
         );
         break;
+      case PopUpState.ABORTING:
+        this.updateData(
+          {
+            isDisable: false,
+            isDelete: false,
+          },
+        );
+        this.errorUI();
     }
   }
+
   static parseFilmCardToState(filmCard) {
     return Object.assign(
       {},

@@ -72,6 +72,10 @@ export default class FilmCardPresenter {
 
   }
 
+  errorUpdate(){
+    this._filmCardComponent.errorUI();
+  }
+
   resetFilmView() {
     if (this._popUpStatus === PopUpStatus.OPEN) {
       this._closePopUp();
@@ -103,6 +107,9 @@ export default class FilmCardPresenter {
         this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
         this._popUpComponent.setDeleteComment(this._handlerDeleteComment);
         document.body.style.overflow = 'hidden';
+      })
+      .catch(() => {
+        this._filmCardComponent.errorUI();
       });
   }
 
@@ -170,6 +177,16 @@ export default class FilmCardPresenter {
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
         this._isChangeComment = true;
         this._popUpComponent.setState(PopUpState.DEFAULT);
+      })
+      .catch(() => {
+        this._popUpComponent.updateData(
+          {
+            currentEmoji: comment.emotion,
+            currentTextComment: comment.comment,
+          },
+        );
+        this._popUpComponent.setState(PopUpState.ABORTING);
+
       });
   }
 
@@ -184,6 +201,9 @@ export default class FilmCardPresenter {
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
         this._isChangeComment = true;
         this._popUpComponent.setState(PopUpState.DEFAULT);
+      })
+      .catch(() => {
+        this._popUpComponent.setState(PopUpState.ABORTING);
       });
   }
 }
