@@ -9,7 +9,7 @@ import FilmsModel from './model/films-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import Api from './api/api.js';
-
+import Store from './api/store.js';
 const AUTHORIZATION = 'Basic nikUsov';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 
@@ -25,13 +25,15 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
-        console.log('success sw');
-        console.log("SW scope:", registration.scope);})
-      .catch(() => {console.log('err sw');});
+        console.log('SW scope:', registration.scope);})
+      .catch(() => {
+        console.log('err sw');
+      });
   });
 }
 
 const succesStartApp = (films) => {
+  store.setItems(films);
   profileView.setData(films);
   filmsModel.setData(films, UpdateType.INIT);
   renderElement (header, profileView, RenderPosition.BEFOREEND);
@@ -43,7 +45,7 @@ const errorStartApp = () => {
   renderElement (footerStatistic, new FooterView(), RenderPosition.BEFOREEND);
 };
 
-
+const store = new Store('test', window.localStorage);
 const filterPresenter = new FilterPresenter(main,filmsModel, filterModel);
 const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, api, profileView);
 presenter.init();

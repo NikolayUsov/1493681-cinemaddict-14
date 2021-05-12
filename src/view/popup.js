@@ -396,7 +396,6 @@ export default class PopUpFilmInfo extends Smart {
     delete filmCard.currentTextComment;
     delete filmCard.currentEmoji;
     delete filmCard.isDelete;
-    delete filmCard.isSave;
     delete filmCard.isDisable;
     delete filmCard.deleteID;
     return filmCard;
