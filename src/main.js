@@ -24,7 +24,9 @@ const api = new Api(END_POINT, AUTHORIZATION);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(() => {console.log('success sw');})
+      .then((registration) => {
+        console.log('success sw');
+        console.log("SW scope:", registration.scope);})
       .catch(() => {console.log('err sw');});
   });
 }
