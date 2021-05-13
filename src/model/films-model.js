@@ -68,7 +68,7 @@ export default class FilmModel extends Observer {
   }
 
   static adaptToServer (film) {
-    const isDataNull = film.userInfo.isWatched && film.userInfo.watchedDate === null;
+    const isDataNull = film.userInfo.watchedDate === null;
     let adaptedFilm = deepClone(film);
 
     adaptedFilm = Object.assign(
