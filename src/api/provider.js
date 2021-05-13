@@ -37,15 +37,27 @@ export default class Provider {
         });
     }
     this._store.setItem(film.id, FilmModel.adaptToServer(Object.assign({}, film)));
-    return film;
+    return Promise.resolve(film);
+  }
+  getComments(filmId) {
+    return this._api.getComments(filmId);
   }
 
+
+  addComment (film,comment){
+    return this._api.addComment(film,comment);
+  }
+
+  deleteComment(id) {
+    return this._api.deleteComment(id);
+  }
   sync() {
     if (isOnline()) {
       const films = Object.values(this._store.getItems());
       return this._api.sync(films)
         .then((result) => {
-          console.log(result);
+          const updatedFilms = result.updated;
+          this._store.setItems(updatedFilms);
         });
     }
   }

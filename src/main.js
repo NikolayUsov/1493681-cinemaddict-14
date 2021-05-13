@@ -53,7 +53,7 @@ const errorStartApp = () => {
 
 
 const filterPresenter = new FilterPresenter(main,filmsModel, filterModel);
-const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, api, profileView);
+const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, apiWithProvider, profileView);
 presenter.init();
 
 
