@@ -30,13 +30,7 @@ const apiWithProvider = new Provider(api, store);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('SW scope:', registration.scope);})
-      .catch(() => {
-        console.log('err sw');
-      });
-  });
+    navigator.serviceWorker.register('/sw.js');});
 }
 
 const succesStartApp = (films) => {

@@ -23,10 +23,10 @@ const generateCommetData = () => {
         return this.date.format('YYYY/MM/DD hh:mm');
       }
       if (this.dateDiff <= 2 && this.dateDiff >1 ) {
-        return '2 days ago';
+        return '2 day ago';
       }
       if (this.dateDiff === 1) {
-        return'1 days ago';
+        return'1 day ago';
       }
       return 'today';
     },

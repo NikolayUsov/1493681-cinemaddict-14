@@ -7,12 +7,14 @@ import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
 import { UpdateType, UserAction, PopUpStatus, PopUpState } from '../utils/const.js';
 import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
+import { toast, ToastMessages } from '../utils/toast.js';
 
 const PopUpControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
   WATCHED: 'watched',
 };
+
 
 const footer = document.querySelector('.footer');
 
@@ -102,6 +104,9 @@ export default class FilmCardPresenter {
         this._comments = comments;
         this._popUpComponent = new PopUpFilmView(this._filmInfo, this._comments);
         renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
+        if (!this._api.isOnline()){
+          toast(ToastMessages.OPEN_POP_UP);
+        }
         this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
         this._popUpComponent.setPopUpControlChange(this._handlerChangePopUpControlButton);
         this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
@@ -179,6 +184,9 @@ export default class FilmCardPresenter {
         this._popUpComponent.setState(PopUpState.DEFAULT);
       })
       .catch(() => {
+        if (!this._api.isOnline()){
+          toast(ToastMessages.OFFLINE_SEND_COMMENT);
+        }
         this._popUpComponent.updateData(
           {
             currentEmoji: comment.emotion,
@@ -203,6 +211,9 @@ export default class FilmCardPresenter {
         this._popUpComponent.setState(PopUpState.DEFAULT);
       })
       .catch(() => {
+        if (!this._api.isOnline()){
+          toast(ToastMessages.OFFLINE_DELETE_COMMENT);
+        }
         this._popUpComponent.setState(PopUpState.ABORTING);
       });
   }

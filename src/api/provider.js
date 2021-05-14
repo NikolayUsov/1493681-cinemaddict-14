@@ -1,7 +1,5 @@
 import FilmModel from '../model/films-model.js';
-const isOnline = () => {
-  return window.navigator.onLine;
-};
+
 
 const createLocalStorageStructure = (films) => {
   return films.reduce((acc, film) => {
@@ -16,7 +14,7 @@ export default class Provider {
   }
 
   getFilms() {
-    if (isOnline()) {
+    if (this.isOnline()) {
       return this._api.getFilms()
         .then((films) => {
           const filmsForStore = createLocalStorageStructure(films.map(FilmModel.adaptToServer));
@@ -29,7 +27,7 @@ export default class Provider {
   }
 
   updateData(film) {
-    if (isOnline()) {
+    if (this.isOnline()) {
       return this._api.updateData(film)
         .then((updateFilm) => {
           this._store.setItem(updateFilm.id, FilmModel.adaptToServer(updateFilm));
@@ -39,20 +37,30 @@ export default class Provider {
     this._store.setItem(film.id, FilmModel.adaptToServer(Object.assign({}, film)));
     return Promise.resolve(film);
   }
+
   getComments(filmId) {
-    return this._api.getComments(filmId);
+    if (this.isOnline()){
+      return this._api.getComments(filmId);
+    }
+    return Promise.resolve([]);
   }
 
-
   addComment (film,comment){
-    return this._api.addComment(film,comment);
+    if (this.isOnline()){
+      return this._api.addComment(film,comment);
+    }
+    return Promise.reject(new Error('Add Comment failed'));
   }
 
   deleteComment(id) {
-    return this._api.deleteComment(id);
+    if (this.isOnline()){
+      return this._api.deleteComment(id);
+    }
+    return Promise.reject(new Error('Delete Comment failed'));
   }
+
   sync() {
-    if (isOnline()) {
+    if (this.isOnline()) {
       const films = Object.values(this._store.getItems());
       return this._api.sync(films)
         .then((result) => {
@@ -60,6 +68,11 @@ export default class Provider {
           this._store.setItems(updatedFilms);
         });
     }
+    return Promise.reject(new Error('Sync data failed'));
+  }
+
+  isOnline () {
+    return window.navigator.onLine;
   }
 }
 
