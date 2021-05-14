@@ -27,4 +27,5 @@ export const PopUpState = {
   DISABLED: 'disable',
   DEFAULT: 'default',
   SUBMIT: 'submit',
+  ABORTING: 'aborting',
 };

@@ -3,12 +3,51 @@ import Smart from './smart-component.js';
 import he from 'he';
 import dayjs from 'dayjs';
 import { PopUpState } from '..//utils/const.js';
+const MaxDataCounter = [
+  {
+    NAME: 'minute',
+    MAX: 60,
+  },
+  {
+    NAME: 'hour',
+    MAX: 24,
+  },
+  {
+    NAME: 'day',
+    MAX: 7,
+  },
+  {
+    NAME: 'week',
+    MAX: 4,
+  },
+  {
+    NAME: 'month',
+    MAX: 12,
+  },
+  {
+    NAME: 'year',
+    MAX: 2021,
+  },
+];
 
 const createNewCommentObj = (comment, emoji) =>{
   return {
     'comment': comment,
     'emotion': emoji,
   };
+};
+
+const getCommentHumanData = (data) => {
+  for (let i = 0; i < MaxDataCounter.length; i++){
+    const currentTimeRule = MaxDataCounter[i];
+    const diff = dayjs().diff((data), currentTimeRule.NAME);
+    if (diff === 0){
+      return 'now';
+    }
+    if (diff < currentTimeRule.MAX){
+      return`${diff} ${currentTimeRule.NAME} ago`;
+    }
+  }
 };
 
 const popupContainerTemplate = (card, comments) => {
@@ -31,7 +70,6 @@ const popupContainerTemplate = (card, comments) => {
     currentTextComment,
     isDelete,
     deleteID,
-    isSave,
     isDisable,
   } = card;
 
@@ -58,7 +96,7 @@ const popupContainerTemplate = (card, comments) => {
       <p class="film-details__comment-text">${he.encode(elem.comment)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${elem.author}</span>
-        <span class="film-details__comment-day">${elem.date}</span>
+        <span class="film-details__comment-day">${getCommentHumanData(elem.date)}</span>
         <button class="film-details__comment-delete"
         data-comment-id = "${elem.id}"
         ${isDisable ? 'disabled' : ''}
@@ -366,8 +404,17 @@ export default class PopUpFilmInfo extends Smart {
           },
         );
         break;
+      case PopUpState.ABORTING:
+        this.updateData(
+          {
+            isDisable: false,
+            isDelete: false,
+          },
+        );
+        this.errorUI();
     }
   }
+
   static parseFilmCardToState(filmCard) {
     return Object.assign(
       {},
@@ -388,7 +435,6 @@ export default class PopUpFilmInfo extends Smart {
     delete filmCard.currentTextComment;
     delete filmCard.currentEmoji;
     delete filmCard.isDelete;
-    delete filmCard.isSave;
     delete filmCard.isDisable;
     delete filmCard.deleteID;
     return filmCard;

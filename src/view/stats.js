@@ -142,19 +142,19 @@ const periodControlsTemplate = (currentInput) => {
 
 const statsTemplate = (data) => {
   const { films, statisticPeriod } = data;
+  const watchedFilm = films.filter((elem) => elem.userInfo.isWatched);
   const watchedFilmByPeriod = getWatchedFilmByPeriod(films, statisticPeriod);
   const watchedStatistic = getWatchedStatistic(watchedFilmByPeriod);
   const { watchingTime,
     topGenre,
     watchedFilmCount,
-    userStatus,
   } = watchedStatistic;
 
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">${userStatus}</span>
+    <span class="statistic__rank-label">${getStatus(watchedFilm.length)}</span>
   </p>
 
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

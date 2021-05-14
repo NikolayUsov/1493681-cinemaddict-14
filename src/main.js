@@ -9,9 +9,14 @@ import FilmsModel from './model/films-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import Api from './api/api.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 
 const AUTHORIZATION = 'Basic nikUsov';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
+const APP_NAME = 'Cinemadict';
+const VERSION = '14';
+const STORE_KEY = `${APP_NAME}-${VERSION}`;
 
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
@@ -20,6 +25,13 @@ const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 const profileView = new ProfileView();
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_KEY, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');});
+}
 
 const succesStartApp = (films) => {
   profileView.setData(films);
@@ -35,11 +47,20 @@ const errorStartApp = () => {
 
 
 const filterPresenter = new FilterPresenter(main,filmsModel, filterModel);
-const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, api, profileView);
+const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, apiWithProvider, profileView);
 presenter.init();
 
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then(succesStartApp)
   .catch(errorStartApp);
 
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
+});

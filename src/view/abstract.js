@@ -26,4 +26,9 @@ export default class Abstract {
   removeElement() {
     this._element = null;
   }
+
+  errorUI() {
+    this.getElement().classList.add('shake');
+    setTimeout(() => this.getElement().classList.remove('shake'),1000);
+  }
 }
