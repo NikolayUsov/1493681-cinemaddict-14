@@ -3,7 +3,7 @@ const VERSION = '1';
 const CACHE_NAME = `${NAME}-${VERSION}`;
 const RESPONSE_SAFE_TYPE = 'basic';
 const HTTP_STATUS_OK = 200;
-const urlsToCache = [
+const URL_TO_CACHE = [
   '/',
   '/index.html',
   '/bundle.js',
@@ -38,7 +38,8 @@ self.addEventListener('install', (evt) => {
   evt.waitUntil(
     caches.open(CACHE_NAME)
       .then((сache) => {
-        return сache.addAll(urlsToCache);}));
+        return сache.addAll(URL_TO_CACHE);
+      }));
 });
 
 
@@ -60,6 +61,7 @@ self.addEventListener('activate', (evt) => {
       ),
   );
 });
+
 self.addEventListener('fetch', (evt) => {
   evt.respondWith(
     caches.match(evt.request)

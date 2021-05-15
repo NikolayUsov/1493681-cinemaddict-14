@@ -7,7 +7,7 @@ export const comparerRating = (a, b) => {
 
 
 export const compareDate = (a, b) => {
-  return dayjs().diff(a.dateCreate) -  dayjs().diff(b.dateCreate);
+  return dayjs().diff(a.dateCreate) - dayjs().diff(b.dateCreate);
 };
 
 export const compareComments = (a, b) => {

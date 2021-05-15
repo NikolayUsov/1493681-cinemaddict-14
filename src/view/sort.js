@@ -4,9 +4,9 @@ import { SortType } from '../utils/const.js';
 const sortTemplate = (sortType) => {
 
   return `<ul class="sort">
-  <li><a href="#" class="sort__button ${sortType === SortType.DEFAULT ? 'sort__button--active': ''}" data-sort = ${SortType.DEFAULT}>Sort by default</a></li>
-  <li><a href="#" class="sort__button ${sortType === SortType.DATE ? 'sort__button--active': ''}" data-sort = ${SortType.DATE}>Sort by date</a></li>
-  <li><a href="#" class="sort__button ${sortType === SortType.RATING ? 'sort__button--active': ''}" data-sort = ${SortType.RATING}>Sort by rating</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.DEFAULT ? 'sort__button--active' : ''}" data-sort = ${SortType.DEFAULT}>Sort by default</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.DATE ? 'sort__button--active' : ''}" data-sort = ${SortType.DATE}>Sort by date</a></li>
+  <li><a href="#" class="sort__button ${sortType === SortType.RATING ? 'sort__button--active' : ''}" data-sort = ${SortType.RATING}>Sort by rating</a></li>
   </ul>`;
 };
 

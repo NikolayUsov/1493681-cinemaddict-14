@@ -18,7 +18,7 @@ export default class Profile extends Smart {
     this._data = null;
   }
 
-  setData (data) {
+  setData(data) {
     this._data = data.slice();
   }
 
@@ -31,5 +31,5 @@ export default class Profile extends Smart {
     this.updateElement();
   }
 
-  restoreHandlers(){}
+  restoreHandlers() { }
 }

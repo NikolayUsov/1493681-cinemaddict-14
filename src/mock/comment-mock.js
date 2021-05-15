@@ -1,16 +1,16 @@
 
-import {createId, getRandomText } from '../utils/common.js';
+import { createId, getRandomText } from '../utils/common.js';
 import { getRandomInteger } from '../utils/common.js';
 import dayjs from 'dayjs';
 
 const commentId = createId();
 const MAX_COMMENT = 5;
 
-const EMODJI =  ['smile', 'sleeping', 'puke', 'angry'];
-const COMMENT_AUTHOR  =['Makim', 'ivan', 'Petr','sveta', 'Vadim'];
+const EMODJI = ['smile', 'sleeping', 'puke', 'angry'];
+const COMMENT_AUTHOR = ['Makim', 'ivan', 'Petr', 'sveta', 'Vadim'];
 
 const generateCommetData = () => {
-  const dataComment = dayjs().subtract(getRandomInteger(0,5), 'day');
+  const dataComment = dayjs().subtract(getRandomInteger(0, 5), 'day');
   return {
     id: commentId(),
     author: COMMENT_AUTHOR.randomElement(),
@@ -18,15 +18,15 @@ const generateCommetData = () => {
     date: dataComment,
     dateDiff: dayjs().diff(dataComment, 'day'),
     emotion: EMODJI.randomElement(),
-    get diffmessage () {
+    get diffmessage() {
       if (this.dateDiff > 2) {
         return this.date.format('YYYY/MM/DD hh:mm');
       }
-      if (this.dateDiff <= 2 && this.dateDiff >1 ) {
+      if (this.dateDiff <= 2 && this.dateDiff > 1) {
         return '2 day ago';
       }
       if (this.dateDiff === 1) {
-        return'1 day ago';
+        return '1 day ago';
       }
       return 'today';
     },
@@ -41,4 +41,4 @@ const generateCommentsListData = () => {
   }
   return commentsList;
 };
-export {generateCommentsListData, commentId, generateCommetData};
+export { generateCommentsListData, commentId, generateCommetData };

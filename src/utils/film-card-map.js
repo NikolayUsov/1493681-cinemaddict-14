@@ -1,4 +1,4 @@
-import {filmCardsMap} from '../mock/data.js';
+import { filmCardsMap } from '../mock/data.js';
 
 export const getCommentsByFilmIdInMap = (id, filmCardsMap) => {
   for (const [key, value] of filmCardsMap.entries()) {

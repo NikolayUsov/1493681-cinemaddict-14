@@ -4,7 +4,7 @@ import FooterView from './view/footer-statistic.js';
 import { UpdateType } from './utils/const.js';
 import { renderElement } from './utils/render.js';
 import FilmCardListPresenter from './presenter/film-list-presenter.js';
-import {RenderPosition} from './utils/render.js';
+import { RenderPosition } from './utils/render.js';
 import FilmsModel from './model/films-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
@@ -21,6 +21,7 @@ const STORE_KEY = `${APP_NAME}-${VERSION}`;
 const header = document.querySelector('.header');
 const main = document.querySelector('.main');
 const footerStatistic = document.querySelector('.footer__statistics');
+
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
 const profileView = new ProfileView();
@@ -30,23 +31,24 @@ const apiWithProvider = new Provider(api, store);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js');});
+    navigator.serviceWorker.register('/sw.js');
+  });
 }
 
 const succesStartApp = (films) => {
   profileView.setData(films);
   filmsModel.setData(films, UpdateType.INIT);
-  renderElement (header, profileView, RenderPosition.BEFOREEND);
-  renderElement (footerStatistic, new FooterView(films), RenderPosition.BEFOREEND);
+  renderElement(header, profileView, RenderPosition.BEFOREEND);
+  renderElement(footerStatistic, new FooterView(films), RenderPosition.BEFOREEND);
 };
 
 const errorStartApp = () => {
   filmsModel.setData([], UpdateType.INIT);
-  renderElement (footerStatistic, new FooterView(), RenderPosition.BEFOREEND);
+  renderElement(footerStatistic, new FooterView(), RenderPosition.BEFOREEND);
 };
 
 
-const filterPresenter = new FilterPresenter(main,filmsModel, filterModel);
+const filterPresenter = new FilterPresenter(main, filmsModel, filterModel);
 const presenter = new FilmCardListPresenter(main, filterPresenter, filmsModel, filterModel, apiWithProvider, profileView);
 presenter.init();
 
