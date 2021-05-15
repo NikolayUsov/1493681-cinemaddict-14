@@ -15,9 +15,13 @@ const PopUpControlType = {
   WATCHED: 'watched',
 };
 
+const UserInfoControlsType = {
+  ISWATCHLIST: 'isWatchList',
+  ISWATCHED: 'isWatched',
+  ISFAVORITE: 'isFavorite',
+};
 
 const footer = document.querySelector('.footer');
-
 
 export default class FilmCardPresenter {
   constructor(container, handlerChangeData, handlerChangeView, filterModel, renderExtraCard, api) {
@@ -74,7 +78,7 @@ export default class FilmCardPresenter {
 
   }
 
-  errorUpdate(){
+  errorUpdate() {
     this._filmCardComponent.errorUI();
   }
 
@@ -104,7 +108,7 @@ export default class FilmCardPresenter {
         this._comments = comments;
         this._popUpComponent = new PopUpFilmView(this._filmInfo, this._comments);
         renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
-        if (!this._api.isOnline()){
+        if (!this._api.isOnline()) {
           toast(ToastMessages.OPEN_POP_UP);
         }
         this._popUpComponent.setClickCloseButton(this._handlePopUpButtonClose);
@@ -140,15 +144,15 @@ export default class FilmCardPresenter {
 
   _handlerChangePopUpControlButton(buttonType) {
     if (buttonType === PopUpControlType.WATCHLIST) {
-      this._updateFilmCardUserInfo('isWatchList');
+      this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHLIST);
     }
 
     if (buttonType === PopUpControlType.FAVORITE) {
-      this._updateFilmCardUserInfo('isFavorite');
+      this._updateFilmCardUserInfo(UserInfoControlsType.ISFAVORITE);
     }
 
     if (buttonType === PopUpControlType.WATCHED) {
-      this._updateFilmCardUserInfo('isWatched');
+      this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHED);
     }
   }
 
@@ -163,28 +167,28 @@ export default class FilmCardPresenter {
   }
 
   _handlerAddToWatchList() {
-    this._updateFilmCardUserInfo('isWatchList');
+    this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHLIST);
   }
 
   _handlerAddToFavorits() {
-    this._updateFilmCardUserInfo('isFavorite');
+    this._updateFilmCardUserInfo(UserInfoControlsType.ISFAVORITE);
   }
 
   _handlerAddToWatched() {
-    this._updateFilmCardUserInfo('isWatched');
+    this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHED);
   }
 
   _handlerSendNewComment(updateFilmCard, comment) {
     this._popUpComponent.setState(PopUpState.DISABLED);
     this._api.addComment(updateFilmCard, comment)
-      .then((result) =>{
+      .then((result) => {
         this._comments = result.comments;
         this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
         this._isChangeComment = true;
         this._popUpComponent.setState(PopUpState.DEFAULT);
       })
       .catch(() => {
-        if (!this._api.isOnline()){
+        if (!this._api.isOnline()) {
           toast(ToastMessages.OFFLINE_SEND_COMMENT);
         }
         this._popUpComponent.updateData(
@@ -211,7 +215,7 @@ export default class FilmCardPresenter {
         this._popUpComponent.setState(PopUpState.DEFAULT);
       })
       .catch(() => {
-        if (!this._api.isOnline()){
+        if (!this._api.isOnline()) {
           toast(ToastMessages.OFFLINE_DELETE_COMMENT);
         }
         this._popUpComponent.setState(PopUpState.ABORTING);

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { getRandomInteger, getRandomFloat } from '../utils/common.js';
 import dayjs from 'dayjs';
-import {generateCommentsListData} from './comment-mock.js';
-import {createId, getRandomText } from '../utils/common.js';
+import { generateCommentsListData } from './comment-mock.js';
+import { createId, getRandomText } from '../utils/common.js';
 const POSTERS = [
   'made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -77,7 +77,7 @@ const getDateCreate = () => {
   return dayjs()
     .subtract(year, 'year')
     .subtract(month, 'month')
-    .subtract(day,'day');
+    .subtract(day, 'day');
 };
 
 
@@ -90,8 +90,9 @@ const generateFilmInfo = () => {
   const poster = POSTERS.randomElement();
   const dateCreate = getDateCreate();
   const commentsList = generateCommentsListData();
+
   return {
-    id:filmId(),
+    id: filmId(),
     poster: `${pathToPoster}${poster}`,
     title: title,
     originalTitle: `Original: ${title}`,
@@ -102,8 +103,8 @@ const generateFilmInfo = () => {
     rating: getRandomFloat(0, 10, 1),
     dateCreate: dateCreate,
     runtime: getRandomInteger(60, 250),
-    get runtimeMessage () {
-      const hour = Math.trunc(this.runtime/60);
+    get runtimeMessage() {
+      const hour = Math.trunc(this.runtime / 60);
       const minutes = this.runtime % 60;
       return `${hour > 0 ? `${hour}h` : ''} ${minutes > 0 ? `${minutes}m` : ''}`;
     },
@@ -119,5 +120,5 @@ const generateFilmInfo = () => {
   };
 };
 
-export { generateFilmInfo, getRandomText};
+export { generateFilmInfo, getRandomText };
 

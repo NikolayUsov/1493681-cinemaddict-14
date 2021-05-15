@@ -3,6 +3,7 @@ import Smart from './smart-component.js';
 import he from 'he';
 import dayjs from 'dayjs';
 import { PopUpState } from '..//utils/const.js';
+
 const MaxDataCounter = [
   {
     NAME: 'minute',
@@ -30,7 +31,7 @@ const MaxDataCounter = [
   },
 ];
 
-const createNewCommentObj = (comment, emoji) =>{
+const createNewCommentObj = (comment, emoji) => {
   return {
     'comment': comment,
     'emotion': emoji,
@@ -38,14 +39,14 @@ const createNewCommentObj = (comment, emoji) =>{
 };
 
 const getCommentHumanData = (data) => {
-  for (let i = 0; i < MaxDataCounter.length; i++){
+  for (let i = 0; i < MaxDataCounter.length; i++) {
     const currentTimeRule = MaxDataCounter[i];
     const diff = dayjs().diff((data), currentTimeRule.NAME);
-    if (diff === 0){
+    if (diff === 0) {
       return 'now';
     }
-    if (diff < currentTimeRule.MAX){
-      return`${diff} ${currentTimeRule.NAME} ago`;
+    if (diff < currentTimeRule.MAX) {
+      return `${diff} ${currentTimeRule.NAME} ago`;
     }
   }
 };
@@ -282,7 +283,7 @@ export default class PopUpFilmInfo extends Smart {
     this.getEmojiControls().addEventListener('change', this._emojiChangeHandler);
     this.getCommentField().addEventListener('input', this._inputTextCommentHandler);
     this.getElement().addEventListener('keydown', this._sendNewCommentHandler);
-    this.getElement().querySelector('.film-details__comments-list').addEventListener('click',this._deleteCommentHandler);
+    this.getElement().querySelector('.film-details__comments-list').addEventListener('click', this._deleteCommentHandler);
   }
 
   _buttonCloseHandler(evt) {
@@ -321,9 +322,13 @@ export default class PopUpFilmInfo extends Smart {
 
   _sendNewCommentHandler(evt) {
     const isRightKeys = (evt.ctrlKey || evt.metaKey) && evt.keyCode === 13;
-    const isHasTextContentAndEmoji = !this._data.currentEmoji || !this._data.currentTextComment.trim();
+    if (!isRightKeys) {
+      return;
+    }
 
-    if (isRightKeys && !isHasTextContentAndEmoji) {
+    const isEmptyTextContentAndEmoji = !this._data.currentEmoji || (!this._data.currentTextComment || !this._data.currentTextComment.trim());
+
+    if (!isEmptyTextContentAndEmoji) {
       this._callback.setSendNewComment(this._data, createNewCommentObj(this._data.currentTextComment, this._data.currentEmoji));
       this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
       this.updateElement();
@@ -342,7 +347,7 @@ export default class PopUpFilmInfo extends Smart {
     this._callback.setSendNewComment = callback;
   }
 
-  setDeleteComment (callback) {
+  setDeleteComment(callback) {
     this._callback.deleteComment = callback;
   }
 
@@ -379,8 +384,8 @@ export default class PopUpFilmInfo extends Smart {
     this.updateElement();
   }
 
-  setState (state, deleteID) {
-    switch (state){
+  setState(state, deleteID) {
+    switch (state) {
       case PopUpState.DISABLED:
         this.updateData(
           {

@@ -13,7 +13,7 @@ const createToastContiner = () => {
 };
 
 const toast = (message) => {
-  if(document.querySelector('.toast-container') === null) {
+  if (document.querySelector('.toast-container') === null) {
     createToastContiner();
   }
   const toastContainer = document.querySelector('.toast-container');
@@ -25,10 +25,10 @@ const toast = (message) => {
 
   setTimeout(() => {
     toastItem.remove();
-    if(!toastContainer.firstChild) {
+    if (!toastContainer.firstChild) {
       toastContainer.remove();
     }
   }, SHOW_TIME);
 };
 
-export {toast, ToastMessages};
+export { toast, ToastMessages };

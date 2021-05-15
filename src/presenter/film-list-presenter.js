@@ -8,7 +8,7 @@ import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction, PopUpStatus } from '../utils/const.js';
 import { comparerRating, compareDate, compareComments } from '../utils/compares.js';
 import { FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl } from '../utils/filter-utils.js';
-import  LoadingView from '../view/loading.js';
+import LoadingView from '../view/loading.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
@@ -76,7 +76,7 @@ export default class FilmCardList {
       case FILTER.STATS:
         this._clearMainFilmCards({ resetRenderedCard: true, resetSortType: true });
         this._renderStatsComponent();
-        replace(this._statsComponent,this._filmCardListWrapper);
+        replace(this._statsComponent, this._filmCardListWrapper);
         break;
       case UpdateType.INIT:
         remove(this._loadingComponent);
@@ -105,7 +105,7 @@ export default class FilmCardList {
         break;
       case UpdateType.MAJOR:
         if (this._statsComponent !== null) {
-          replace(this._filmCardListWrapper,this._statsComponent);
+          replace(this._filmCardListWrapper, this._statsComponent);
           remove(this._statsComponent);
           this._statsComponent = null;
         }
@@ -176,7 +176,7 @@ export default class FilmCardList {
   }
 
   _renderLoading() {
-    renderElement(this._filmCardListContainer,  this._loadingComponent, RenderPosition.BEFOREEND);
+    renderElement(this._filmCardListContainer, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderFilmCard(filmInfo, renderContainer) {
@@ -297,7 +297,7 @@ export default class FilmCardList {
     renderElement(this._mainContainer, this._buttonShowMore, RenderPosition.AFTEREND);
   }
 
-  _renderStatsComponent () {
+  _renderStatsComponent() {
     this._statsComponent = new StatsView(this._filmsModel.getData());
     renderElement(this._filmCardListContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }

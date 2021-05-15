@@ -9,7 +9,7 @@ const loadingTemplate = () => {
 };
 
 export default class LoadinView extends AbstractView {
-  constructor (){
+  constructor() {
     super();
   }
 

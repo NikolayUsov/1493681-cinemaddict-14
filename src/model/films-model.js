@@ -1,27 +1,28 @@
 import Observer from '..//utils/observe.js';
 import { deepClone } from '../utils/common.js';
 import dayjs from 'dayjs';
+
 export default class FilmModel extends Observer {
-  constructor () {
+  constructor() {
     super();
     this._films = [];
   }
 
-  setData (films, typeUpdate) {
+  setData(films, typeUpdate) {
     this._films = films.slice();
     this._notify(typeUpdate);
   }
 
-  getData () {
+  getData() {
     return this._films;
   }
 
-  updateData (typeUpdate, update, popUpStatus) {
+  updateData(typeUpdate, update, popUpStatus) {
     const index = this._films.findIndex((film) => film.id === update.id);
     if (index === -1) {
       throw new Error('Can\'t find update element');
     }
-    this._films =[
+    this._films = [
       ...this._films.slice(0, index),
       update,
       ...this._films.slice(index + 1),
@@ -29,14 +30,14 @@ export default class FilmModel extends Observer {
     this._notify(typeUpdate, update, popUpStatus);
   }
 
-  static adaptToClient (film) {
+  static adaptToClient(film) {
     let adaptedFilm = deepClone(film);
     adaptedFilm = Object.assign(
       {},
       adaptedFilm,
       {
         poster: film.film_info.poster,
-        title:  film.film_info.title,
+        title: film.film_info.title,
         originalTitle: film.film_info.alternative_title,
         description: film.film_info.description,
         director: film.film_info.director,
@@ -46,13 +47,13 @@ export default class FilmModel extends Observer {
         dateCreate: film.film_info.release.date,
         country: film.film_info.release.release_country,
         runtime: film.film_info.runtime,
-        get runtimeMessage () {
-          const hour = Math.trunc(this.runtime/60);
+        get runtimeMessage() {
+          const hour = Math.trunc(this.runtime / 60);
           const minutes = this.runtime % 60;
           return `${hour > 0 ? `${hour}h` : ''} ${minutes > 0 ? `${minutes}m` : ''}`;
         },
         genres: film.film_info.genre,
-        adult:  film.film_info.age_rating,
+        adult: film.film_info.age_rating,
         userInfo: {
           isWatchList: film.user_details.watchlist,
           isFavorite: film.user_details.favorite,
@@ -64,10 +65,11 @@ export default class FilmModel extends Observer {
 
     delete adaptedFilm.user_details;
     delete adaptedFilm.film_info;
+
     return adaptedFilm;
   }
 
-  static adaptToServer (film) {
+  static adaptToServer(film) {
     const isDataNull = film.userInfo.watchedDate === null;
     let adaptedFilm = deepClone(film);
 
@@ -85,7 +87,7 @@ export default class FilmModel extends Observer {
           actors: film.actors,
           total_rating: film.rating,
           release: {
-            date:  dayjs(film.dateCreate).toISOString(),
+            date: dayjs(film.dateCreate).toISOString(),
             release_country: film.country,
           },
           runtime: film.runtime,
@@ -95,7 +97,7 @@ export default class FilmModel extends Observer {
         user_details: {
           watchlist: film.userInfo.isWatchList,
           favorite: film.userInfo.isFavorite,
-          already_watched:film.userInfo.isWatched,
+          already_watched: film.userInfo.isWatched,
           watching_date: isDataNull ? dayjs() : dayjs(film.userInfo.watchedDate).toISOString(),
         },
       },
@@ -115,6 +117,7 @@ export default class FilmModel extends Observer {
     delete adaptedFilm.runtime;
     delete adaptedFilm.userInfo;
     delete adaptedFilm.runtimeMessage;
+
     return adaptedFilm;
   }
 }

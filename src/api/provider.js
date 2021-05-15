@@ -23,6 +23,7 @@ export default class Provider {
         });
     }
     const films = Object.values(this._store.getItems());
+
     return Promise.resolve(films.map(FilmModel.adaptToClient));
   }
 
@@ -35,27 +36,31 @@ export default class Provider {
         });
     }
     this._store.setItem(film.id, FilmModel.adaptToServer(Object.assign({}, film)));
+
     return Promise.resolve(film);
   }
 
   getComments(filmId) {
-    if (this.isOnline()){
+    if (this.isOnline()) {
       return this._api.getComments(filmId);
     }
+
     return Promise.resolve([]);
   }
 
-  addComment (film,comment){
-    if (this.isOnline()){
-      return this._api.addComment(film,comment);
+  addComment(film, comment) {
+    if (this.isOnline()) {
+      return this._api.addComment(film, comment);
     }
+
     return Promise.reject(new Error('Add Comment failed'));
   }
 
   deleteComment(id) {
-    if (this.isOnline()){
+    if (this.isOnline()) {
       return this._api.deleteComment(id);
     }
+
     return Promise.reject(new Error('Delete Comment failed'));
   }
 
@@ -68,10 +73,11 @@ export default class Provider {
           this._store.setItems(updatedFilms);
         });
     }
+
     return Promise.reject(new Error('Sync data failed'));
   }
 
-  isOnline () {
+  isOnline() {
     return window.navigator.onLine;
   }
 }

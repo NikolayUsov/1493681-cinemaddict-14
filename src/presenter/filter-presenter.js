@@ -1,9 +1,9 @@
-import {FilterView} from '../view/filter-view.js';
-import { FILTER ,filtersFunctionMap } from '../utils/filter-utils.js';
+import { FilterView } from '../view/filter-view.js';
+import { FILTER, filtersFunctionMap } from '../utils/filter-utils.js';
 import { remove, renderElement, RenderPosition, replace } from '../utils/render.js';
 
 export default class FilterPresenter {
-  constructor(container,filmsModel, filterModel){
+  constructor(container, filmsModel, filterModel) {
     this._filterContainer = container;
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
@@ -14,7 +14,7 @@ export default class FilterPresenter {
     this._filmsModel.addToObserve(this._handlerFromModel);
   }
 
-  init(){
+  init() {
     const prevFilterComponent = this._filterComponent;
     this._filterComponent = new FilterView(this._getFilters(), this._filterModel.get());
     this._filterComponent.setFilterClick(this._handlerFilterClick);
@@ -24,11 +24,11 @@ export default class FilterPresenter {
       return;
     }
 
-    replace (this._filterComponent, prevFilterComponent);
+    replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
   }
 
-  _handlerFromModel () {
+  _handlerFromModel() {
     this.init();
   }
 
@@ -36,8 +36,8 @@ export default class FilterPresenter {
     this._filterModel.set(updateType, filterType);
   }
 
-  _getFilters () {
-    const films =  this._filmsModel.getData();
+  _getFilters() {
+    const films = this._filmsModel.getData();
 
     return [
       {
