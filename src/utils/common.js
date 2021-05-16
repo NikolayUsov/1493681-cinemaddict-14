@@ -42,7 +42,7 @@ Array.prototype.randomElement = function () {
 };
 
 export const isObject = (obj) => {
-  return obj != null && obj.constructor.name === 'Object';
+  return obj !== null && obj.constructor.name === 'Object';
 };
 
 export const deepClone = (obj) => {

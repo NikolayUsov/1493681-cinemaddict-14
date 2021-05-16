@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { getRandomInteger, getRandomFloat } from '../utils/common.js';
 import dayjs from 'dayjs';
-import { generateCommentsListData } from './comment-mock.js';
+import { generateCommentsData } from './comment-mock.js';
 import { createId, getRandomText } from '../utils/common.js';
 const POSTERS = [
   'made-for-each-other.png',
@@ -86,10 +86,9 @@ const filmId = createId();
 const generateFilmInfo = () => {
   const title = TITELS.randomElement();
   const pathToPoster = '/images/posters/';
-  const pathToBigPoster = pathToPoster;
   const poster = POSTERS.randomElement();
   const dateCreate = getDateCreate();
-  const commentsList = generateCommentsListData();
+  const commentsList = generateCommentsData();
 
   return {
     id: filmId(),

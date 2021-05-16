@@ -1,6 +1,6 @@
 import AbstractView from './abstract.js';
 import dayjs from 'dayjs';
-//import { getComments } from '../utils/film-card-map.js';
+
 const filmCardTemplate = (card) => {
   const MAX_DESCRIPTION_LENGTH = 140;
   const {
@@ -44,7 +44,7 @@ const filmCardTemplate = (card) => {
 </article>`;
 };
 
-export default class filmCard extends AbstractView {
+export default class FilmCard extends AbstractView {
   constructor(data) {
     super();
     this._data = data;

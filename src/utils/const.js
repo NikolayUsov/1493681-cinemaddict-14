@@ -17,12 +17,12 @@ export const UpdateType = {
   INIT: 'init',
 };
 
-export const PopUpStatus = {
+export const PopupStatus = {
   OPEN: 'open',
   CLOSE: 'close',
 };
 
-export const PopUpState = {
+export const PopupState = {
   DELETE: 'delete',
   DISABLED: 'disable',
   DEFAULT: 'default',

@@ -8,7 +8,7 @@ const loadingTemplate = () => {
 </section>`;
 };
 
-export default class LoadinView extends AbstractView {
+export default class LoadView extends AbstractView {
   constructor() {
     super();
   }

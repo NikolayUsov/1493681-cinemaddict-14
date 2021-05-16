@@ -132,7 +132,7 @@ const inputTemplate = (input, currentInput) => {
    id="statistic-${input}" value="${input}"
     ${input === currentInput ? 'checked' : ''}>
   <label for="statistic-${input}" class="statistic__filters-label">
-  ${input === PeriodOfStatistics.ALL ? 'All time' : `${input.charAt(0).toUpperCase() + input.slice(1)}`}</label>`;
+  ${input === PeriodOfStatistics.ALL ? 'All time' : `${input.charAt(0).toUpperCase()}${input.slice(1)}`}</label>`;
 };
 
 const periodControlsTemplate = (currentInput) => {

@@ -1,6 +1,6 @@
 const SHOW_TIME = 5000;
 
-const ToastMessages = {
+const ToastMessage = {
   OPEN_POP_UP: 'Can\'t show comments.Offline mode',
   OFFLINE_SEND_COMMENT: 'You can\'t send comment. Offline mode',
   OFFLINE_DELETE_COMMENT: 'You can\'t delete comment. Offline mode',
@@ -31,4 +31,4 @@ const toast = (message) => {
   }, SHOW_TIME);
 };
 
-export { toast, ToastMessages };
+export { toast, ToastMessage };

@@ -31,7 +31,7 @@ const mainNavigationTemplate = (filters, activeFilter) => {
     </nav>`;
 };
 
-export class FilterView extends Smart {
+export default class FilterView extends Smart {
   constructor(filters, currentFilter) {
     super();
     this._data =filters;

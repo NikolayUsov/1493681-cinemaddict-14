@@ -5,7 +5,7 @@ import FilmCardPresenter from './film-card-presenter.js';
 import StatsView from '../view/stats.js';
 import ButtonShowMoreView from '../view/button-show-more.js';
 import SortView from '../view/sort.js';
-import { SortType, UpdateType, UserAction, PopUpStatus } from '../utils/const.js';
+import { SortType, UpdateType, UserAction, PopupStatus } from '../utils/const.js';
 import { comparerRating, compareDate, compareComments } from '../utils/compares.js';
 import { FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl } from '../utils/filter-utils.js';
 import LoadingView from '../view/loading.js';
@@ -30,7 +30,7 @@ export default class FilmCardList {
     this._mainContainer = this._filmCardListWrapper.getMainContainer();
     this._topCommentedContainer = this._filmCardListWrapper.getTopCommentedContainer();
     this._topRatingContainer = this._filmCardListWrapper.getTopRatingContainer();
-    this._handlerChangePopUp = this._handlerChangePopUp.bind(this);
+    this._handlerChangePopup = this._handlerChangePopup.bind(this);
     this._handlerSortClick = this._handlerSortClick.bind(this);
     this._handleButtonShowMore = this._handleButtonShowMore.bind(this);
     this._handleChangeFromModel = this._handleChangeFromModel.bind(this);
@@ -119,11 +119,11 @@ export default class FilmCardList {
   _handleChangeOnView(userAction, updateType, update, updateControl, popUpStatus) {
     const filterType = this._filterModel.get();
 
-    if (filterType !== FILTER.ALL_MOVIES && popUpStatus === PopUpStatus.CLOSE) {
+    if (filterType !== FILTER.ALL_MOVIES && popUpStatus === PopupStatus.CLOSE) {
       updateType = UpdateType.MINOR;
     }
 
-    if (FilterTypeMatchToFilmsControl[filterType] !== updateControl && this._popUpStatus === PopUpStatus.OPEN) {
+    if (FilterTypeMatchToFilmsControl[filterType] !== updateControl && this._popUpStatus === PopupStatus.OPEN) {
       updateType = UpdateType.PATH;
     }
 
@@ -148,7 +148,7 @@ export default class FilmCardList {
     }
   }
 
-  _handlerChangePopUp() {
+  _handlerChangePopup() {
     [
       ...Object.values(this._mainFilmCardPresenters),
       ...Object.values(this._topCommentedFilmCardPresenter),
@@ -180,7 +180,7 @@ export default class FilmCardList {
   }
 
   _renderFilmCard(filmInfo, renderContainer) {
-    this._filmCardPresenter = new FilmCardPresenter(renderContainer, this._handleChangeOnView, this._handlerChangePopUp, this._filterModel, this._renderExtraCards, this._api);
+    this._filmCardPresenter = new FilmCardPresenter(renderContainer, this._handleChangeOnView, this._handlerChangePopup, this._filterModel, this._renderExtraCards, this._api);
     this._filmCardPresenter.init(filmInfo);
     switch (renderContainer) {
       case (this._mainContainer):

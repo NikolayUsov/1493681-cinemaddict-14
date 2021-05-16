@@ -33,12 +33,12 @@ const generateCommetData = () => {
   };
 };
 
-const generateCommentsListData = () => {
+const generateCommentsData = () => {
   const items = getRandomInteger(0, MAX_COMMENT);
-  const commentsList = [];
+  const comments = [];
   for (let i = 0; i < items; i++) {
-    commentsList.push(generateCommetData());
+    comments.push(generateCommetData());
   }
-  return commentsList;
+  return comments;
 };
-export { generateCommentsListData, commentId, generateCommetData };
+export { generateCommentsData, commentId, generateCommetData };

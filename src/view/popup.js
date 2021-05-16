@@ -2,7 +2,7 @@
 import Smart from './smart-component.js';
 import he from 'he';
 import dayjs from 'dayjs';
-import { PopUpState } from '..//utils/const.js';
+import { PopupState } from '..//utils/const.js';
 
 const MaxDataCounter = [
   {
@@ -237,10 +237,10 @@ const popupContainerTemplate = (card, comments) => {
   `;
 };
 
-export default class PopUpFilmInfo extends Smart {
+export default class PopupFilmInfo extends Smart {
   constructor(data, comments) {
     super();
-    this._data = PopUpFilmInfo.parseFilmCardToState(data);
+    this._data = PopupFilmInfo.parseFilmCardToState(data);
     this._comments = comments;
     this._buttonCloseHandler = this._buttonCloseHandler.bind(this);
     this._controlListClickHandler = this._controlListClickHandler.bind(this);
@@ -269,13 +269,13 @@ export default class PopUpFilmInfo extends Smart {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setPopUpControlChange(this._callback.inputControlPopUp);
+    this.setPopupControlChange(this._callback.inputControlPopup);
     this.setClickCloseButton(this._callback.clickCloseButton);
   }
 
   reset(filmCard) {
     this.updateData(
-      PopUpFilmInfo.parseFilmCardToState(filmCard),
+      PopupFilmInfo.parseFilmCardToState(filmCard),
     );
   }
 
@@ -294,7 +294,7 @@ export default class PopUpFilmInfo extends Smart {
 
   _controlListClickHandler(evt) {
     evt.preventDefault();
-    this._callback.inputControlPopUp(evt.target.id);
+    this._callback.inputControlPopup(evt.target.id);
   }
 
   _emojiChangeHandler(evt) {
@@ -310,8 +310,8 @@ export default class PopUpFilmInfo extends Smart {
     );
   }
 
-  setPopUpControlChange(callback) {
-    this._callback.inputControlPopUp = callback;
+  setPopupControlChange(callback) {
+    this._callback.inputControlPopup = callback;
     this.getElement().querySelector('.film-details__controls').addEventListener('change', this._controlListClickHandler);
   }
 
@@ -330,7 +330,7 @@ export default class PopUpFilmInfo extends Smart {
 
     if (!isEmptyTextContentAndEmoji) {
       this._callback.setSendNewComment(this._data, createNewCommentObj(this._data.currentTextComment, this._data.currentEmoji));
-      this._data = PopUpFilmInfo.parseStateToFilmCard(this._data);
+      this._data = PopupFilmInfo.parseStateToFilmCard(this._data);
       this.updateElement();
     }
   }
@@ -386,14 +386,14 @@ export default class PopUpFilmInfo extends Smart {
 
   setState(state, deleteID) {
     switch (state) {
-      case PopUpState.DISABLED:
+      case PopupState.DISABLED:
         this.updateData(
           {
             isDisable: true,
           },
         );
         break;
-      case PopUpState.DELETE:
+      case PopupState.DELETE:
         this.updateData(
           {
             isDelete: true,
@@ -401,7 +401,7 @@ export default class PopUpFilmInfo extends Smart {
           },
         );
         break;
-      case PopUpState.DEFAULT:
+      case PopupState.DEFAULT:
         this.updateData(
           {
             isDisable: false,
@@ -409,7 +409,7 @@ export default class PopUpFilmInfo extends Smart {
           },
         );
         break;
-      case PopUpState.ABORTING:
+      case PopupState.ABORTING:
         this.updateData(
           {
             isDisable: false,
