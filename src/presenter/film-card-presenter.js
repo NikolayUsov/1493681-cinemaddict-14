@@ -16,9 +16,9 @@ const PopUpControlType = {
 };
 
 const UserInfoControlsType = {
-  ISWATCHLIST: 'isWatchList',
-  ISWATCHED: 'isWatched',
-  ISFAVORITE: 'isFavorite',
+  IS_WATCHLIST: 'isWatchList',
+  IS_WATCHED: 'isWatched',
+  IS_FAVORITE: 'isFavorite',
 };
 
 const footer = document.querySelector('.footer');
@@ -144,15 +144,15 @@ export default class FilmCardPresenter {
 
   _handlerChangePopUpControlButton(buttonType) {
     if (buttonType === PopUpControlType.WATCHLIST) {
-      this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHLIST);
+      this._updateFilmCardUserInfo(UserInfoControlsType.IS_WATCHLIST);
     }
 
     if (buttonType === PopUpControlType.FAVORITE) {
-      this._updateFilmCardUserInfo(UserInfoControlsType.ISFAVORITE);
+      this._updateFilmCardUserInfo(UserInfoControlsType.IS_FAVORITE);
     }
 
     if (buttonType === PopUpControlType.WATCHED) {
-      this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHED);
+      this._updateFilmCardUserInfo(UserInfoControlsType.IS_WATCHED);
     }
   }
 
@@ -167,15 +167,15 @@ export default class FilmCardPresenter {
   }
 
   _handlerAddToWatchList() {
-    this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHLIST);
+    this._updateFilmCardUserInfo(UserInfoControlsType.IS_WATCHLIST);
   }
 
   _handlerAddToFavorits() {
-    this._updateFilmCardUserInfo(UserInfoControlsType.ISFAVORITE);
+    this._updateFilmCardUserInfo(UserInfoControlsType.IS_FAVORITE);
   }
 
   _handlerAddToWatched() {
-    this._updateFilmCardUserInfo(UserInfoControlsType.ISWATCHED);
+    this._updateFilmCardUserInfo(UserInfoControlsType.IS_WATCHED);
   }
 
   _handlerSendNewComment(updateFilmCard, comment) {
