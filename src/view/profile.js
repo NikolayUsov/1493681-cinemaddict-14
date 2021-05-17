@@ -1,5 +1,5 @@
 import { getStatus } from '../utils/stats.js';
-import Smart from '../view/smart-component.js';
+import Smart from '../view/smart.js';
 
 const headerProfileTemplate = (films) => {
   const watchedFilms = films.filter((elem) => elem.userInfo.isWatched);

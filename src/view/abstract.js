@@ -27,7 +27,7 @@ export default class Abstract {
     this._element = null;
   }
 
-  errorUI() {
+  showErrorUI() {
     this.getElement().classList.add('shake');
     setTimeout(() => this.getElement().classList.remove('shake'), 1000);
   }

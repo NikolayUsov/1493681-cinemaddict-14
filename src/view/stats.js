@@ -1,4 +1,4 @@
-import Smart from '../view/smart-component.js';
+import Smart from '../view/smart.js';
 import { getStatus } from '../utils/stats.js';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';

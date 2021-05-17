@@ -1,4 +1,4 @@
-import Smart from './smart-component.js';
+import Smart from './smart.js';
 import { FILTER } from '../utils/filter-utils.js';
 import { UpdateType } from '../utils/const.js';
 
@@ -56,7 +56,7 @@ export default class FilterView extends Smart {
     const isNavigation = evt.target.classList.contains('main-navigation__item') ||
     evt.target.classList.contains('main-navigation__additional');
 
-    if (!isNavigation) {
+    if (!isNavigation || this._currentFilter === evt.target.dataset.filter) {
       return;
     }
 

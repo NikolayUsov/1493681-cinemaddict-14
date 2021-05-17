@@ -1,5 +1,5 @@
 import FilmCardView from '../view/film-card';
-import PopupFilmView from '../view/popup.js';
+import PopupFilmView from '../view/popup-film-info.js';
 import { renderElement } from '../utils/render.js';
 import { isEscEvent } from '../utils/common.js';
 import { remove, replace } from '../utils/render.js';
@@ -7,8 +7,8 @@ import { deepClone } from '../utils/common.js';
 import { RenderPosition } from '../utils/render.js';
 import { UpdateType, UserAction, PopupStatus, PopupState } from '../utils/const.js';
 import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
-import { toast, ToastMessage } from '../utils/toast.js';
-
+import { showToast, ToastMessage } from '../utils/toast.js';
+import dayjs from 'dayjs';
 const PopupControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
@@ -33,6 +33,7 @@ export default class FilmCardPresenter {
     this._api = api;
     this._renderExtraCard = renderExtraCard;
     this._isChangeComment = false;
+    this._minorUpdateAfterClose = false;
     this._handlerChangeData = handlerChangeData;
     this._handlerChangeView = handlerChangeView;
     this._popUpStatus = PopupStatus.CLOSE;
@@ -78,8 +79,8 @@ export default class FilmCardPresenter {
 
   }
 
-  errorUpdate() {
-    this._filmCardComponent.errorUI();
+  SetErrorUpdate() {
+    this._filmCardComponent.showErrorUI();
   }
 
   resetFilmView() {
@@ -96,6 +97,11 @@ export default class FilmCardPresenter {
     this._popUpStatus = PopupStatus.CLOSE;
     this._comments = null;
     document.body.style.overflow = '';
+
+    if (this._minorUpdateAfterClose) {
+      this._handlerChangeData(UserAction.UPDATE, UpdateType.MINOR, this._updateFilmCard, this._filmInfo, this._popUpStatus);
+    }
+
     if (this._isChangeComment) {
       this._renderExtraCard();
       this._isChangeComment = false;
@@ -109,7 +115,7 @@ export default class FilmCardPresenter {
         this._popUpComponent = new PopupFilmView(this._filmInfo, this._comments);
         renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
         if (!this._api.isOnline()) {
-          toast(ToastMessage.OPEN_POP_UP);
+          showToast(ToastMessage.OPEN_POP_UP);
         }
         this._popUpComponent.setClickCloseButton(this._handlePopupButtonClose);
         this._popUpComponent.setPopupControlChange(this._handlerChangePopupControlButton);
@@ -118,7 +124,7 @@ export default class FilmCardPresenter {
         document.body.style.overflow = 'hidden';
       })
       .catch(() => {
-        this._filmCardComponent.errorUI();
+        this._filmCardComponent.showErrorUI();
       });
   }
 
@@ -160,8 +166,13 @@ export default class FilmCardPresenter {
     const currentFilter = this._filterModel.get();
     this._updateFilmCard = deepClone(this._filmInfo);
     this._updateFilmCard.userInfo[updateControl] = !this._updateFilmCard.userInfo[updateControl];
+
+    if (updateControl === UserInfoControlsType.IS_WATCHED) {
+      this._updateFilmCard.userInfo[updateControl] ? this._updateFilmCard.userInfo.watchedDate = dayjs() : this._updateFilmCard.userInfo.watchedDate = null;
+    }
+
     if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopupStatus.OPEN) {
-      this._closePopup();
+      this._minorUpdateAfterClose = true;
     }
     this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, updateControl, this._popUpStatus);
   }
@@ -189,7 +200,7 @@ export default class FilmCardPresenter {
       })
       .catch(() => {
         if (!this._api.isOnline()) {
-          toast(ToastMessage.OFFLINE_SEND_COMMENT);
+          showToast(ToastMessage.OFFLINE_SEND_COMMENT);
         }
         this._popUpComponent.updateData(
           {
@@ -216,7 +227,7 @@ export default class FilmCardPresenter {
       })
       .catch(() => {
         if (!this._api.isOnline()) {
-          toast(ToastMessage.OFFLINE_DELETE_COMMENT);
+          showToast(ToastMessage.OFFLINE_DELETE_COMMENT);
         }
         this._popUpComponent.setState(PopupState.ABORTING);
       });

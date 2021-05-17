@@ -1,4 +1,4 @@
-import FilmModel from '../model/films-model.js';
+import FilmModel from '../model/film-model.js';
 
 
 const createLocalStorageStructure = (films) => {

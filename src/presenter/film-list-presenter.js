@@ -8,12 +8,12 @@ import SortView from '../view/sort.js';
 import { SortType, UpdateType, UserAction, PopupStatus } from '../utils/const.js';
 import { comparerRating, compareDate, compareComments } from '../utils/compares.js';
 import { FILTER, filtersFunctionMap, FilterTypeMatchToFilmsControl } from '../utils/filter-utils.js';
-import LoadingView from '../view/loading.js';
+import LoadingView from '../view/load-view.js';
 
 const CARD_STEP = 5;
 const MAX_EXTRA_CARD = 2;
 
-export default class FilmCardList {
+export default class FilmListPresenter {
   constructor(container, filterPresenter, filmModel, filterModel, api, userProfile) {
     this._api = api;
     this._filmCardListContainer = container;
@@ -137,7 +137,7 @@ export default class FilmCardList {
               ...Object.values(this._topCommentedFilmCardPresenter),
               ...Object.values(this._topratingFilmCardPresenter),
             ]
-              .forEach((elem) => elem.errorUpdate());
+              .forEach((elem) => elem.SetErrorUpdate());
           });
         break;
       case UserAction.ADD_COMMENT:
@@ -298,6 +298,10 @@ export default class FilmCardList {
   }
 
   _renderStatsComponent() {
+    if ( this._statsComponent !== null) {
+      this._statsComponent = null;
+      remove(this._statsComponent);
+    }
     this._statsComponent = new StatsView(this._filmsModel.getData());
     renderElement(this._filmCardListContainer, this._statsComponent, RenderPosition.BEFOREEND);
   }

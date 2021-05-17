@@ -1,4 +1,4 @@
-import Observer from '..//utils/observe.js';
+import Observer from '../utils/observe.js';
 import { deepClone } from '../utils/common.js';
 import dayjs from 'dayjs';
 
@@ -70,7 +70,6 @@ export default class FilmModel extends Observer {
   }
 
   static adaptToServer(film) {
-    const isDataNull = film.userInfo.watchedDate === null;
     let adaptedFilm = deepClone(film);
 
     adaptedFilm = Object.assign(
@@ -80,25 +79,25 @@ export default class FilmModel extends Observer {
         film_info: {
           poster: film.poster,
           title: film.title,
-          alternative_title: film.originalTitle,
+          'alternative_title': film.originalTitle,
           description: film.description,
           director: film.director,
           writers: film.screenWriters,
           actors: film.actors,
-          total_rating: film.rating,
+          'total_rating': film.rating,
           release: {
             date: dayjs(film.dateCreate).toISOString(),
-            release_country: film.country,
+            'release_country': film.country,
           },
           runtime: film.runtime,
           genre: film.genres,
-          age_rating: film.adult,
+          'age_rating': film.adult,
         },
-        user_details: {
+        'user_details': {
           watchlist: film.userInfo.isWatchList,
           favorite: film.userInfo.isFavorite,
-          already_watched: film.userInfo.isWatched,
-          watching_date: isDataNull ? dayjs() : dayjs(film.userInfo.watchedDate).toISOString(),
+          'already_watched': film.userInfo.isWatched,
+          'watching_date': film.userInfo.isWatched ? dayjs(film.userInfo.watchedDate).toISOString() : film.userInfo.watchedDate,
         },
       },
     );

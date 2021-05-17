@@ -1,4 +1,4 @@
-import Smart from './smart-component.js';
+import Smart from './smart.js';
 import { SortType } from '../utils/const.js';
 
 const sortTemplate = (sortType) => {

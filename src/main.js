@@ -1,18 +1,18 @@
 
 import ProfileView from './view/profile.js';
-import FooterView from './view/footer-statistic.js';
+import FooterView from './view/footer.js';
 import { UpdateType } from './utils/const.js';
 import { renderElement } from './utils/render.js';
 import FilmCardListPresenter from './presenter/film-list-presenter.js';
 import { RenderPosition } from './utils/render.js';
-import FilmsModel from './model/films-model.js';
+import FilmsModel from './model/film-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilterModel from './model/filter-model.js';
 import Api from './api/api.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 
-const AUTHORIZATION = 'Basic nikUsov';
+const AUTHORIZATION = 'Basic Usov';
 const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 const APP_NAME = 'Cinemadict';
 const VERSION = '14';

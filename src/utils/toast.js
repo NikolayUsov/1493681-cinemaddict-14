@@ -12,7 +12,7 @@ const createToastContiner = () => {
   document.body.append(toastContainer);
 };
 
-const toast = (message) => {
+const showToast = (message) => {
   if (document.querySelector('.toast-container') === null) {
     createToastContiner();
   }
@@ -31,4 +31,4 @@ const toast = (message) => {
   }, SHOW_TIME);
 };
 
-export { toast, ToastMessage };
+export { showToast, ToastMessage };

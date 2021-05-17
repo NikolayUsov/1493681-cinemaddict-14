@@ -1,8 +1,8 @@
 
-import Smart from './smart-component.js';
+import Smart from './smart.js';
 import he from 'he';
 import dayjs from 'dayjs';
-import { PopupState } from '..//utils/const.js';
+import { PopupState } from '../utils/const.js';
 
 const MaxDataCounter = [
   {
@@ -416,7 +416,7 @@ export default class PopupFilmInfo extends Smart {
             isDelete: false,
           },
         );
-        this.errorUI();
+        this.showErrorUI();
     }
   }
 
