@@ -11,7 +11,7 @@ export default class Observer {
     this._observers.filter((observer) => observer !== removeObserver);
   }
 
-  _notify(event, payload, popUpStatus) {
-    this._observers.forEach((observe) => observe(event, payload, popUpStatus));
+  _notify(event, payload, popupStatus) {
+    this._observers.forEach((observe) => observe(event, payload, popupStatus));
   }
 }

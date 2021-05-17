@@ -17,7 +17,7 @@ export default class FilmModel extends Observer {
     return this._films;
   }
 
-  updateData(typeUpdate, update, popUpStatus) {
+  updateData(typeUpdate, update, popupStatus) {
     const index = this._films.findIndex((film) => film.id === update.id);
     if (index === -1) {
       throw new Error('Can\'t find update element');
@@ -27,7 +27,7 @@ export default class FilmModel extends Observer {
       update,
       ...this._films.slice(index + 1),
     ];
-    this._notify(typeUpdate, update, popUpStatus);
+    this._notify(typeUpdate, update, popupStatus);
   }
 
   static adaptToClient(film) {

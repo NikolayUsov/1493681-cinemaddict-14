@@ -9,6 +9,7 @@ import { UpdateType, UserAction, PopupStatus, PopupState } from '../utils/const.
 import { FilterTypeMatchToFilmsControl } from '../utils/filter-utils';
 import { showToast, ToastMessage } from '../utils/toast.js';
 import dayjs from 'dayjs';
+
 const PopupControlType = {
   FAVORITE: 'favorite',
   WATCHLIST: 'watchlist',
@@ -28,7 +29,7 @@ export default class FilmCardPresenter {
     this._container = container;
     this._filterModel = filterModel;
     this._filmCardComponent = null;
-    this._popUpComponent = null;
+    this._popupComponent = null;
     this._comments = null;
     this._api = api;
     this._renderExtraCard = renderExtraCard;
@@ -36,7 +37,7 @@ export default class FilmCardPresenter {
     this._minorUpdateAfterClose = false;
     this._handlerChangeData = handlerChangeData;
     this._handlerChangeView = handlerChangeView;
-    this._popUpStatus = PopupStatus.CLOSE;
+    this._popupStatus = PopupStatus.CLOSE;
     this._handleOpenPopup = this._handleOpenPopup.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handlePopupButtonClose = this._handlePopupButtonClose.bind(this);
@@ -64,13 +65,13 @@ export default class FilmCardPresenter {
       return;
     }
 
-    if (this._popUpStatus === PopupStatus.CLOSE) {
+    if (this._popupStatus ===  PopupStatus.CLOSE) {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this._popUpStatus === PopupStatus.OPEN) {
+    if (this._popupStatus === PopupStatus.OPEN) {
       replace(this._filmCardComponent, prevFilmCardComponent);
-      this._popUpComponent.updateData(this._filmInfo, true, this._comments);
+      this._popupComponent.updateData(this._filmInfo, true, this._comments);
     }
   }
 
@@ -84,22 +85,22 @@ export default class FilmCardPresenter {
   }
 
   resetFilmView() {
-    if (this._popUpStatus === PopupStatus.OPEN) {
+    if (this._popupStatus === PopupStatus.OPEN) {
       this._closePopup();
-      this._popUpStatus = PopupStatus.CLOSE;
+      this._popupStatus = PopupStatus.CLOSE;
     }
   }
 
   _closePopup() {
-    this._popUpComponent.getElement().remove();
-    this._popUpComponent.removeElement();
-    this._popUpComponent.reset(this._filmInfo);
-    this._popUpStatus = PopupStatus.CLOSE;
+    this._popupComponent.getElement().remove();
+    this._popupComponent.removeElement();
+    this._popupComponent.reset(this._filmInfo);
+    this._popupStatus = PopupStatus.CLOSE;
     this._comments = null;
     document.body.style.overflow = '';
 
     if (this._minorUpdateAfterClose) {
-      this._handlerChangeData(UserAction.UPDATE, UpdateType.MINOR, this._updateFilmCard, this._filmInfo, this._popUpStatus);
+      this._handlerChangeData(UserAction.UPDATE, UpdateType.MINOR, this._updateFilmCard, this._filmInfo, this._popupStatus);
     }
 
     if (this._isChangeComment) {
@@ -112,15 +113,15 @@ export default class FilmCardPresenter {
     this._api.getComments(this._filmInfo.id)
       .then((comments) => {
         this._comments = comments;
-        this._popUpComponent = new PopupFilmView(this._filmInfo, this._comments);
-        renderElement(footer, this._popUpComponent, RenderPosition.AFTEREND);
+        this._popupComponent = new PopupFilmView(this._filmInfo, this._comments);
+        renderElement(footer, this._popupComponent, RenderPosition.AFTEREND);
         if (!this._api.isOnline()) {
           showToast(ToastMessage.OPEN_POP_UP);
         }
-        this._popUpComponent.setClickCloseButton(this._handlePopupButtonClose);
-        this._popUpComponent.setPopupControlChange(this._handlerChangePopupControlButton);
-        this._popUpComponent.setSendNewComment(this._handlerSendNewComment);
-        this._popUpComponent.setDeleteComment(this._handlerDeleteComment);
+        this._popupComponent.setClickCloseButton(this._handlePopupButtonClose);
+        this._popupComponent.setPopupControlChange(this._handlerChangePopupControlButton);
+        this._popupComponent.setSendNewComment(this._handlerSendNewComment);
+        this._popupComponent.setDeleteComment(this._handlerDeleteComment);
         document.body.style.overflow = 'hidden';
       })
       .catch(() => {
@@ -138,7 +139,7 @@ export default class FilmCardPresenter {
   _handleOpenPopup() {
     this._handlerChangeView();
     this._openPopup();
-    this._popUpStatus = PopupStatus.OPEN;
+    this._popupStatus = PopupStatus.OPEN;
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
@@ -171,10 +172,10 @@ export default class FilmCardPresenter {
       this._updateFilmCard.userInfo[updateControl] ? this._updateFilmCard.userInfo.watchedDate = dayjs() : this._updateFilmCard.userInfo.watchedDate = null;
     }
 
-    if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popUpStatus === PopupStatus.OPEN) {
+    if (FilterTypeMatchToFilmsControl[currentFilter] === updateControl && this._popupStatus === PopupStatus.OPEN) {
       this._minorUpdateAfterClose = true;
     }
-    this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, updateControl, this._popUpStatus);
+    this._handlerChangeData(UserAction.UPDATE, UpdateType.PATH, this._updateFilmCard, updateControl, this._popupStatus);
   }
 
   _handlerAddToWatchList() {
@@ -190,46 +191,46 @@ export default class FilmCardPresenter {
   }
 
   _handlerSendNewComment(updateFilmCard, comment) {
-    this._popUpComponent.setState(PopupState.DISABLED);
+    this._popupComponent.setState(PopupState.DISABLED);
     this._api.addComment(updateFilmCard, comment)
       .then((result) => {
         this._comments = result.comments;
-        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popUpStatus);
+        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, result.film, '', this._popupStatus);
         this._isChangeComment = true;
-        this._popUpComponent.setState(PopupState.DEFAULT);
+        this._popupComponent.setState(PopupState.DEFAULT);
       })
       .catch(() => {
         if (!this._api.isOnline()) {
           showToast(ToastMessage.OFFLINE_SEND_COMMENT);
         }
-        this._popUpComponent.updateData(
+        this._popupComponent.updateData(
           {
             currentEmoji: comment.emotion,
             currentTextComment: comment.comment,
           },
         );
-        this._popUpComponent.setState(PopupState.ABORTING);
+        this._popupComponent.setState(PopupState.ABORTING);
 
       });
   }
 
   _handlerDeleteComment(commnetID) {
-    this._popUpComponent.setState(PopupState.DELETE, commnetID);
+    this._popupComponent.setState(PopupState.DELETE, commnetID);
     this._api.deleteComment(commnetID)
       .then(() => {
         const updatedFilmCard = deepClone(this._filmInfo);
         const comment = updatedFilmCard.comments.filter((comment) => comment !== commnetID);
         updatedFilmCard.comments = comment;
         this._comments = this._comments.filter((comment) => comment.id !== commnetID);
-        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popUpStatus);
+        this._handlerChangeData(UserAction.DELETE_COMMENT, UpdateType.PATH, updatedFilmCard, '', this._popupStatus);
         this._isChangeComment = true;
-        this._popUpComponent.setState(PopupState.DEFAULT);
+        this._popupComponent.setState(PopupState.DEFAULT);
       })
       .catch(() => {
         if (!this._api.isOnline()) {
           showToast(ToastMessage.OFFLINE_DELETE_COMMENT);
         }
-        this._popUpComponent.setState(PopupState.ABORTING);
+        this._popupComponent.setState(PopupState.ABORTING);
       });
   }
 }

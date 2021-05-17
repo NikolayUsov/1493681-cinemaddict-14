@@ -116,14 +116,14 @@ export default class FilmListPresenter {
     }
   }
 
-  _handleChangeOnView(userAction, updateType, update, updateControl, popUpStatus) {
+  _handleChangeOnView(userAction, updateType, update, updateControl, popupStatus) {
     const filterType = this._filterModel.get();
 
-    if (filterType !== FILTER.ALL_MOVIES && popUpStatus === PopupStatus.CLOSE) {
+    if (filterType !== FILTER.ALL_MOVIES && popupStatus === PopupStatus.CLOSE) {
       updateType = UpdateType.MINOR;
     }
 
-    if (FilterTypeMatchToFilmsControl[filterType] !== updateControl && this._popUpStatus === PopupStatus.OPEN) {
+    if (FilterTypeMatchToFilmsControl[filterType] !== updateControl && this._popupStatus === PopupStatus.OPEN) {
       updateType = UpdateType.PATH;
     }
 
@@ -143,7 +143,7 @@ export default class FilmListPresenter {
       case UserAction.ADD_COMMENT:
         break;
       case UserAction.DELETE_COMMENT:
-        this._filmsModel.updateData(updateType, update, popUpStatus);
+        this._filmsModel.updateData(updateType, update, popupStatus);
         break;
     }
   }
