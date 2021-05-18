@@ -76,7 +76,7 @@ export default class FilmModel extends Observer {
       {},
       adaptedFilm,
       {
-        film_info: {
+        'film_info': {
           poster: film.poster,
           title: film.title,
           'alternative_title': film.originalTitle,
